@@ -38,6 +38,7 @@ const FORM_MODULES = [JsonSchemaModule];
 // #endregion
 
 // #region Http Interceptors
+// 注册拦截器
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DefaultInterceptor } from '@core';
 import { SimpleInterceptor } from '@delon/auth';

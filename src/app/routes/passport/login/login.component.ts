@@ -1,3 +1,4 @@
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, Optional } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,7 +8,9 @@ import { DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService } from '
 import { SettingsService, _HttpClient } from '@delon/theme';
 import { environment } from '@env/environment';
 import { NzTabChangeEvent } from 'ng-zorro-antd/tabs';
-import { finalize } from 'rxjs/operators';
+
+import { WebsiteConfig } from '../../../models/config/website-config';
+import { ConfigService } from '../../../services/config/config.service';
 
 @Component({
   selector: 'passport-login',
@@ -28,15 +31,18 @@ export class UserLoginComponent implements OnDestroy {
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     private startupSrv: StartupService,
     private http: _HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    configService: ConfigService
   ) {
     this.form = fb.group({
-      userName: [null, [Validators.required, Validators.pattern(/^(admin|user)$/)]],
-      password: [null, [Validators.required, Validators.pattern(/^(ng\-alain\.com)$/)]],
+      userName: [null, [Validators.required]],
+      password: [null, [Validators.required]],
       mobile: [null, [Validators.required, Validators.pattern(/^1\d{10}$/)]],
       captcha: [null, [Validators.required]],
       remember: [true]
     });
+    this.configService = configService;
+    this.webSiteConfig = configService.getWebSiteConfig();
   }
 
   // #region fields
@@ -62,7 +68,10 @@ export class UserLoginComponent implements OnDestroy {
 
   count = 0;
   interval$: any;
-
+  //配置服务
+  configService: ConfigService;
+  //获取网站配置信息
+  webSiteConfig: WebsiteConfig;
   // #endregion
 
   switch({ index }: NzTabChangeEvent): void {
@@ -110,39 +119,29 @@ export class UserLoginComponent implements OnDestroy {
     // 然一般来说登录请求不需要校验，因此可以在请求URL加上：`/login?_allow_anonymous=true` 表示不触发用户 Token 校验
     this.loading = true;
     this.cdr.detectChanges();
-    this.http
-      .post('/login/account?_allow_anonymous=true', {
-        type: this.type,
-        userName: this.userName.value,
-        password: this.password.value
-      })
-      .pipe(
-        finalize(() => {
-          this.loading = true;
-          this.cdr.detectChanges();
-        })
-      )
-      .subscribe(res => {
-        if (res.msg !== 'ok') {
-          this.error = res.msg;
-          this.cdr.detectChanges();
-          return;
-        }
-        // 清空路由复用信息
-        this.reuseTabService.clear();
-        // 设置用户Token信息
-        // TODO: Mock expired value
-        res.user.expired = +new Date() + 1000 * 60 * 5;
-        this.tokenService.set(res.user);
-        // 重新获取 StartupService 内容，我们始终认为应用信息一般都会受当前用户授权范围而影响
-        this.startupSrv.load().subscribe(() => {
-          let url = this.tokenService.referrer!.url || '/';
-          if (url.includes('/passport')) {
-            url = '/';
-          }
-          this.router.navigateByUrl(url);
-        });
+    const formData = new FormData();
+    formData.set('type', String(this.type));
+    formData.set('email', this.userName.value);
+    formData.set('pwd', this.password.value);
+    this.http.post(`${this.webSiteConfig.baseURL}/api/Auth/login`, formData).subscribe(res => {
+      console.log(res);
+      if (res.Ok != true) {
+        this.loading = false;
+        this.error = res.Msg;
+        this.cdr.detectChanges();
+        console.log('进入111');
+        return;
+      }
+
+      // 清空路由复用信息
+      this.reuseTabService.clear();
+      // 设置用户Token信息
+      this.tokenService.set({
+        token: res.Token
       });
+      // 直接跳转
+      this.router.navigate(['/']);
+    });
   }
 
   // #region social

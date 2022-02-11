@@ -2,9 +2,9 @@
   "typescript.tsdk": "./node_modules/typescript/lib",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    // For ESLint
+
     "source.fixAll.eslint": true,
-    // For Stylelint
+
     "source.fixAll.stylelint": true
   },
   "[markdown]": {
@@ -30,7 +30,7 @@
     ".prettierrc": "jsonc",
     ".stylelintrc": "jsonc"
   },
-  // Angular schematics 插件: https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics
+ 
   "ngschematics.schematics": [
     "ng-alain"
   ]

@@ -3,7 +3,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ACLService } from '@delon/acl';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
-import { MenuService, SettingsService, TitleService } from '@delon/theme';
+import { ALAIN_I18N_TOKEN, MenuService, SettingsService, TitleService } from '@delon/theme';
 import type { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzIconService } from 'ng-zorro-antd/icon';
 import { Observable, zip, of } from 'rxjs';
@@ -11,6 +11,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { ICONS } from '../../../style-icons';
 import { ICONS_AUTO } from '../../../style-icons-auto';
+import { I18NService } from '../i18n/i18n.service';
 
 /**
  * Used for application startup
@@ -21,6 +22,7 @@ export class StartupService {
   constructor(
     iconSrv: NzIconService,
     private menuService: MenuService,
+    @Inject(ALAIN_I18N_TOKEN) private i18n: I18NService,
     private settingService: SettingsService,
     private aclService: ACLService,
     private titleService: TitleService,
@@ -52,65 +54,31 @@ export class StartupService {
       })
     );
   }
-
-  private viaMock(): Observable<void> {
-    // const tokenData = this.tokenService.get();
-    // if (!tokenData.token) {
-    //   this.router.navigateByUrl(this.tokenService.login_url!);
-    //   return;
-    // }
-    // mock
-    const app: any = {
-      name: `notion-like-theme`,
-      description: `notion style theme`
-    };
-    const user: any = {
-      name: 'Admin',
-      avatar: './assets/tmp/img/avatar.jpg',
-      email: 'cipchk@qq.com',
-      token: '123456789'
-    };
-    // Application information: including site name, description, year
-    //程序信息，包含网站名称，介绍等
-    this.settingService.setApp(app);
-    // User information: including name, avatar, email address
-    //用户信息，包含用户名、头像、邮箱地址
-    this.settingService.setUser(user);
-    // ACL: Set the permissions to full, https://ng-alain.com/acl/getting-started
-    //访问控制列表
-    this.aclService.setFull(true);
-    // Menu data, https://ng-alain.com/theme/menu
-    //菜单栏服务
-    this.menuService.add([
-      {
-        text: 'Main',
-        group: true,
-        children: [
-          {
-            text: 'Dashboard',
-            link: '/dashboard',
-            icon: { type: 'icon', value: 'appstore' }
-          },
-          {
-            text: 'Log',
-            link: '/sys/log',
-            icon: { type: 'icon', value: 'appstore' }
-          }
-        ]
-      }
-    ]);
-    // Can be set page suffix title, https://ng-alain.com/theme/title
-    //页面标题服务 设置后缀为app名称
-    this.titleService.suffix = app.name;
-
-    return of();
-  }
-
   load(): Observable<void> {
-    // http
-    // return this.viaHttp();
-    // mock: Don’t use it in a production environment. ViaMock is just to simulate some data to make the scaffolding work normally
-    // mock：请勿在生产环境中这么使用，viaMock 单纯只是为了模拟一些数据使脚手架一开始能正常运行
-    return this.viaMock();
+    const defaultLang = this.i18n.defaultLang;
+    return zip(this.i18n.loadLangData(defaultLang), this.httpClient.get('assets/tmp/app-data.json')).pipe(
+      // 接收其他拦截器后产生的异常消息
+      catchError(res => {
+        console.warn(`StartupService.load: Network request failed`, res);
+        setTimeout(() => this.router.navigateByUrl(`/exception/500`));
+        return [];
+      }),
+      map(([langData, appData]: [Record<string, string>, NzSafeAny]) => {
+        // setting language data
+        this.i18n.use(defaultLang, langData);
+
+        // 应用信息：包括站点名、描述、年份
+        this.settingService.setApp(appData.app);
+        // 用户信息：包括姓名、头像、邮箱地址
+        this.settingService.setUser(appData.user);
+        // ACL：设置权限为全量
+        this.aclService.setFull(true);
+        // 初始化菜单
+        this.menuService.add(appData.menu);
+        // 设置页面标题的后缀
+        this.titleService.default = '';
+        this.titleService.suffix = appData.app.name;
+      })
+    );
   }
 }

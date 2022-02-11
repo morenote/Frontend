@@ -1,12 +1,12 @@
 {
   "app": {
-    "name": "Alain",
-    "description": "Ng-zorro admin panel front-end framework"
+    "name": "MoreNote",
+    "description": "Knowledge, Blogging, Sharing, Collaboration"
   },
   "user": {
-    "name": "Admin",
+    "name": "demo",
     "avatar": "./assets/tmp/img/avatar.jpg",
-    "email": "cipchk@qq.com"
+    "email": "demo@qq.com"
   },
   "menu": [
     {
@@ -21,6 +21,11 @@
           "icon": "anticon-dashboard",
           "children": [
             {
+              "text": "工作台",
+              "link": "/dashboard/workplace",
+              "i18n": "menu.dashboard.workplace"
+            },
+            {
               "text": "仪表盘V1",
               "link": "/dashboard/v1",
               "i18n": "menu.dashboard.v1"
@@ -34,12 +39,8 @@
               "text": "监控页",
               "link": "/dashboard/monitor",
               "i18n": "menu.dashboard.monitor"
-            },
-            {
-              "text": "工作台",
-              "link": "/dashboard/workplace",
-              "i18n": "menu.dashboard.workplace"
             }
+
           ]
         },
         {

@@ -1,7 +1,7 @@
 /* eslint-disable import/order */
 /* eslint-disable import/no-duplicates */
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { APP_INITIALIZER, Injector, LOCALE_ID, NgModule, Type } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { APP_INITIALIZER, LOCALE_ID, NgModule, Type } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NzMessageModule } from 'ng-zorro-antd/message';
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 // #region default language
 // Reference: https://ng-alain.com/docs/i18n
 import { default as ngLang } from '@angular/common/locales/zh';
-import { DELON_LOCALE, zh_CN as delonLang } from '@delon/theme';
+import { ALAIN_I18N_TOKEN, DELON_LOCALE, zh_CN as delonLang } from '@delon/theme';
 import { zhCN as dateLang } from 'date-fns/locale';
 import { NZ_DATE_LOCALE, NZ_I18N, zh_CN as zorroLang } from 'ng-zorro-antd/i18n';
 const LANG = {
@@ -30,6 +30,11 @@ const LANG_PROVIDES = [
   { provide: NZ_DATE_LOCALE, useValue: LANG.date },
   { provide: DELON_LOCALE, useValue: LANG.delon }
 ];
+// #endregion
+// #region i18n services
+
+const I18NSERVICE_PROVIDES = [{ provide: ALAIN_I18N_TOKEN, useClass: I18NService, multi: false }];
+
 // #endregion
 
 // #region JSON Schema form (using @delon/form)
@@ -76,6 +81,7 @@ import { LayoutModule } from './layout/layout.module';
 import { RoutesModule } from './routes/routes.module';
 import { SharedModule } from './shared/shared.module';
 import { STWidgetModule } from './shared/st-widget/st-widget.module';
+import { I18NService } from './core/i18n/i18n.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -89,12 +95,13 @@ import { STWidgetModule } from './shared/st-widget/st-widget.module';
     LayoutModule,
     RoutesModule,
     STWidgetModule,
+
     NzMessageModule,
     NzNotificationModule,
     ...FORM_MODULES,
     ...GLOBAL_THIRD_MODULES
   ],
-  providers: [...LANG_PROVIDES, ...INTERCEPTOR_PROVIDES, ...APPINIT_PROVIDES],
+  providers: [...LANG_PROVIDES, ...INTERCEPTOR_PROVIDES, ...I18NSERVICE_PROVIDES, ...APPINIT_PROVIDES],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

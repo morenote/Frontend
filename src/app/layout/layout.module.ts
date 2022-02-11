@@ -27,10 +27,27 @@ import { LayoutBlankComponent } from './blank/blank.component';
 
 const COMPONENTS = [LayoutBasicComponent, LayoutBlankComponent];
 
-const HEADERCOMPONENTS = [HeaderSearchComponent, HeaderFullScreenComponent, HeaderClearStorageComponent, HeaderUserComponent];
+const HEADERCOMPONENTS = [
+  HeaderSearchComponent,
+  HeaderNotifyComponent,
+  HeaderTaskComponent,
+  HeaderIconComponent,
+  HeaderFullScreenComponent,
+  HeaderI18nComponent,
+  HeaderClearStorageComponent,
+  HeaderUserComponent,
+  HeaderRTLComponent
+];
 
 // passport
 import { LayoutPassportComponent } from './passport/passport.component';
+import { HeaderNotifyComponent } from './basic/widgets/notify.component';
+import { HeaderIconComponent } from './basic/widgets/icon.component';
+import { HeaderRTLComponent } from './basic/widgets/rtl.component';
+import { HeaderI18nComponent } from './basic/widgets/i18n.component';
+import { HeaderTaskComponent } from './basic/widgets/task.component';
+import {AlainThemeModule} from "@delon/theme";
+import {NzCardModule} from "ng-zorro-antd/card";
 const PASSPORT = [LayoutPassportComponent];
 
 @NgModule({
@@ -38,6 +55,7 @@ const PASSPORT = [LayoutPassportComponent];
     CommonModule,
     FormsModule,
     RouterModule,
+    AlainThemeModule.forChild(),
     ThemeBtnModule,
     SettingDrawerModule,
     LayoutDefaultModule,
@@ -51,7 +69,8 @@ const PASSPORT = [LayoutPassportComponent];
     NzSpinModule,
     NzBadgeModule,
     NzAvatarModule,
-    NzIconModule
+    NzIconModule,
+    NzCardModule
   ],
   declarations: [...COMPONENTS, ...HEADERCOMPONENTS, ...PASSPORT],
   exports: [...COMPONENTS, ...PASSPORT]

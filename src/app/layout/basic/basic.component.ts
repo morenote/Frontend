@@ -23,7 +23,16 @@ import { environment } from '@env/environment';
         </div>
       </layout-default-header-item>
       <layout-default-header-item direction="middle">
-        <header-search class="alain-default__search" [toggleChange]="searchToggleStatus"></header-search>
+        <header-search class="alain-default__search" [(toggleChange)]="searchToggleStatus"></header-search>
+      </layout-default-header-item>
+      <layout-default-header-item direction="right">
+        <header-notify></header-notify>
+      </layout-default-header-item>
+      <layout-default-header-item direction="right" hidden="mobile">
+        <header-task></header-task>
+      </layout-default-header-item>
+      <layout-default-header-item direction="right" hidden="mobile">
+        <header-icon></header-icon>
       </layout-default-header-item>
       <layout-default-header-item direction="right" hidden="mobile">
         <div layout-default-header-item-trigger nz-dropdown [nzDropdownMenu]="settingsMenu" nzTrigger="click" nzPlacement="bottomRight">
@@ -32,10 +41,16 @@ import { environment } from '@env/environment';
         <nz-dropdown-menu #settingsMenu="nzDropdownMenu">
           <div nz-menu style="width: 200px;">
             <div nz-menu-item>
+              <header-rtl></header-rtl>
+            </div>
+            <div nz-menu-item>
               <header-fullscreen></header-fullscreen>
             </div>
             <div nz-menu-item>
               <header-clear-storage></header-clear-storage>
+            </div>
+            <div nz-menu-item>
+              <header-i18n></header-i18n>
             </div>
           </div>
         </nz-dropdown-menu>
@@ -53,8 +68,8 @@ import { environment } from '@env/environment';
         </div>
         <nz-dropdown-menu #userMenu="nzDropdownMenu">
           <ul nz-menu>
-            <li nz-menu-item routerLink="/pro/account/center">个人中心</li>
-            <li nz-menu-item routerLink="/pro/account/settings">个人设置</li>
+            <li nz-menu-item routerLink="/pro/account/center">{{ 'menu.account.center' | i18n }}</li>
+            <li nz-menu-item routerLink="/pro/account/settings">{{ 'menu.account.settings' | i18n }}</li>
           </ul>
         </nz-dropdown-menu>
       </ng-template>

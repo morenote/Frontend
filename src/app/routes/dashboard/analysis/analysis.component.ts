@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { I18NService } from '@core';
 import { STColumn } from '@delon/abc/st';
 import { ALAIN_I18N_TOKEN, _HttpClient } from '@delon/theme';
 import { getTimeDistance } from '@delon/util/date-time';
@@ -6,8 +7,6 @@ import { deepCopy } from '@delon/util/other';
 import { yuan } from '@shared';
 import type { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzMessageService } from 'ng-zorro-antd/message';
-
-import { I18NService } from '../../../core/i18n/i18n.service';
 
 @Component({
   selector: 'app-dashboard-analysis',

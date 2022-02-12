@@ -5,17 +5,8 @@ import { FooterToolbarModule } from '@delon/abc/footer-toolbar';
 import { TagSelectModule } from '@delon/abc/tag-select';
 import { CurrencyPipeModule } from '@delon/util/pipes/currency';
 import { SharedModule } from '@shared';
-import { NzBadgeModule } from 'ng-zorro-antd/badge';
-import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzListModule } from 'ng-zorro-antd/list';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
-import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
-import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
-import { NzUploadModule } from 'ng-zorro-antd/upload';
 
 import { ProAccountCenterApplicationsComponent } from './account/center/applications/applications.component';
 import { ProAccountCenterArticlesComponent } from './account/center/articles/articles.component';
@@ -45,7 +36,6 @@ import { ProProfileAdvancedComponent } from './profile/advanced/advanced.compone
 import { ProProfileBaseComponent } from './profile/basic/basic.component';
 import { ProResultFailComponent } from './result/fail/fail.component';
 import { ProResultSuccessComponent } from './result/success/success.component';
-
 
 const COMPONENTS = [
   BasicFormComponent,
@@ -87,18 +77,7 @@ const COMPONENTS = [
     FooterToolbarModule,
     NzPaginationModule,
     NzStepsModule,
-    CurrencyPipeModule,
-    NzTagModule,
-    NzListModule,
-    NzBadgeModule,
-    NzRadioModule,
-    NzDividerModule,
-    NzUploadModule,
-    NzTimePickerModule,
-    NzDatePickerModule,
-    NzSwitchModule,
-    NzSwitchModule,
-    NzSwitchModule
+    CurrencyPipeModule
   ],
   declarations: COMPONENTS
 })

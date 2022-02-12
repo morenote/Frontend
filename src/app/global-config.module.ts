@@ -9,7 +9,7 @@ import { throwIfAlreadyLoaded } from '@core';
 import { environment } from '@env/environment';
 
 // Please refer to: https://ng-alain.com/docs/global-config
-// #region NG-ALAIN config
+// #region NG-ALAIN Config
 
 const alainConfig: AlainConfig = {
   st: { modal: { size: 'lg' } },
@@ -50,7 +50,7 @@ const alainProvides = [{ provide: ALAIN_CONFIG, useValue: alainConfig }];
 // #endregion
 
 // Please refer to: https://ng.ant.design/docs/global-config/en#how-to-use
-// #region NG-ZORRO config
+// #region NG-ZORRO Config
 
 import { NzConfig, NZ_CONFIG } from 'ng-zorro-antd/core/config';
 

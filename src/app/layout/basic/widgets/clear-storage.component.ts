@@ -6,7 +6,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
   selector: 'header-clear-storage',
   template: `
     <i nz-icon nzType="tool"></i>
-    清理本地缓存
+    {{ 'menu.clear.local.storage' | i18n }}
   `,
   host: {
     '[class.flex-1]': 'true'

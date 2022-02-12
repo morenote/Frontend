@@ -17,10 +17,6 @@ import { G2TimelineModule } from '@delon/chart/timeline';
 import { TrendModule } from '@delon/chart/trend';
 import { G2WaterWaveModule } from '@delon/chart/water-wave';
 import { SharedModule } from '@shared';
-import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
-import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
-import { NzListModule } from 'ng-zorro-antd/list';
-import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { CountdownModule } from 'ngx-countdown';
 
 import { DashboardAnalysisComponent } from './analysis/analysis.component';
@@ -52,11 +48,7 @@ const COMPONENTS = [DashboardV1Component, DashboardAnalysisComponent, DashboardM
     NumberInfoModule,
     TrendModule,
     QuickMenuModule,
-    OnboardingModule,
-    NzRadioModule,
-    NzListModule,
-    NzBreadCrumbModule,
-    NzDatePickerModule
+    OnboardingModule
   ],
   declarations: [...COMPONENTS]
 })

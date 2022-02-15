@@ -57,4 +57,7 @@ const DIRECTIVES: Array<Type<any>> = [];
     ...DIRECTIVES
   ]
 })
+/**
+ * 共享模块(全局依赖)
+ */
 export class SharedModule {}

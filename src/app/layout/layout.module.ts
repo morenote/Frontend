@@ -48,6 +48,7 @@ const HEADERCOMPONENTS = [
 
 // passport
 import { LayoutPassportComponent } from './passport/passport.component';
+import {NzTreeModule} from "ng-zorro-antd/tree";
 const PASSPORT = [LayoutPassportComponent];
 
 @NgModule({
@@ -70,7 +71,8 @@ const PASSPORT = [LayoutPassportComponent];
     NzBadgeModule,
     NzAvatarModule,
     NzIconModule,
-    NzCardModule
+    NzCardModule,
+    NzTreeModule
   ],
   declarations: [...COMPONENTS, ...HEADERCOMPONENTS, ...PASSPORT],
   exports: [...COMPONENTS, ...PASSPORT]

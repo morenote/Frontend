@@ -5,7 +5,7 @@ import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzI18nService } from 'ng-zorro-antd/i18n';
 import { of } from 'rxjs';
 
-import { I18NService } from './i18n.service';
+import { I18NService } from '@core';
 
 describe('Service: I18n', () => {
   let injector: TestBedStatic;

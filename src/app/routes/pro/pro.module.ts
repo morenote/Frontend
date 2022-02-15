@@ -77,6 +77,7 @@ const COMPONENTS = [
     FooterToolbarModule,
     NzPaginationModule,
     NzStepsModule,
+
     CurrencyPipeModule
   ],
   declarations: COMPONENTS

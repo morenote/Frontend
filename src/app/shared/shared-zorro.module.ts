@@ -30,38 +30,116 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
+import {NzTreeModule} from "ng-zorro-antd/tree";
+import {NzAffixModule} from "ng-zorro-antd/affix";
+import {NzAnchorModule} from "ng-zorro-antd/anchor";
+import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
+import {NzBackTopModule} from "ng-zorro-antd/back-top";
+import {NzCalendarModule} from "ng-zorro-antd/calendar";
+import {NzNotificationModule} from "ng-zorro-antd/notification";
+import {NzWaveModule} from "ng-zorro-antd/core/wave";
+import {NzMentionModule} from "ng-zorro-antd/mention";
+import {NzTreeSelectModule} from "ng-zorro-antd/tree-select";
+import {NzStepsModule} from "ng-zorro-antd/steps";
+import {NzTransferModule} from "ng-zorro-antd/transfer";
+import {NzTreeViewModule} from "ng-zorro-antd/tree-view";
+import {NzPageHeaderModule} from "ng-zorro-antd/page-header";
+import {NzNoAnimationModule} from "ng-zorro-antd/core/no-animation";
+import {NzCarouselModule} from "ng-zorro-antd/carousel";
+import {NzCascaderModule} from "ng-zorro-antd/cascader";
+import {NzCommentModule} from "ng-zorro-antd/comment";
+import {NzRateModule} from "ng-zorro-antd/rate";
+import {NzResultModule} from "ng-zorro-antd/result";
+import {NzSkeletonModule} from "ng-zorro-antd/skeleton";
+import {NzPaginationModule} from "ng-zorro-antd/pagination";
+import {NzTimelineModule} from "ng-zorro-antd/timeline";
+import {NzDescriptionsModule} from "ng-zorro-antd/descriptions";
+import {NzTypographyModule} from "ng-zorro-antd/typography";
+import {NzResizableModule} from "ng-zorro-antd/resizable";
+import {NzMenuModule} from "ng-zorro-antd/menu";
+import {NzI18nModule} from "ng-zorro-antd/i18n";
+import {NzTransButtonModule} from "ng-zorro-antd/core/trans-button";
+import {NzEmptyModule} from "ng-zorro-antd/empty";
+import {NzCollapseModule} from "ng-zorro-antd/collapse";
+import {NzSliderModule} from "ng-zorro-antd/slider";
+import {NzLayoutModule} from "ng-zorro-antd/layout";
+import {NzStatisticModule} from "ng-zorro-antd/statistic";
+import {NzPipesModule} from "ng-zorro-antd/pipes";
+import {NzImageModule} from "ng-zorro-antd/image";
 
+/**
+ * zorro共享模块
+ */
 export const SHARED_ZORRO_MODULES = [
-  NzButtonModule,
-  NzMessageModule,
-  NzDropDownModule,
-  NzGridModule,
-  NzCheckboxModule,
-  NzToolTipModule,
-  NzPopoverModule,
-  NzSelectModule,
-  NzIconModule,
-  NzBadgeModule,
+  NzAffixModule,
   NzAlertModule,
-  NzModalModule,
-  NzTableModule,
-  NzDrawerModule,
-  NzTabsModule,
-  NzInputModule,
-  NzDatePickerModule,
-  NzTimePickerModule,
-  NzTagModule,
-  NzInputNumberModule,
-  NzBreadCrumbModule,
-  NzListModule,
-  NzSwitchModule,
-  NzRadioModule,
-  NzFormModule,
+  NzAnchorModule,
+  NzAutocompleteModule,
   NzAvatarModule,
-  NzSpinModule,
+  NzBackTopModule,
+  NzBadgeModule,
+  NzButtonModule,
+  NzBreadCrumbModule,
+  NzCalendarModule,
   NzCardModule,
+  NzCarouselModule,
+  NzCascaderModule,
+  NzCheckboxModule,
+  NzCollapseModule,
+  NzCommentModule,
+  NzDatePickerModule,
+  NzDescriptionsModule,
   NzDividerModule,
-  NzProgressModule,
+  NzDrawerModule,
+  NzDropDownModule,
+  NzEmptyModule,
+  NzFormModule,
+  NzGridModule,
+  NzI18nModule,
+  NzIconModule,
+  NzImageModule,
+  NzInputModule,
+  NzInputNumberModule,
+  NzLayoutModule,
+  NzListModule,
+  NzMentionModule,
+  NzMenuModule,
+  NzMessageModule,
+  NzModalModule,
+  NzNoAnimationModule,
+  NzNotificationModule,
+  NzPageHeaderModule,
+  NzPaginationModule,
   NzPopconfirmModule,
-  NzUploadModule
+  NzPopoverModule,
+  NzProgressModule,
+  NzRadioModule,
+  NzRateModule,
+  NzResultModule,
+  NzSelectModule,
+  NzSkeletonModule,
+  NzSliderModule,
+  NzSpinModule,
+  NzStatisticModule,
+  NzStepsModule,
+  NzSwitchModule,
+  NzTableModule,
+  NzTabsModule,
+  NzTagModule,
+  NzTimePickerModule,
+  NzTimelineModule,
+  NzToolTipModule,
+  NzTransButtonModule,
+  NzTransferModule,
+  NzTreeModule,
+  NzTreeViewModule,
+  NzTreeSelectModule,
+  NzTypographyModule,
+  NzUploadModule,
+  NzWaveModule,
+  NzResizableModule,
+  NzPipesModule,
+
+
 ];
+

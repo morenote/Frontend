@@ -1,6 +1,6 @@
 /* eslint-disable import/order */
 /* eslint-disable import/no-duplicates */
-import { HttpClientModule } from '@angular/common/http';
+import {HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 import { default as ngLang } from '@angular/common/locales/zh';
 import { APP_INITIALIZER, LOCALE_ID, NgModule, Type } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -83,9 +83,11 @@ import { CoreModule } from './core/core.module';
 import { GlobalConfigModule } from './global-config.module';
 import { LayoutModule } from './layout/layout.module';
 import { RoutesModule } from './routes/routes.module';
-import { SharedModule } from './shared/shared.module';
+import { SharedModule } from '@shared';
 import { STWidgetModule } from './shared/st-widget/st-widget.module';
 import { Observable } from 'rxjs';
+import {NzTreeModule} from "ng-zorro-antd/tree";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [AppComponent],
@@ -99,8 +101,12 @@ import { Observable } from 'rxjs';
     LayoutModule,
     RoutesModule,
     STWidgetModule,
+
     NzNotificationModule,
     ...GLOBAL_THIRD_MODULES,
+    FormsModule,
+    HttpClientJsonpModule,
+    ReactiveFormsModule,
     ...FORM_MODULES
   ],
   providers: [...LANG_PROVIDES, ...INTERCEPTOR_PROVIDES, ...I18NSERVICE_PROVIDES, ...APPINIT_PROVIDES],

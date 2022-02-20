@@ -89,6 +89,7 @@ import { Observable } from 'rxjs';
 import {NzTreeModule} from "ng-zorro-antd/tree";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NuMarkdownModule} from "@ng-util/markdown";
+import {NzIconModule} from "ng-zorro-antd/icon";
 
 @NgModule({
   declarations: [AppComponent],
@@ -109,6 +110,7 @@ import {NuMarkdownModule} from "@ng-util/markdown";
     HttpClientJsonpModule,
     ReactiveFormsModule,
     ...FORM_MODULES,
+
 
   ],
   providers: [...LANG_PROVIDES, ...INTERCEPTOR_PROVIDES, ...I18NSERVICE_PROVIDES, ...APPINIT_PROVIDES],

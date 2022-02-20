@@ -3,6 +3,8 @@ import { SharedModule } from '@shared';
 import { NoteRoutingModule } from './note-routing.module';
 import {EditorComponent} from "./editor/editor.component";
 import {NzTreeModule} from "ng-zorro-antd/tree";
+import {VditorMarkdomEditorComponent} from "../../my-components/VditorMarkdomEditor/vditor-markdom-editor.component";
+import {NzIconModule} from "ng-zorro-antd/icon";
 
 
 const COMPONENTS: Type<void>[] = [
@@ -14,9 +16,13 @@ const COMPONENTS: Type<void>[] = [
   imports: [
     SharedModule,
     NoteRoutingModule,
-    NzTreeModule
+    NzTreeModule,
+    NzIconModule
 
   ],
-  declarations: COMPONENTS,
+  declarations: [
+    COMPONENTS,
+    VditorMarkdomEditorComponent
+  ],
 })
 export class NoteModule { }

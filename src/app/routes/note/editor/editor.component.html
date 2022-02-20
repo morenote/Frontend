@@ -11,7 +11,8 @@
     <nz-tree [nzData]="nodes"
 
              nzAsyncData
-             nzCheckable
+
+             nzShowIcon
              nzVirtualHeight
              (nzClick)="nzEvent($event)"
              [nzSearchValue]="searchValue"
@@ -19,6 +20,9 @@
     ></nz-tree>
   </aside>
   <main class="page ant-drawer-content-wrapper">
-    <div id="vditor"></div>
+
+    <app-VditorMarkdomEditor></app-VditorMarkdomEditor>
+
+
   </main>
 </div>

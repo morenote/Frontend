@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {NzFormatEmitEvent} from "ng-zorro-antd/tree";
+import {NzFormatEmitEvent, NzTreeNodeOptions} from "ng-zorro-antd/tree";
+import Vditor from "vditor";
 
 @Component({
   selector: 'app-editor',
@@ -7,74 +8,68 @@ import {NzFormatEmitEvent} from "ng-zorro-antd/tree";
   styleUrls: ['./editor.component.less'
   ]
 })
-export class EditorComponent implements OnInit {
 
+
+export class EditorComponent implements OnInit {
+  searchValue = '';
+  public vditor!:Vditor ;
   constructor() { }
   nodes = [
-    {
-      title: '0-0',
-      key: '00',
-      expanded: true,
-      children: [
-        {
-          title: '0-0-0',
-          key: '000',
-          expanded: true,
-          children: [
-            { title: '0-0-0-0', key: '0000', isLeaf: true },
-            { title: '0-0-0-1', key: '0001', isLeaf: true },
-            { title: '0-0-0-2', key: '0002', isLeaf: true }
-          ]
-        },
-        {
-          title: '0-0-1',
-          key: '001',
-          children: [
-            { title: '0-0-1-0', key: '0010', isLeaf: true },
-            { title: '0-0-1-1', key: '0011', isLeaf: true },
-            { title: '0-0-1-2', key: '0012', isLeaf: true }
-          ]
-        },
-        {
-          title: '0-0-2',
-          key: '002'
-        }
-      ]
-    },
-    {
-      title: '0-1',
-      key: '01',
-      children: [
-        {
-          title: '0-1-0',
-          key: '010',
-          children: [
-            { title: '0-1-0-0', key: '0100', isLeaf: true },
-            { title: '0-1-0-1', key: '0101', isLeaf: true },
-            { title: '0-1-0-2', key: '0102', isLeaf: true }
-          ]
-        },
-        {
-          title: '0-1-1',
-          key: '011',
-          children: [
-            { title: '0-1-1-0', key: '0110', isLeaf: true },
-            { title: '0-1-1-1', key: '0111', isLeaf: true },
-            { title: '0-1-1-2', key: '0112', isLeaf: true }
-          ]
-        }
-      ]
-    },
-    {
-      title: '0-2',
-      key: '02',
-      isLeaf: true
-    }
+    { title: 'leaf', key: '1001', icon: 'smile', isLeaf: true },
+    { title: 'Expand to load',icon:'meh', key: '0' },
+    { title: 'Expand to load', key: '1' },
+    { title: 'Tree Node', key: '2', isLeaf: true }
   ];
   nzEvent(event: NzFormatEmitEvent): void {
     console.log(event);
+    // load child async
+    if (event.eventName === 'expand') {
+      const node = event.node;
+      if (node?.getChildren().length === 0 && node?.isExpanded) {
+        this.loadNode().then(data => {
+          node.addChildren(data);
+        });
+      }
+    }
   }
+
+  //节点展开事件
+  loadNode(): Promise<NzTreeNodeOptions[]> {
+    return new Promise(resolve => {
+      setTimeout(
+        () =>
+          resolve([
+            { title: 'Child Node', key: `${new Date().getTime()}-0` },
+            { title: 'Child Node', key: `${new Date().getTime()}-2` },
+            { title: 'Child Node', key: `${new Date().getTime()}-3` },
+            { title: 'Child Node', key: `${new Date().getTime()}-4` },
+            { title: 'Child Node', key: `${new Date().getTime()}-5` },
+            { title: 'Child Node', key: `${new Date().getTime()}-6` },
+            { title: 'Child Node', key: `${new Date().getTime()}-7` },
+            { title: 'Child Node', key: `${new Date().getTime()}-8` },
+
+            { title: 'Child Node', key: `${new Date().getTime()}-9` },
+            { title: 'Child Node', key: `${new Date().getTime()}-10` }
+          ]),
+        100
+      );
+    });
+  }
+
+
   ngOnInit(): void {
+    this.vditor = new Vditor('vditor', {
+
+      toolbarConfig: {
+        pin: true,
+      },
+      cache: {
+        enable: false,
+      },
+      after: () => {
+        this.vditor.setValue('Hello, Vditor + Angular!');
+      }
+    });
   }
 
 }

@@ -88,6 +88,7 @@ import { STWidgetModule } from './shared/st-widget/st-widget.module';
 import { Observable } from 'rxjs';
 import {NzTreeModule} from "ng-zorro-antd/tree";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {NuMarkdownModule} from "@ng-util/markdown";
 
 @NgModule({
   declarations: [AppComponent],
@@ -107,7 +108,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     FormsModule,
     HttpClientJsonpModule,
     ReactiveFormsModule,
-    ...FORM_MODULES
+    ...FORM_MODULES,
+
   ],
   providers: [...LANG_PROVIDES, ...INTERCEPTOR_PROVIDES, ...I18NSERVICE_PROVIDES, ...APPINIT_PROVIDES],
   bootstrap: [AppComponent]

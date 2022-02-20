@@ -1,5 +1,24 @@
-<p>editor works!</p>
-<div class="left-div ant-drawer-content-wrapper">
-  <nz-tree [nzData]="nodes" nzDraggable nzBlockNode (nzOnDrop)="nzEvent($event)"></nz-tree>
+<div class=" ant-drawer-content-wrapper">
+  <aside class="sidebar">
+    <nz-input-group [nzSuffix]="suffixIcon">
+      <input type="text" nz-input
+             placeholder="Search"
+             [(ngModel)]="searchValue"/>
+    </nz-input-group>
+    <ng-template #suffixIcon>
+      <i nz-icon nzType="search"></i>
+    </ng-template>
+    <nz-tree [nzData]="nodes"
 
+             nzAsyncData
+             nzCheckable
+             nzVirtualHeight
+             (nzClick)="nzEvent($event)"
+             [nzSearchValue]="searchValue"
+             (nzExpandChange)="nzEvent($event)"
+    ></nz-tree>
+  </aside>
+  <main class="page ant-drawer-content-wrapper">
+    <div id="vditor"></div>
+  </main>
 </div>

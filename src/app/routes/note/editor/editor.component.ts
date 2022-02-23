@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {NzFormatEmitEvent, NzTreeNodeOptions} from "ng-zorro-antd/tree";
+import {NzFormatBeforeDropEvent, NzFormatEmitEvent, NzTreeNodeOptions} from "ng-zorro-antd/tree";
+
+import {NzContextMenuService, NzDropdownMenuComponent, NzDropDownModule} from 'ng-zorro-antd/dropdown';
+
 import Vditor from "vditor";
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import {delay, Observable, of} from "rxjs";
+
+
 
 @Component({
   selector: 'app-myeditor',
@@ -14,7 +20,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 export class EditorComponent implements OnInit {
   searchValue = '';
   //<i nz-icon nzType="folder" nzTheme="outline"></i>
-  constructor() { }
+  constructor(private nzContextMenuService: NzContextMenuService) { }
   nodes = [
     { title: 'leaf', key: '1001', icon: 'folder' },
     { title: 'Expand to load',icon:'folder', key: '0' },
@@ -33,7 +39,7 @@ export class EditorComponent implements OnInit {
       }
     }
   }
-
+  public  nzOverlayClassName:string="";
   //节点展开事件
   loadNode(): Promise<NzTreeNodeOptions[]> {
     return new Promise(resolve => {
@@ -61,5 +67,26 @@ export class EditorComponent implements OnInit {
   ngOnInit(): void {
 
   }
+  beforeDrop(arg: NzFormatBeforeDropEvent): Observable<boolean> {
+    // if insert node into another node, wait 1s
+    if (arg.pos === 0) {
+      return of(true).pipe(delay(1000));
+    } else {
+      return of(false);
+    }
+  }
+  contextMenu(event: NzFormatEmitEvent, menu: NzDropdownMenuComponent): void {
+      //console.log(menu.nzOverlayClassName)
+      console.log(event.node)
+
+      this.nzContextMenuService.create(event.event!, menu);
+
+  }
+
+  closeMenu(): void {
+    this.nzContextMenuService.close();
+  }
+
+
 
 }

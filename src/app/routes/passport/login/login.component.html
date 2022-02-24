@@ -61,9 +61,9 @@
 </form>
 <div class="other">
   其他登录方式
-  <i nz-tooltip nzTooltipTitle="Login via github" (click)="open('github', 'window')" nz-icon nzType="github" class="icon"></i>
-  <i nz-tooltip nzTooltipTitle="Login via fido2" (click)="open('smile', 'window')" nz-icon nzType="smile" class="icon"></i>
-  <i nz-tooltip nzTooltipTitle="Login via qrcode" (click)="open('smile', 'window')" nz-icon nzType="qrcode" class="icon"></i>
-
+  <i nz-tooltip nzTooltipTitle="人脸识别登录" (click)="open('smile', 'window')" nz-icon nzType="smile" class="icon"></i>
+  <i nz-tooltip nzTooltipTitle="FIDO2登录" (click)="open('smile', 'window')" nz-icon nzType="key" class="icon"></i>
+  <i nz-tooltip nzTooltipTitle="二维码扫描登录" (click)="open('smile', 'window')" nz-icon nzType="qrcode" class="icon"></i>
+  <i nz-tooltip nzTooltipTitle="USBKey登录" (click)="open('smile', 'window')" nz-icon nzType="usb" class="icon"></i>
   <a class="register" routerLink="/passport/register">注册账户</a>
 </div>

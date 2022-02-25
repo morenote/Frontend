@@ -1,7 +1,7 @@
 <nz-list nzItemLayout="horizontal">
   <nz-list-item [nzActions]="[passwordOp]">
     <ng-template #passwordOp>
-      <a (click)="msg.success('Edit')">修改</a>
+      <a >修改</a>
     </ng-template>
     <nz-list-item-meta nzTitle="账户密码" [nzDescription]="passwordDesc">
       <ng-template #passwordDesc> 当前密码强度：<span class="text-green">强</span> </ng-template>
@@ -9,7 +9,7 @@
   </nz-list-item>
   <nz-list-item [nzActions]="[phoneOp]">
     <ng-template #phoneOp>
-      <a (click)="msg.success('Edit')">修改</a>
+      <a >修改</a>
     </ng-template>
     <nz-list-item-meta nzTitle="密保手机" [nzDescription]="phoneDesc">
       <ng-template #phoneDesc> 已绑定手机：159****2231 </ng-template>
@@ -17,7 +17,7 @@
   </nz-list-item>
   <nz-list-item [nzActions]="[questionOp]">
     <ng-template #questionOp>
-      <a (click)="msg.success('Edit')">修改</a>
+      <a >修改</a>
     </ng-template>
     <nz-list-item-meta nzTitle="密保问题" [nzDescription]="questionDesc">
       <ng-template #questionDesc> 未设置密保问题，密保问题可有效保护账户安全 </ng-template>
@@ -25,7 +25,7 @@
   </nz-list-item>
   <nz-list-item [nzActions]="[emailOp]">
     <ng-template #emailOp>
-      <a (click)="msg.success('Edit')">修改</a>
+      <a >修改</a>
     </ng-template>
     <nz-list-item-meta nzTitle="备用邮箱" [nzDescription]="emailDesc">
       <ng-template #emailDesc> 已绑定邮箱：cip*****.com </ng-template>
@@ -33,10 +33,23 @@
   </nz-list-item>
   <nz-list-item [nzActions]="[mfaOp]">
     <ng-template #mfaOp>
-      <a (click)="msg.success('Edit')">修改</a>
+      <a >修改</a>
     </ng-template>
     <nz-list-item-meta nzTitle="MFA 设备" [nzDescription]="mfaDesc">
       <ng-template #mfaDesc> 未绑定 MFA 设备，绑定后，可以进行二次确认 </ng-template>
     </nz-list-item-meta>
   </nz-list-item>
+
+  <nz-list-item [nzActions]="[usbkeyOp]">
+    <ng-template #usbkeyOp>
+      <a (click)="OnBindUsbKey()">绑定</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="智能密码钥匙" [nzDescription]="usbkeyDesc">
+      <ng-template #usbkeyDesc> 未绑定 智能密码钥匙，绑定后，可以使用 智能密码钥匙 登录和抗抵赖签名 </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+
+
+
+
 </nz-list>

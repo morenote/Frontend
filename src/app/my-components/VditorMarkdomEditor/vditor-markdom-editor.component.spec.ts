@@ -8,9 +8,8 @@ describe('MyVditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ VditorMarkdomEditorComponent ]
-    })
-    .compileComponents();
+      declarations: [VditorMarkdomEditorComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

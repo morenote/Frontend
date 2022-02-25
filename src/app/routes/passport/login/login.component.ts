@@ -7,12 +7,14 @@ import { ReuseTabService } from '@delon/abc/reuse-tab';
 import { DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService } from '@delon/auth';
 import { SettingsService, _HttpClient } from '@delon/theme';
 import { environment } from '@env/environment';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzTabChangeEvent } from 'ng-zorro-antd/tabs';
-import {concatWith, Observable, Subscription} from 'rxjs';
+import { concatWith, Observable, Subscription } from 'rxjs';
 
 import { ApiRe } from '../../../models/api/api-re';
 import { UserLoginSecurityStrategy } from '../../../models/auth/user-login-security-strategy';
 import { WebsiteConfig } from '../../../models/config/website-config';
+import { AuthService } from '../../../services/auth/auth.service';
 import { ConfigService } from '../../../services/config/config.service';
 
 import * as http from 'http';
@@ -37,6 +39,8 @@ export class UserLoginComponent implements OnDestroy {
     private startupSrv: StartupService,
     public http: _HttpClient,
     private cdr: ChangeDetectorRef,
+    private modal: NzModalService,
+    public authService: AuthService,
     configService: ConfigService
   ) {
     this.form = fb.group({
@@ -168,13 +172,13 @@ export class UserLoginComponent implements OnDestroy {
         console.log('进入111');
         return;
       }
-
       // 清空路由复用信息
       this.reuseTabService.clear();
       // 设置用户Token信息
       this.tokenService.set({
         token: res.Token
       });
+      this.authService.SetUserName(res.Username);
       // 直接跳转
       this.router.navigate(['/']);
     });
@@ -183,6 +187,13 @@ export class UserLoginComponent implements OnDestroy {
   // #region social
 
   open(type: string, openType: SocialOpenType = 'href'): void {
+    if (type == 'fido2') {
+      this.handleSignInSubmit().then(r => {
+        console.log('fido2 function');
+      });
+      return;
+    }
+
     let url = ``;
     let callback = ``;
     if (environment.production) {
@@ -235,5 +246,178 @@ export class UserLoginComponent implements OnDestroy {
     } else {
       this.userNameIsOk = false;
     }
+  }
+
+  //==============================FIDO2登录验证===========================================
+  async handleSignInSubmit() {
+    let username = this.userName.value;
+
+    // prepare form post data
+    let formData = new FormData();
+    formData.append('username', username);
+
+    // send to server for registering
+    let makeAssertionOptions;
+    try {
+      let res = await fetch('/assertionOptions', {
+        method: 'POST', // or 'PUT'
+        body: formData, // data can be `string` or {object}!
+        headers: {
+          Accept: 'application/json'
+        }
+      });
+
+      makeAssertionOptions = await res.json();
+    } catch (e) {
+      this.ShowErrorMessage('Request to server failed');
+    }
+
+    console.log('Assertion Options Object', makeAssertionOptions);
+
+    // show options error to user
+    if (makeAssertionOptions.status !== 'ok') {
+      console.log('Error creating assertion options');
+      console.log(makeAssertionOptions.errorMessage);
+      this.ShowErrorMessage(makeAssertionOptions.errorMessage);
+      return;
+    }
+
+    // todo: switch this to coercebase64
+    const challenge = makeAssertionOptions.challenge.replace(/-/g, '+').replace(/_/g, '/');
+    makeAssertionOptions.challenge = Uint8Array.from(atob(challenge), c => c.charCodeAt(0));
+
+    // fix escaping. Change this to coerce
+    makeAssertionOptions.allowCredentials.forEach((listItem: any) => {
+      let fixedId = listItem.id.replace(/\_/g, '/').replace(/\-/g, '+');
+      listItem.id = Uint8Array.from(atob(fixedId), c => c.charCodeAt(0));
+    });
+
+    console.log('Assertion options', makeAssertionOptions);
+
+    this.ShowInfoMessage('Tap your security key to login');
+
+    // ask browser for credentials (browser will ask connected authenticators)
+    let credential;
+    try {
+      credential = await navigator.credentials.get({ publicKey: makeAssertionOptions });
+    } catch (err) {
+      this.ShowErrorMessage('error');
+    }
+
+    try {
+      await this.verifyAssertionWithServer(credential);
+    } catch (e) {
+      this.ShowErrorMessage('Could not verify assertion');
+    }
+  }
+  async verifyAssertionWithServer(assertedCredential: any) {
+    // Move data into Arrays incase it is super long
+    let authData = new Uint8Array(assertedCredential.response.authenticatorData);
+    let clientDataJSON = new Uint8Array(assertedCredential.response.clientDataJSON);
+    let rawId = new Uint8Array(assertedCredential.rawId);
+    let sig = new Uint8Array(assertedCredential.response.signature);
+    const data = {
+      id: assertedCredential.id,
+      rawId: this.coerceToBase64Url(rawId),
+      type: assertedCredential.type,
+      extensions: assertedCredential.getClientExtensionResults(),
+      response: {
+        authenticatorData: this.coerceToBase64Url(authData),
+        clientDataJson: this.coerceToBase64Url(clientDataJSON),
+        signature: this.coerceToBase64Url(sig)
+      }
+    };
+
+    let response;
+    try {
+      let res = await fetch('/makeAssertion', {
+        method: 'POST', // or 'PUT'
+        body: JSON.stringify(data), // data can be `string` or {object}!
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+
+      response = await res.json();
+    } catch (e) {
+      this.ShowErrorMessage('Request to server failed');
+      throw e;
+    }
+
+    console.log('Assertion Object', response);
+
+    // show error
+    if (response.status !== 'ok') {
+      console.log('Error doing assertion');
+      console.log(response.errorMessage);
+      this.ShowErrorMessage(response.errorMessage);
+      return;
+    }
+
+    // show success message
+
+    this.ShowInfoMessage("You're logged in successfully.");
+  }
+
+  //============================界面提示===================================
+  ShowInfoMessage(message: string): void {
+    this.modal.info({
+      nzTitle: 'This is a notification message',
+      nzContent: message,
+      nzOnOk: () => console.log('Info OK')
+    });
+  }
+
+  ShowSuccess(message: string): void {
+    this.modal.success({
+      nzTitle: 'This is a success message',
+      nzContent: message
+    });
+  }
+
+  ShowErrorMessage(message: string): void {
+    this.modal.error({
+      nzTitle: 'This is an error message',
+      nzContent: message
+    });
+  }
+
+  SHowWarningMessage(message: string): void {
+    this.modal.warning({
+      nzTitle: 'This is an warning message',
+      nzContent: message
+    });
+  }
+  //==========================================================
+  coerceToBase64Url(thing: any): any {
+    // Array or ArrayBuffer to Uint8Array
+    if (Array.isArray(thing)) {
+      thing = Uint8Array.from(thing);
+    }
+
+    if (thing instanceof ArrayBuffer) {
+      thing = new Uint8Array(thing);
+    }
+
+    // Uint8Array to base64
+    if (thing instanceof Uint8Array) {
+      let str = '';
+      let len = thing.byteLength;
+
+      for (let i = 0; i < len; i++) {
+        str += String.fromCharCode(thing[i]);
+      }
+      thing = window.btoa(str);
+    }
+
+    if (typeof thing !== 'string') {
+      throw new Error('could not coerce to string');
+    }
+    // base64 to base64url
+    // NOTE: "=" at the end of challenge is optional, strip it off here
+    thing = thing.replace(/\+/g, '-').replace(/\//g, '_').replace(/=*$/g, '');
+
+    return thing;
   }
 }

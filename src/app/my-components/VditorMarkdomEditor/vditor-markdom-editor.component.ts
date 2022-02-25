@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import Vditor from "vditor";
+import Vditor from 'vditor';
 
 @Component({
   selector: 'app-VditorMarkdomEditor',
@@ -7,21 +7,19 @@ import Vditor from "vditor";
   styleUrls: ['./vditor-markdom-editor.component.css']
 })
 export class VditorMarkdomEditorComponent implements OnInit {
-
-  constructor() { }
-  public vditor!:Vditor ;
+  constructor() {}
+  public vditor!: Vditor;
   ngOnInit() {
     this.vditor = new Vditor('vditor', {
       toolbarConfig: {
-        pin: true,
+        pin: true
       },
       cache: {
-        enable: false,
+        enable: false
       },
       after: () => {
         this.vditor.setValue('Hello, Vditor + Angular!');
       }
     });
   }
-
 }

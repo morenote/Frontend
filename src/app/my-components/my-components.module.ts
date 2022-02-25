@@ -1,17 +1,13 @@
 import { NgModule, Type } from '@angular/core';
 import { SharedModule } from '@shared';
+
+import { VditorMarkdomEditorComponent } from './VditorMarkdomEditor/vditor-markdom-editor.component';
 import { MyComponentsRoutingModule } from './my-components-routing.module';
-import {VditorMarkdomEditorComponent} from "./VditorMarkdomEditor/vditor-markdom-editor.component";
 
-
-const COMPONENTS: Type<void>[] = [];
+const COMPONENTS: Array<Type<void>> = [];
 
 @NgModule({
-  imports: [
-    SharedModule,
-    MyComponentsRoutingModule
-
-  ],
-  declarations: COMPONENTS,
+  imports: [SharedModule, MyComponentsRoutingModule],
+  declarations: COMPONENTS
 })
-export class MyComponentsModule { }
+export class MyComponentsModule {}

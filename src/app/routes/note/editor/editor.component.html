@@ -1,30 +1,27 @@
-<div class=" ant-drawer-content-wrapper">
+<div class="ant-drawer-content-wrapper">
   <aside class="sidebar">
     <nz-input-group [nzSuffix]="suffixIcon">
-      <input type="text" nz-input
-             placeholder="Search"
-             [(ngModel)]="searchValue"/>
+      <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
     </nz-input-group>
     <ng-template #suffixIcon>
       <i nz-icon nzType="search"></i>
     </ng-template>
-    <nz-tree [nzData]="nodes"
-
-             nzAsyncData
-             nzDraggable
-             nzShowIcon
-
-             [nzBeforeDrop]="beforeDrop"
-             nzVirtualHeight
-             (nzClick)="nzEvent($event)"
-             (nzOnDrop)="nzEvent($event)"
-             (nzContextMenu)="contextMenu($event, menu)"
-             [nzSearchValue]="searchValue"
-             (nzExpandChange)="nzEvent($event)"
+    <nz-tree
+      [nzData]="nodes"
+      nzAsyncData
+      nzDraggable
+      nzShowIcon
+      [nzBeforeDrop]="beforeDrop"
+      nzVirtualHeight
+      (nzClick)="nzEvent($event)"
+      (nzOnDrop)="nzEvent($event)"
+      (nzContextMenu)="contextMenu($event, menu)"
+      [nzSearchValue]="searchValue"
+      (nzExpandChange)="nzEvent($event)"
     ></nz-tree>
-    <nz-dropdown-menu    #menu="nzDropdownMenu" #action="nzDropdownMenu">
+    <nz-dropdown-menu #menu="nzDropdownMenu" #action="nzDropdownMenu">
       <ul nz-menu>
-        <li nz-menu-item >1st menu item</li>
+        <li nz-menu-item>1st menu item</li>
         <li nz-menu-item>2nd menu item</li>
         <li nz-menu-item nzDisabled>disabled menu item</li>
         <li nz-submenu nzTitle="sub menu">
@@ -43,9 +40,6 @@
     </nz-dropdown-menu>
   </aside>
   <main class="page ant-drawer-content-wrapper">
-
     <app-VditorMarkdomEditor></app-VditorMarkdomEditor>
-
-
   </main>
 </div>

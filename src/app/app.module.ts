@@ -1,6 +1,6 @@
 /* eslint-disable import/order */
 /* eslint-disable import/no-duplicates */
-import {HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
+import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 import { default as ngLang } from '@angular/common/locales/zh';
 import { APP_INITIALIZER, LOCALE_ID, NgModule, Type } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -86,10 +86,10 @@ import { RoutesModule } from './routes/routes.module';
 import { SharedModule } from '@shared';
 import { STWidgetModule } from './shared/st-widget/st-widget.module';
 import { Observable } from 'rxjs';
-import {NzTreeModule} from "ng-zorro-antd/tree";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {NuMarkdownModule} from "@ng-util/markdown";
-import {NzIconModule} from "ng-zorro-antd/icon";
+import { NzTreeModule } from 'ng-zorro-antd/tree';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NuMarkdownModule } from '@ng-util/markdown';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @NgModule({
   declarations: [AppComponent],
@@ -109,9 +109,7 @@ import {NzIconModule} from "ng-zorro-antd/icon";
     FormsModule,
     HttpClientJsonpModule,
     ReactiveFormsModule,
-    ...FORM_MODULES,
-
-
+    ...FORM_MODULES
   ],
   providers: [...LANG_PROVIDES, ...INTERCEPTOR_PROVIDES, ...I18NSERVICE_PROVIDES, ...APPINIT_PROVIDES],
   bootstrap: [AppComponent]

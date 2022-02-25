@@ -1,3 +1,4 @@
+import { HttpParams } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, Optional } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,9 +8,14 @@ import { DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService } from '
 import { SettingsService, _HttpClient } from '@delon/theme';
 import { environment } from '@env/environment';
 import { NzTabChangeEvent } from 'ng-zorro-antd/tabs';
+import {concatWith, Observable, Subscription} from 'rxjs';
 
+import { ApiRe } from '../../../models/api/api-re';
+import { UserLoginSecurityStrategy } from '../../../models/auth/user-login-security-strategy';
 import { WebsiteConfig } from '../../../models/config/website-config';
 import { ConfigService } from '../../../services/config/config.service';
+
+import * as http from 'http';
 
 @Component({
   selector: 'passport-login',
@@ -29,7 +35,7 @@ export class UserLoginComponent implements OnDestroy {
     private reuseTabService: ReuseTabService,
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     private startupSrv: StartupService,
-    private http: _HttpClient,
+    public http: _HttpClient,
     private cdr: ChangeDetectorRef,
     configService: ConfigService
   ) {
@@ -45,6 +51,7 @@ export class UserLoginComponent implements OnDestroy {
   }
 
   // #region fields
+  isShowPassWord: boolean = false;
 
   get userName(): AbstractControl {
     return this.form.get('userName')!;
@@ -94,14 +101,42 @@ export class UserLoginComponent implements OnDestroy {
 
   // #endregion
 
+  userNameIsOk: boolean = false; //用户名是否是ok的
+  showPwdBox = false;
+  userNameLoginButtonValue: string = '登录';
+  userLoginSecurityStrategy: UserLoginSecurityStrategy | undefined;
+  securityStrategy: UserLoginSecurityStrategy | undefined;
+
+  getUserLoginSecurityStrategy(): Subscription {
+    let url = `${this.webSiteConfig.baseURL}/api/User/GetUserLoginSecurityStrategy?_allow_anonymous=true&userName=${this.userName.value}`;
+    let obs: Subscription = this.http.get<ApiRe>(url).subscribe((apiRe: ApiRe) => {
+      let securityStrategy: UserLoginSecurityStrategy = apiRe.Data as UserLoginSecurityStrategy;
+      // alert(securityStrategy.UserName);
+      this.securityStrategy = securityStrategy;
+      if (securityStrategy.AllowPassWordLogin) {
+        this.showPwdBox = true;
+        console.log('已经允许密码登录方式');
+        return;
+      }
+    });
+
+    return obs;
+  }
+
   submit(): void {
     this.error = '';
+
+    if (this.password == null) {
+      alert('缺少登录密码');
+      return;
+    }
     if (this.type === 0) {
       this.userName.markAsDirty();
       this.userName.updateValueAndValidity();
       this.password.markAsDirty();
       this.password.updateValueAndValidity();
       if (this.userName.invalid || this.password.invalid) {
+        alert('缺少登录条件1');
         return;
       }
     } else {
@@ -110,6 +145,7 @@ export class UserLoginComponent implements OnDestroy {
       this.captcha.markAsDirty();
       this.captcha.updateValueAndValidity();
       if (this.mobile.invalid || this.captcha.invalid) {
+        alert('缺少登录条件2');
         return;
       }
     }
@@ -122,7 +158,8 @@ export class UserLoginComponent implements OnDestroy {
     formData.set('type', String(this.type));
     formData.set('email', this.userName.value);
     formData.set('pwd', this.password.value);
-    this.http.post(`${this.webSiteConfig.baseURL}/api/Auth/login`, formData).subscribe(res => {
+
+    this.http.post(`${this.webSiteConfig.baseURL}/api/Auth/login?_allow_anonymous=true`, formData).subscribe(res => {
       console.log(res);
       if (res.Ok != true) {
         this.loading = false;
@@ -189,6 +226,14 @@ export class UserLoginComponent implements OnDestroy {
   ngOnDestroy(): void {
     if (this.interval$) {
       clearInterval(this.interval$);
+    }
+  }
+
+  okUserNameChage() {
+    if (this.userName != null) {
+      this.userNameIsOk = true;
+    } else {
+      this.userNameIsOk = false;
     }
   }
 }

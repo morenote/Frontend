@@ -5,7 +5,7 @@
       <nz-form-item>
         <nz-form-control nzErrorTip="Please enter mobile username">
           <nz-input-group nzSize="large" nzPrefixIcon="user">
-            <input type="text" nz-input formControlName="userName" placeholder="username or email" />
+            <input type="text" nz-input (input)="okUserNameChage()" formControlName="userName" placeholder="username or email" />
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
@@ -56,10 +56,12 @@
     </nz-col>
   </nz-form-item>
   <nz-form-item>
-    <button nz-button type="submit" nzType="primary" nzSize="large" [nzLoading]="loading" nzBlock> 登录 </button>
+    <button nz-button type="submit" nzType="primary" [disabled]="!userNameIsOk" nzSize="large" [nzLoading]="loading" nzBlock>
+      {{ userNameLoginButtonValue }}
+    </button>
   </nz-form-item>
 </form>
-<div class="other">
+<div class="other" *ngIf="userNameIsOk">
   其他登录方式
   <i nz-tooltip nzTooltipTitle="人脸识别登录" (click)="open('smile', 'window')" nz-icon nzType="smile" class="icon"></i>
   <i nz-tooltip nzTooltipTitle="FIDO2登录" (click)="open('smile', 'window')" nz-icon nzType="key" class="icon"></i>

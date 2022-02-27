@@ -6,6 +6,7 @@ import { AuthService } from '../../../../../services/auth/auth.service';
 import { HelperServiceService } from '../../../../../services/helper/helper-service.service';
 import {ConfigService} from "../../../../../services/config/config.service";
 import {WebsiteConfig} from "../../../../../models/config/website-config";
+import {_HttpClient} from "@delon/theme";
 
 @Component({
   selector: 'app-account-settings-security',
@@ -17,7 +18,8 @@ export class ProAccountSettingsSecurityComponent {
   public config: WebsiteConfig ;
   constructor(public authService: AuthService,
               public helperService: HelperServiceService,
-              public configService:ConfigService) {
+              public configService:ConfigService,
+              public http: _HttpClient,) {
     this.config=configService.getWebSiteConfig();
   }
   fido2list:Map<string,string> =new Map<string, string>();
@@ -63,7 +65,8 @@ export class ProAccountSettingsSecurityComponent {
     data.append('authType', authenticator_attachment);
     data.append('userVerification', user_verification);
     data.append('requireResidentKey', require_resident_key);
-
+    data.append('token',this.authService.GetToken());
+    data.append('userId',this.authService.GetUserId()!);
     // send to server for registering
     let makeCredentialOptions;
     try {
@@ -76,7 +79,7 @@ export class ProAccountSettingsSecurityComponent {
 
     console.log('Credential Options Object', makeCredentialOptions);
 
-    if (makeCredentialOptions.status !== 'ok') {
+    if (makeCredentialOptions.status != 'ok') {
       console.log('Error creating credential options');
       console.log(makeCredentialOptions.errorMessage);
       this.helperService.ShowErrorMessage(makeCredentialOptions.errorMessage);
@@ -108,16 +111,16 @@ export class ProAccountSettingsSecurityComponent {
         publicKey: makeCredentialOptions
       });
     } catch (e) {
-      var msg =
-        'Could not create credentials in browser. Probably because the username is already registered with your authenticator. Please change username or authenticator.';
-      console.error(msg, e);
+      var msg =  '😟Could not create credentials in browser. Probably because the username is already registered with your authenticator. Please change username or authenticator.<br>';
+
+      console.error(msg,e);
       this.helperService.ShowErrorMessage(msg);
     }
 
-    console.log('PublicKeyCredential Created', newCredential);
-
+    console.log('😊PublicKeyCredential Created', newCredential);
     try {
-      this.registerNewCredential(newCredential);
+      await this.registerNewCredential(newCredential);
+      console.log('😊PublicKeyCredential Success');
     } catch (e) {
       this.helperService.ShowErrorMessage('registerNewCredential is error');
     }
@@ -201,7 +204,6 @@ export class ProAccountSettingsSecurityComponent {
    */
   OnBindFIDO2() {
     this.handleRegisterSubmit().then(r => {
-
     });
   }
 }

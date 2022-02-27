@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import {type} from "os";
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,8 @@ export class HelperServiceService {
   constructor(private modal: NzModalService) {}
 
   coerceToArrayBuffer(thing: any) {
+    console.log(thing)
+    console.log("coerceToArrayBuffer:thing typeof is"+typeof thing)
     if (typeof thing === 'string') {
       // base64url to base64
       thing = thing.replace(/-/g, '+').replace(/_/g, '/');

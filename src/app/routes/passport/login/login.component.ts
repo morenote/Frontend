@@ -178,7 +178,10 @@ export class UserLoginComponent implements OnDestroy {
       this.tokenService.set({
         token: res.Token
       });
+
       this.authService.SetUserName(res.Username);
+      this.authService.SetToken(res.Token);
+      this.authService.SetUserId(res.UserId);
       // 直接跳转
       this.router.navigate(['/']);
     });

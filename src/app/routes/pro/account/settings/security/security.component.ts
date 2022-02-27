@@ -4,6 +4,8 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 
 import { AuthService } from '../../../../../services/auth/auth.service';
 import { HelperServiceService } from '../../../../../services/helper/helper-service.service';
+import {ConfigService} from "../../../../../services/config/config.service";
+import {WebsiteConfig} from "../../../../../models/config/website-config";
 
 @Component({
   selector: 'app-account-settings-security',
@@ -11,7 +13,13 @@ import { HelperServiceService } from '../../../../../services/helper/helper-serv
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProAccountSettingsSecurityComponent {
-  constructor(public authService: AuthService, public helperService: HelperServiceService) {}
+
+  public config: WebsiteConfig ;
+  constructor(public authService: AuthService,
+              public helperService: HelperServiceService,
+              public configService:ConfigService) {
+    this.config=configService.getWebSiteConfig();
+  }
   fido2list:Map<string,string> =new Map<string, string>();
   OnBindUsbKey() {
     alert('已经绑定');
@@ -116,7 +124,8 @@ export class ProAccountSettingsSecurityComponent {
   }
 
   async fetchMakeCredentialOptions(formData: any) {
-    let response = await fetch('/makeCredentialOptions', {
+    console.log("fetchMakeCredentialOptions")
+    let response = await fetch(`${this.config.baseURL}/api/Auth/makeCredentialOptions`, {
       method: 'POST', // or 'PUT'
       body: formData, // data can be `string` or {object}!
       headers: {
@@ -184,5 +193,15 @@ export class ProAccountSettingsSecurityComponent {
     let data = await response.json();
 
     return data;
+  }
+
+  /**
+   * 绑定FIDO2令牌
+   * @constructor
+   */
+  OnBindFIDO2() {
+    this.handleRegisterSubmit().then(r => {
+
+    });
   }
 }

@@ -12,9 +12,24 @@ import { HelperServiceService } from '../../../../../services/helper/helper-serv
 })
 export class ProAccountSettingsSecurityComponent {
   constructor(public authService: AuthService, public helperService: HelperServiceService) {}
-
+  fido2list:Map<string,string> =new Map<string, string>();
   OnBindUsbKey() {
     alert('已经绑定');
+  }
+  ngOnInit(): void {
+  this.fido2list.set("key1","key1 — 已于 2021 年 01 月 01 日注册");
+  this.fido2list.set("key2","key2 — 已于 2021 年 01 月 01 日注册");
+  this.fido2list.set("key3","key3 — 已于 2021 年 01 月 01 日注册");
+  this.fido2list.set("key4","key4 — 已于 2021 年 01 月 01 日注册");
+  this.fido2list.set("key5","key5 — 已于 2021 年 01 月 01 日注册");
+  }
+  unBindFIDO2(keyid:string){
+    if (this.fido2list.has(keyid)){
+      this.fido2list.delete(keyid);
+      alert("您已经成功解绑key："+keyid);
+    }else {
+      alert("您请求解绑的key不存在："+keyid);
+    }
   }
 
   async handleRegisterSubmit() {

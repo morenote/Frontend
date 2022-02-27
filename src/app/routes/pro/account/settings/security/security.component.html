@@ -40,6 +40,36 @@
     </nz-list-item-meta>
   </nz-list-item>
 
+  <nz-list-item [nzActions]="[fido2Op]">
+    <ng-template #fido2Op>
+      <a >绑定</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="FIDO2 设备" [nzDescription]="fdio2Desc">
+      <ng-template #fdio2Desc>
+        未绑定 FIDO2 设备，绑定后，可以使用FIDO2设备认证登录,支持设备: Yubikey,WindowsHello,任何支持FIDO2协议的安全令牌<br>
+        <ul>
+          <li  *ngFor="let key_id of fido2list.keys(),index as i" >
+              {{fido2list.get(key_id)}}---- <a (click)="unBindFIDO2(key_id)">解绑</a>
+          </li>
+        </ul>
+
+      </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+
+
+  <nz-list-item [nzActions]="[TFAuthenticationkeyOp]">
+    <ng-template #TFAuthenticationkeyOp>
+      <a (click)="OnBindUsbKey()">绑定</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="双因素身份验证应用" [nzDescription]="TFADesc">
+      <ng-template #TFADesc>
+        双因素身份验证 （2FA） 是登录网站或应用时使用的额外安全层。出现提示时，使用手机上的应用程序获取双因素身份验证代码。<br>
+        我们建议使用基于云的 TOTP 应用程序，例如： 1Password， Authy， LastPass Authenticator， 或 Microsoft Authenticator.
+      </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+
   <nz-list-item [nzActions]="[usbkeyOp]">
     <ng-template #usbkeyOp>
       <a (click)="OnBindUsbKey()">绑定</a>

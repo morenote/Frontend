@@ -40,6 +40,15 @@
     </nz-list-item-meta>
   </nz-list-item>
 
+  <nz-list-item [nzActions]="[faceOp]">
+    <ng-template #faceOp>
+      <a >修改</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="Face OK" [nzDescription]="faceDesc">
+      <ng-template #faceDesc> 未绑定人脸，绑定人脸后，可以使用人脸登录或二次确认 </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+
   <nz-list-item [nzActions]="[fido2Op]">
     <ng-template #fido2Op>
       <a (click)="OnBindFIDO2()">绑定</a>

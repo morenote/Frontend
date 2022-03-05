@@ -1,19 +1,20 @@
 /* eslint-disable import/order */
 /* eslint-disable import/no-duplicates */
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { APP_INITIALIZER, Injector, LOCALE_ID, NgModule, Type } from '@angular/core';
+import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
+import { default as ngLang } from '@angular/common/locales/zh';
+import { APP_INITIALIZER, LOCALE_ID, NgModule, Type } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NzMessageModule } from 'ng-zorro-antd/message';
+import { SimpleInterceptor } from '@delon/auth';
+import { DELON_LOCALE, zh_CN as delonLang, ALAIN_I18N_TOKEN } from '@delon/theme';
+import { NZ_DATE_LOCALE, NZ_I18N, zh_CN as zorroLang } from 'ng-zorro-antd/i18n';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
-import { Observable } from 'rxjs';
 
 // #region default language
-// Reference: https://ng-alain.com/docs/i18n
-import { default as ngLang } from '@angular/common/locales/zh';
-import { DELON_LOCALE, zh_CN as delonLang } from '@delon/theme';
+// 参考：https://ng-alain.com/docs/i18n
+import { I18NService } from '@core';
 import { zhCN as dateLang } from 'date-fns/locale';
-import { NZ_DATE_LOCALE, NZ_I18N, zh_CN as zorroLang } from 'ng-zorro-antd/i18n';
+
 const LANG = {
   abbr: 'zh',
   ng: ngLang,
@@ -32,6 +33,19 @@ const LANG_PROVIDES = [
 ];
 // #endregion
 
+// #region i18n services
+
+const I18NSERVICE_PROVIDES = [{ provide: ALAIN_I18N_TOKEN, useClass: I18NService, multi: false }];
+
+// #endregion
+
+// #region global third module
+
+import { BidiModule } from '@angular/cdk/bidi';
+const GLOBAL_THIRD_MODULES: Array<Type<any>> = [BidiModule];
+
+// #endregion
+
 // #region JSON Schema form (using @delon/form)
 import { JsonSchemaModule } from '@shared';
 const FORM_MODULES = [JsonSchemaModule];
@@ -40,25 +54,21 @@ const FORM_MODULES = [JsonSchemaModule];
 // #region Http Interceptors
 // 注册拦截器
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { DefaultInterceptor } from '@core';
-import { SimpleInterceptor } from '@delon/auth';
-const INTERCEPTOR_PROVIDES = [
-  { provide: HTTP_INTERCEPTORS, useClass: SimpleInterceptor, multi: true },
-  { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true }
-];
-// #endregion
 
-// #region global third module
-const GLOBAL_THIRD_MODULES: Array<Type<void>> = [];
+import { DefaultInterceptor } from '@core';
+
+const INTERCEPTOR_PROVIDES = [
+
+  { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true },
+
+];
 // #endregion
 
 // #region Startup Service
 import { StartupService } from '@core';
 export function StartupServiceFactory(startupService: StartupService): () => Observable<void> {
-  //加载数据
   return () => startupService.load();
 }
-//应用程序初始化提供
 const APPINIT_PROVIDES = [
   StartupService,
   {
@@ -75,8 +85,13 @@ import { CoreModule } from './core/core.module';
 import { GlobalConfigModule } from './global-config.module';
 import { LayoutModule } from './layout/layout.module';
 import { RoutesModule } from './routes/routes.module';
-import { SharedModule } from './shared/shared.module';
+import { SharedModule } from '@shared';
 import { STWidgetModule } from './shared/st-widget/st-widget.module';
+import { Observable } from 'rxjs';
+import { NzTreeModule } from 'ng-zorro-antd/tree';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NuMarkdownModule } from '@ng-util/markdown';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @NgModule({
   declarations: [AppComponent],
@@ -90,12 +105,15 @@ import { STWidgetModule } from './shared/st-widget/st-widget.module';
     LayoutModule,
     RoutesModule,
     STWidgetModule,
-    NzMessageModule,
+
     NzNotificationModule,
-    ...FORM_MODULES,
-    ...GLOBAL_THIRD_MODULES
+    ...GLOBAL_THIRD_MODULES,
+    FormsModule,
+    HttpClientJsonpModule,
+    ReactiveFormsModule,
+    ...FORM_MODULES
   ],
-  providers: [...LANG_PROVIDES, ...INTERCEPTOR_PROVIDES, ...APPINIT_PROVIDES],
+  providers: [...LANG_PROVIDES, ...INTERCEPTOR_PROVIDES, ...I18NSERVICE_PROVIDES, ...APPINIT_PROVIDES],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

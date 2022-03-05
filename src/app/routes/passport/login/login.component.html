@@ -3,16 +3,16 @@
     <nz-tab [nzTitle]="'账户密码登录'">
       <nz-alert *ngIf="error" [nzType]="'error'" [nzMessage]="error" [nzShowIcon]="true" class="mb-lg"></nz-alert>
       <nz-form-item>
-        <nz-form-control nzErrorTip="Please enter mobile number, muse be: admin or user">
+        <nz-form-control nzErrorTip="Please enter mobile username">
           <nz-input-group nzSize="large" nzPrefixIcon="user">
-            <input nz-input formControlName="userName" placeholder="username: admin or user" />
+            <input type="text" nz-input (input)="okUserNameChage()" formControlName="userName" placeholder="username or email" />
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <nz-form-control nzErrorTip="Please enter password, muse be: ng-alain.com">
+        <nz-form-control nzErrorTip="Please enter password">
           <nz-input-group nzSize="large" nzPrefixIcon="lock">
-            <input nz-input type="password" formControlName="password" placeholder="password: ng-alain.com" />
+            <input nz-input type="password" formControlName="password" placeholder="password" />
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
@@ -56,13 +56,16 @@
     </nz-col>
   </nz-form-item>
   <nz-form-item>
-    <button nz-button type="submit" nzType="primary" nzSize="large" [nzLoading]="loading" nzBlock> 登录 </button>
+    <button nz-button type="submit" nzType="primary" [disabled]="!userNameIsOk" nzSize="large" [nzLoading]="loading" nzBlock>
+      {{ userNameLoginButtonValue }}
+    </button>
   </nz-form-item>
 </form>
-<div class="other">
+<div class="other" *ngIf="userNameIsOk">
   其他登录方式
-  <i nz-tooltip nzTooltipTitle="in fact Auth0 via window" (click)="open('auth0', 'window')" nz-icon nzType="alipay-circle" class="icon"></i>
-  <i nz-tooltip nzTooltipTitle="in fact Github via redirect" (click)="open('github')" nz-icon nzType="taobao-circle" class="icon"></i>
-  <i (click)="open('weibo', 'window')" nz-icon nzType="weibo-circle" class="icon"></i>
+  <i nz-tooltip nzTooltipTitle="人脸识别登录" (click)="open('face', 'window')" nz-icon nzType="smile" class="icon"></i>
+  <i nz-tooltip nzTooltipTitle="FIDO2登录" (click)="open('fido2', 'window')" nz-icon nzType="usb" class="icon"></i>
+  <i nz-tooltip nzTooltipTitle="二维码登录" (click)="open('qrcode', 'window')" nz-icon nzType="qrcode" class="icon"></i>
+  <i nz-tooltip nzTooltipTitle="智能密码钥登录" (click)="open('usbkey', 'window')" nz-icon nzType="key" class="icon"></i>
   <a class="register" routerLink="/passport/register">注册账户</a>
 </div>

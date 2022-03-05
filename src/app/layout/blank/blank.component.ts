@@ -1,15 +1,10 @@
 import { Component } from '@angular/core';
-import { SettingsService, User } from '@delon/theme';
-import { LayoutDefaultOptions } from '@delon/theme/layout-default';
-import { environment } from '@env/environment';
 
 @Component({
   selector: 'layout-blank',
-  template: ``,
+  template: `<router-outlet></router-outlet> `,
   host: {
     '[class.alain-blank]': 'true'
   }
 })
-export class LayoutBlankComponent {
-  isCollapsed = false;
-}
+export class LayoutBlankComponent {}

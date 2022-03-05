@@ -5,7 +5,7 @@ import screenfull from 'screenfull';
   selector: 'header-fullscreen',
   template: `
     <i nz-icon [nzType]="status ? 'fullscreen-exit' : 'fullscreen'"></i>
-    {{ status ? '退出全屏' : '全屏' }}
+    {{ (status ? 'menu.fullscreen.exit' : 'menu.fullscreen') | i18n }}
   `,
   host: {
     '[class.flex-1]': 'true'

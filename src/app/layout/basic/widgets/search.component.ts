@@ -31,7 +31,7 @@ import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
         (input)="search($event)"
         (focus)="qFocus()"
         (blur)="qBlur()"
-        [attr.placeholder]="'搜索：笔记、文件、图片等'"
+        [attr.placeholder]="'menu.search.placeholder' | i18n"
       />
     </nz-input-group>
     <nz-autocomplete nzBackfill #auto>

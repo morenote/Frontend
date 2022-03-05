@@ -1,3 +1,4 @@
+import { HttpParams } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, Optional } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -6,8 +7,17 @@ import { ReuseTabService } from '@delon/abc/reuse-tab';
 import { DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService } from '@delon/auth';
 import { SettingsService, _HttpClient } from '@delon/theme';
 import { environment } from '@env/environment';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzTabChangeEvent } from 'ng-zorro-antd/tabs';
-import { finalize } from 'rxjs/operators';
+import { concatWith, Observable, Subscription } from 'rxjs';
+
+import { ApiRe } from '../../../models/api/api-re';
+import { UserLoginSecurityStrategy } from '../../../models/auth/user-login-security-strategy';
+import { WebsiteConfig } from '../../../models/config/website-config';
+import { AuthService } from '../../../services/auth/auth.service';
+import { ConfigService } from '../../../services/config/config.service';
+
+import * as http from 'http';
 
 @Component({
   selector: 'passport-login',
@@ -27,19 +37,25 @@ export class UserLoginComponent implements OnDestroy {
     private reuseTabService: ReuseTabService,
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     private startupSrv: StartupService,
-    private http: _HttpClient,
-    private cdr: ChangeDetectorRef
+    public http: _HttpClient,
+    private cdr: ChangeDetectorRef,
+    private modal: NzModalService,
+    public authService: AuthService,
+    configService: ConfigService
   ) {
     this.form = fb.group({
-      userName: [null, [Validators.required, Validators.pattern(/^(admin|user)$/)]],
-      password: [null, [Validators.required, Validators.pattern(/^(ng\-alain\.com)$/)]],
+      userName: [null, [Validators.required]],
+      password: [null, [Validators.required]],
       mobile: [null, [Validators.required, Validators.pattern(/^1\d{10}$/)]],
       captcha: [null, [Validators.required]],
       remember: [true]
     });
+    this.configService = configService;
+    this.webSiteConfig = configService.getWebSiteConfig();
   }
 
   // #region fields
+  isShowPassWord: boolean = false;
 
   get userName(): AbstractControl {
     return this.form.get('userName')!;
@@ -62,7 +78,10 @@ export class UserLoginComponent implements OnDestroy {
 
   count = 0;
   interval$: any;
-
+  //配置服务
+  configService: ConfigService;
+  //获取网站配置信息
+  webSiteConfig: WebsiteConfig;
   // #endregion
 
   switch({ index }: NzTabChangeEvent): void {
@@ -86,14 +105,42 @@ export class UserLoginComponent implements OnDestroy {
 
   // #endregion
 
+  userNameIsOk: boolean = false; //用户名是否是ok的
+  showPwdBox = false;
+  userNameLoginButtonValue: string = '登录';
+  userLoginSecurityStrategy: UserLoginSecurityStrategy | undefined;
+  securityStrategy: UserLoginSecurityStrategy | undefined;
+
+  getUserLoginSecurityStrategy(): Subscription {
+    let url = `${this.webSiteConfig.baseURL}/api/User/GetUserLoginSecurityStrategy?_allow_anonymous=true&userName=${this.userName.value}`;
+    let obs: Subscription = this.http.get<ApiRe>(url).subscribe((apiRe: ApiRe) => {
+      let securityStrategy: UserLoginSecurityStrategy = apiRe.Data as UserLoginSecurityStrategy;
+      // alert(securityStrategy.UserName);
+      this.securityStrategy = securityStrategy;
+      if (securityStrategy.AllowPassWordLogin) {
+        this.showPwdBox = true;
+        console.log('已经允许密码登录方式');
+        return;
+      }
+    });
+
+    return obs;
+  }
+
   submit(): void {
     this.error = '';
+
+    if (this.password == null) {
+      alert('缺少登录密码');
+      return;
+    }
     if (this.type === 0) {
       this.userName.markAsDirty();
       this.userName.updateValueAndValidity();
       this.password.markAsDirty();
       this.password.updateValueAndValidity();
       if (this.userName.invalid || this.password.invalid) {
+        alert('缺少登录条件1');
         return;
       }
     } else {
@@ -102,6 +149,7 @@ export class UserLoginComponent implements OnDestroy {
       this.captcha.markAsDirty();
       this.captcha.updateValueAndValidity();
       if (this.mobile.invalid || this.captcha.invalid) {
+        alert('缺少登录条件2');
         return;
       }
     }
@@ -110,44 +158,45 @@ export class UserLoginComponent implements OnDestroy {
     // 然一般来说登录请求不需要校验，因此可以在请求URL加上：`/login?_allow_anonymous=true` 表示不触发用户 Token 校验
     this.loading = true;
     this.cdr.detectChanges();
-    this.http
-      .post('/login/account?_allow_anonymous=true', {
-        type: this.type,
-        userName: this.userName.value,
-        password: this.password.value
-      })
-      .pipe(
-        finalize(() => {
-          this.loading = true;
-          this.cdr.detectChanges();
-        })
-      )
-      .subscribe(res => {
-        if (res.msg !== 'ok') {
-          this.error = res.msg;
-          this.cdr.detectChanges();
-          return;
-        }
-        // 清空路由复用信息
-        this.reuseTabService.clear();
-        // 设置用户Token信息
-        // TODO: Mock expired value
-        res.user.expired = +new Date() + 1000 * 60 * 5;
-        this.tokenService.set(res.user);
-        // 重新获取 StartupService 内容，我们始终认为应用信息一般都会受当前用户授权范围而影响
-        this.startupSrv.load().subscribe(() => {
-          let url = this.tokenService.referrer!.url || '/';
-          if (url.includes('/passport')) {
-            url = '/';
-          }
-          this.router.navigateByUrl(url);
-        });
+    const formData = new FormData();
+    formData.set('type', String(this.type));
+    formData.set('email', this.userName.value);
+    formData.set('pwd', this.password.value);
+
+    this.http.post(`${this.webSiteConfig.baseURL}/api/Auth/login?_allow_anonymous=true`, formData).subscribe(res => {
+      console.log(res);
+      if (res.Ok != true) {
+        this.loading = false;
+        this.error = res.Msg;
+        this.cdr.detectChanges();
+        console.log('进入111');
+        return;
+      }
+      // 清空路由复用信息
+      this.reuseTabService.clear();
+      // 设置用户Token信息
+      this.tokenService.set({
+        token: res.Token
       });
+
+      this.authService.SetUserName(res.Username);
+      this.authService.SetToken(res.Token);
+      this.authService.SetUserId(res.UserId);
+      // 直接跳转
+      this.router.navigate(['/']);
+    });
   }
 
   // #region social
 
   open(type: string, openType: SocialOpenType = 'href'): void {
+    if (type == 'fido2') {
+      this.handleSignInSubmit().then(r => {
+        console.log('fido2 function');
+      });
+      return;
+    }
+
     let url = ``;
     let callback = ``;
     if (environment.production) {
@@ -192,5 +241,186 @@ export class UserLoginComponent implements OnDestroy {
     if (this.interval$) {
       clearInterval(this.interval$);
     }
+  }
+
+  okUserNameChage() {
+    if (this.userName != null) {
+      this.userNameIsOk = true;
+    } else {
+      this.userNameIsOk = false;
+    }
+  }
+
+  //==============================FIDO2登录验证===========================================
+  async handleSignInSubmit() {
+    let username = this.userName.value;
+
+    // prepare form post data
+    let formData = new FormData();
+    formData.append('username', username);
+
+    // send to server for registering
+    let makeAssertionOptions;
+    try {
+      let res = await fetch('/assertionOptions', {
+        method: 'POST', // or 'PUT'
+        body: formData, // data can be `string` or {object}!
+        headers: {
+          Accept: 'application/json'
+        }
+      });
+
+      makeAssertionOptions = await res.json();
+    } catch (e) {
+      this.ShowErrorMessage('Request to server failed');
+    }
+
+    console.log('Assertion Options Object', makeAssertionOptions);
+
+    // show options error to user
+    if (makeAssertionOptions.status !== 'ok') {
+      console.log('Error creating assertion options');
+      console.log(makeAssertionOptions.errorMessage);
+      this.ShowErrorMessage(makeAssertionOptions.errorMessage);
+      return;
+    }
+
+    // todo: switch this to coercebase64
+    const challenge = makeAssertionOptions.challenge.replace(/-/g, '+').replace(/_/g, '/');
+    makeAssertionOptions.challenge = Uint8Array.from(atob(challenge), c => c.charCodeAt(0));
+
+    // fix escaping. Change this to coerce
+    makeAssertionOptions.allowCredentials.forEach((listItem: any) => {
+      let fixedId = listItem.id.replace(/\_/g, '/').replace(/\-/g, '+');
+      listItem.id = Uint8Array.from(atob(fixedId), c => c.charCodeAt(0));
+    });
+
+    console.log('Assertion options', makeAssertionOptions);
+
+    this.ShowInfoMessage('Tap your security key to login');
+
+    // ask browser for credentials (browser will ask connected authenticators)
+    let credential;
+    try {
+      credential = await navigator.credentials.get({ publicKey: makeAssertionOptions });
+    } catch (err) {
+      this.ShowErrorMessage('error');
+    }
+
+    try {
+      await this.verifyAssertionWithServer(credential);
+    } catch (e) {
+      this.ShowErrorMessage('Could not verify assertion');
+    }
+  }
+  async verifyAssertionWithServer(assertedCredential: any) {
+    // Move data into Arrays incase it is super long
+    let authData = new Uint8Array(assertedCredential.response.authenticatorData);
+    let clientDataJSON = new Uint8Array(assertedCredential.response.clientDataJSON);
+    let rawId = new Uint8Array(assertedCredential.rawId);
+    let sig = new Uint8Array(assertedCredential.response.signature);
+    const data = {
+      id: assertedCredential.id,
+      rawId: this.coerceToBase64Url(rawId),
+      type: assertedCredential.type,
+      extensions: assertedCredential.getClientExtensionResults(),
+      response: {
+        authenticatorData: this.coerceToBase64Url(authData),
+        clientDataJson: this.coerceToBase64Url(clientDataJSON),
+        signature: this.coerceToBase64Url(sig)
+      }
+    };
+
+    let response;
+    try {
+      let res = await fetch('/makeAssertion', {
+        method: 'POST', // or 'PUT'
+        body: JSON.stringify(data), // data can be `string` or {object}!
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+
+      response = await res.json();
+    } catch (e) {
+      this.ShowErrorMessage('Request to server failed');
+      throw e;
+    }
+
+    console.log('Assertion Object', response);
+
+    // show error
+    if (response.status !== 'ok') {
+      console.log('Error doing assertion');
+      console.log(response.errorMessage);
+      this.ShowErrorMessage(response.errorMessage);
+      return;
+    }
+
+    // show success message
+
+    this.ShowInfoMessage("You're logged in successfully.");
+  }
+
+  //============================界面提示===================================
+  ShowInfoMessage(message: string): void {
+    this.modal.info({
+      nzTitle: 'This is a notification message',
+      nzContent: message,
+      nzOnOk: () => console.log('Info OK')
+    });
+  }
+
+  ShowSuccess(message: string): void {
+    this.modal.success({
+      nzTitle: 'This is a success message',
+      nzContent: message
+    });
+  }
+
+  ShowErrorMessage(message: string): void {
+    this.modal.error({
+      nzTitle: 'This is an error message',
+      nzContent: message
+    });
+  }
+
+  SHowWarningMessage(message: string): void {
+    this.modal.warning({
+      nzTitle: 'This is an warning message',
+      nzContent: message
+    });
+  }
+  //==========================================================
+  coerceToBase64Url(thing: any): any {
+    // Array or ArrayBuffer to Uint8Array
+    if (Array.isArray(thing)) {
+      thing = Uint8Array.from(thing);
+    }
+
+    if (thing instanceof ArrayBuffer) {
+      thing = new Uint8Array(thing);
+    }
+
+    // Uint8Array to base64
+    if (thing instanceof Uint8Array) {
+      let str = '';
+      let len = thing.byteLength;
+
+      for (let i = 0; i < len; i++) {
+        str += String.fromCharCode(thing[i]);
+      }
+      thing = window.btoa(str);
+    }
+
+    if (typeof thing !== 'string') {
+      throw new Error('could not coerce to string');
+    }
+    // base64 to base64url
+    // NOTE: "=" at the end of challenge is optional, strip it off here
+    thing = thing.replace(/\+/g, '-').replace(/\//g, '_').replace(/=*$/g, '');
+
+    return thing;
   }
 }

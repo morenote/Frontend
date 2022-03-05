@@ -1,0 +1,93 @@
+<nz-list nzItemLayout="horizontal">
+  <nz-list-item [nzActions]="[passwordOp]">
+    <ng-template #passwordOp>
+      <a >修改</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="账户密码" [nzDescription]="passwordDesc">
+      <ng-template #passwordDesc> 当前密码强度：<span class="text-green">强</span> </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+  <nz-list-item [nzActions]="[phoneOp]">
+    <ng-template #phoneOp>
+      <a >修改</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="密保手机" [nzDescription]="phoneDesc">
+      <ng-template #phoneDesc> 已绑定手机：159****2231 </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+  <nz-list-item [nzActions]="[questionOp]">
+    <ng-template #questionOp>
+      <a >修改</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="密保问题" [nzDescription]="questionDesc">
+      <ng-template #questionDesc> 未设置密保问题，密保问题可有效保护账户安全 </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+  <nz-list-item [nzActions]="[emailOp]">
+    <ng-template #emailOp>
+      <a >修改</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="备用邮箱" [nzDescription]="emailDesc">
+      <ng-template #emailDesc> 已绑定邮箱：cip*****.com </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+  <nz-list-item [nzActions]="[mfaOp]">
+    <ng-template #mfaOp>
+      <a >修改</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="MFA 设备" [nzDescription]="mfaDesc">
+      <ng-template #mfaDesc> 未绑定 MFA 设备，绑定后，可以进行二次确认 </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+
+  <nz-list-item [nzActions]="[faceOp]">
+    <ng-template #faceOp>
+      <a >修改</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="Face OK" [nzDescription]="faceDesc">
+      <ng-template #faceDesc> 未绑定人脸，绑定人脸后，可以使用人脸登录或二次确认 </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+
+  <nz-list-item [nzActions]="[fido2Op]">
+    <ng-template #fido2Op>
+      <a (click)="OnBindFIDO2()">绑定</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="FIDO2 设备" [nzDescription]="fdio2Desc">
+      <ng-template #fdio2Desc>
+        未绑定 FIDO2 设备，绑定后，可以使用FIDO2设备认证登录,支持: Yubikey、WindowsHello、支持FIDO2协议的安全令牌<br>
+        <ul>
+          <li  *ngFor="let key_id of fido2list.keys(),index as i" >
+              {{fido2list.get(key_id)}}---- <a (click)="unBindFIDO2(key_id)">解绑</a>
+          </li>
+        </ul>
+      </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+
+
+  <nz-list-item [nzActions]="[TFAuthenticationkeyOp]">
+    <ng-template #TFAuthenticationkeyOp>
+      <a (click)="OnBindUsbKey()">绑定</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="双因素身份验证应用" [nzDescription]="TFADesc">
+      <ng-template #TFADesc>
+        双因素身份验证 （2FA） 是登录网站或应用时使用的额外安全层。出现提示时，使用手机上的应用程序获取双因素身份验证代码。<br>
+        我们建议使用基于云的 TOTP 应用程序，例如： 1Password， Authy， LastPass Authenticator， 或 Microsoft Authenticator.
+      </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+
+  <nz-list-item [nzActions]="[usbkeyOp]">
+    <ng-template #usbkeyOp>
+      <a (click)="OnBindUsbKey()">绑定</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="智能密码钥匙" [nzDescription]="usbkeyDesc">
+      <ng-template #usbkeyDesc> 未绑定 智能密码钥匙，绑定后，可以使用 智能密码钥匙 登录和抗抵赖签名 </ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+
+
+
+
+</nz-list>

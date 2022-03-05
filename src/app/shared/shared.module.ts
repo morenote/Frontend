@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule, Type } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DelonACLModule } from '@delon/acl';
 import { DelonFormModule } from '@delon/form';
@@ -10,16 +10,15 @@ import { SHARED_DELON_MODULES } from './shared-delon.module';
 import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
 
 // #region third libs
+// import { NgxTinymceModule } from 'ngx-tinymce';
+// import { UEditorModule } from 'ngx-ueditor';
 
-const THIRDMODULES: Array<Type<void>> = [];
-
+const THIRDMODULES: Array<Type<any>> = [];
 // #endregion
 
 // #region your componets & directives
-
-const COMPONENTS: Array<Type<void>> = [];
-const DIRECTIVES: Array<Type<void>> = [];
-
+const COMPONENTS: Array<Type<any>> = [];
+const DIRECTIVES: Array<Type<any>> = [];
 // #endregion
 
 @NgModule({
@@ -58,4 +57,7 @@ const DIRECTIVES: Array<Type<void>> = [];
     ...DIRECTIVES
   ]
 })
+/**
+ * 共享模块(全局依赖)
+ */
 export class SharedModule {}

@@ -10,6 +10,7 @@ export class LocalStorageDBService {
 
   public SetValue(key:string, value:string):void{
     localStorage.setItem(key, value);
+
   }
   public GetValue(key:string):string | null{
     let value = localStorage.getItem(key);

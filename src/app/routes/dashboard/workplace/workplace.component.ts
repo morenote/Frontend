@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { zip } from 'rxjs';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-dashboard-workplace',
@@ -18,27 +19,27 @@ export class DashboardWorkplaceComponent implements OnInit {
   // region: mock data
   links = [
     {
-      title: '操作一',
+      title: '个人主页',
       href: ''
     },
     {
-      title: '操作二',
+      title: '笔记仓库',
       href: ''
     },
     {
-      title: '操作三',
+      title: '文件仓库',
       href: ''
     },
     {
-      title: '操作四',
+      title: '组织架构',
       href: ''
     },
     {
-      title: '操作五',
+      title: '个人设置',
       href: ''
     },
     {
-      title: '操作六',
+      title: '系统设置',
       href: ''
     }
   ];
@@ -76,7 +77,10 @@ export class DashboardWorkplaceComponent implements OnInit {
   ];
   // endregion
 
-  constructor(private http: _HttpClient, public msg: NzMessageService, private cdr: ChangeDetectorRef) {}
+  constructor(private http: _HttpClient,
+              public msg: NzMessageService,
+              private cdr: ChangeDetectorRef,
+              public router:Router) {}
 
   ngOnInit(): void {
     zip(this.http.get('/chart'), this.http.get('/api/notice'), this.http.get('/api/activities')).subscribe(
@@ -96,5 +100,9 @@ export class DashboardWorkplaceComponent implements OnInit {
         this.cdr.detectChanges();
       }
     );
+  }
+
+  OnAllProject() {
+    this.router.navigate(['/pro/account/center/projects'],{queryParams:{id:'hello world'}})
   }
 }

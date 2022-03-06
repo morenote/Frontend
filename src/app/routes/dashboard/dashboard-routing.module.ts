@@ -7,7 +7,7 @@ import { DashboardV1Component } from './v1/v1.component';
 import { DashboardWorkplaceComponent } from './workplace/workplace.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'v1', pathMatch: 'full' },
+  { path: '', redirectTo: 'workplace', pathMatch: 'full' },
   { path: 'v1', component: DashboardV1Component },
   { path: 'analysis', component: DashboardAnalysisComponent },
   { path: 'monitor', component: DashboardMonitorComponent },

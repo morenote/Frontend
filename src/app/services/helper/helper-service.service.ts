@@ -62,6 +62,7 @@ export class HelperServiceService {
       }
       thing = window.btoa(str);
     }
+    return thing;
   }
   ShowInfoMessage(message: string): void {
     this.modal.info({

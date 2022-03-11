@@ -89,5 +89,13 @@
 
 
 
-
 </nz-list>
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Please enter the name of the key"
+
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkLoading]="isOkLoading"
+>
+  <input *nzModalContent nz-input placeholder="{{placeholder}}" [(ngModel)]="value"  />

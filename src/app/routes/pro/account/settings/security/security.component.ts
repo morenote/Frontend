@@ -14,7 +14,7 @@ import {_HttpClient} from "@delon/theme";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProAccountSettingsSecurityComponent {
-
+  public token:string="";
   public config: WebsiteConfig ;
   constructor(public authService: AuthService,
               public helperService: HelperServiceService,
@@ -32,6 +32,8 @@ export class ProAccountSettingsSecurityComponent {
   this.fido2list.set("key3","key3 — 已于 2021 年 01 月 01 日注册");
   this.fido2list.set("key4","key4 — 已于 2021 年 01 月 01 日注册");
   this.fido2list.set("key5","key5 — 已于 2021 年 01 月 01 日注册");
+
+   this.token=this.authService.GetToken()
   }
   unBindFIDO2(keyid:string){
     if (this.fido2list.has(keyid)){
@@ -42,6 +44,9 @@ export class ProAccountSettingsSecurityComponent {
     }
   }
 
+  /**
+   * 注册请求
+   */
   async handleRegisterSubmit() {
     let username = this.authService.GetUserName();
     let displayName = this.authService.GetUserName();
@@ -67,9 +72,11 @@ export class ProAccountSettingsSecurityComponent {
     data.append('requireResidentKey', require_resident_key);
     data.append('token',this.authService.GetToken());
     data.append('userId',this.authService.GetUserId()!);
+
     // send to server for registering
     let makeCredentialOptions;
     try {
+      //请求fido2注册选项
       makeCredentialOptions = await this.fetchMakeCredentialOptions(data);
     } catch (e) {
       console.error(e);
@@ -107,6 +114,7 @@ export class ProAccountSettingsSecurityComponent {
 
     let newCredential;
     try {
+
       newCredential = await navigator.credentials.create({
         publicKey: makeCredentialOptions
       });
@@ -128,7 +136,8 @@ export class ProAccountSettingsSecurityComponent {
 
   async fetchMakeCredentialOptions(formData: any) {
     console.log("fetchMakeCredentialOptions")
-    let response = await fetch(`${this.config.baseURL}/api/Auth/makeCredentialOptions`, {
+
+    let response = await fetch(`${this.config.baseURL}/api/fido2/makeCredentialOptions`, {
       method: 'POST', // or 'PUT'
       body: formData, // data can be `string` or {object}!
       headers: {
@@ -142,26 +151,44 @@ export class ProAccountSettingsSecurityComponent {
   }
 
   // This should be used to verify the auth data with the server
+  // 发送到服务器，服务器验证通过后，注册成功
   async registerNewCredential(newCredential: any) {
+
+
     // Move data into Arrays incase it is super long
     let attestationObject = new Uint8Array(newCredential.response.attestationObject);
     let clientDataJSON = new Uint8Array(newCredential.response.clientDataJSON);
     let rawId = new Uint8Array(newCredential.rawId);
 
-    const data = {
+    const attestationResponse = {
       id: newCredential.id,
+      token:this.token,
       rawId: this.helperService.coerceToBase64Url(rawId),
       type: newCredential.type,
       extensions: newCredential.getClientExtensionResults(),
       response: {
-        AttestationObject: this.helperService.coerceToBase64Url(attestationObject),
-        clientDataJson: this.helperService.coerceToBase64Url(clientDataJSON)
+        attestationObject: this.helperService.coerceToBase64Url(attestationObject),
+        clientDataJSON: this.helperService.coerceToBase64Url(clientDataJSON)
       }
     };
 
+    console.log('😊attestationObject')
+    console.log(attestationObject)
+
+    console.log('😊This should be used to verify the auth data with the server')
+    console.log(newCredential)
+
+    let fromData=new FormData();
+    fromData.append('token',this.authService.GetToken());
+    fromData.append('data',JSON.stringify(attestationResponse));
+    fromData.append('KeyName',this.value!);
+    console.log("😊registerCredentialWithServer")
+    console.log(attestationResponse)
+
     let response;
     try {
-      response = await this.registerCredentialWithServer(data);
+      //注册
+      response = await this.registerCredentialWithServer(fromData);
     } catch (e) {
       this.helperService.ShowErrorMessage('registerCredentialWithServer is error');
     }
@@ -184,12 +211,14 @@ export class ProAccountSettingsSecurityComponent {
   }
 
   async registerCredentialWithServer(formData: any) {
-    let response = await fetch('/makeCredential', {
+
+
+
+    let response = await fetch(`${this.config.baseURL}/api/fido2/RegisterCredentials`, {
       method: 'POST', // or 'PUT'
-      body: JSON.stringify(formData), // data can be `string` or {object}!
+      body: formData, // data can be `string` or {object}!
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+        Accept: 'application/json'
       }
     });
 
@@ -197,13 +226,36 @@ export class ProAccountSettingsSecurityComponent {
 
     return data;
   }
+  isVisible = false;
+  isOkLoading = false;
+  value?: string='key';
+  placeholder?:string;
+
+  showModal(): void {
+    this.isVisible = true;
+  }
+
+  handleOk(): void {
+    this.isVisible = false;
+    this.isOkLoading = false;
+    if (this.value!=null || this.value!=''){
+      this.handleRegisterSubmit().then(r => {
+      });
+    }
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
+  }
 
   /**
    * 绑定FIDO2令牌
    * @constructor
    */
   OnBindFIDO2() {
-    this.handleRegisterSubmit().then(r => {
-    });
+    this.isVisible=true;
+
+
+
   }
 }

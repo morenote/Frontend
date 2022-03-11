@@ -182,6 +182,9 @@ export class UserLoginComponent implements OnDestroy {
       this.authService.SetUserName(res.Username);
       this.authService.SetToken(res.Token);
       this.authService.SetUserId(res.UserId);
+
+      this.authService.SetUserLoginInfo(res);
+
       // 直接跳转
       this.router.navigate(['/']);
     });

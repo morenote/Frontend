@@ -41,4 +41,17 @@ export class AuthService {
   public SetUserId(value:string):void{
       this.db.SetValue("UserId",value);
   }
+
+  public  SetUserLoginInfo(res:any){
+      let json=JSON.stringify(res);
+      this.db.SetValue("userLoginInfo",json);
+  }
+  public  GetUserLoginInfo(res:any):any{
+    let json= this.db.GetValue("userLoginInfo");
+    if (json==null||json==''){
+      return null;
+    }
+    return  JSON.parse(json);
+  }
+
 }

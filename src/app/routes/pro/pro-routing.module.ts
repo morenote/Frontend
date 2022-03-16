@@ -24,6 +24,8 @@ import { ProProfileAdvancedComponent } from './profile/advanced/advanced.compone
 import { ProProfileBaseComponent } from './profile/basic/basic.component';
 import { ProResultFailComponent } from './result/fail/fail.component';
 import { ProResultSuccessComponent } from './result/success/success.component';
+import {ProAccountCenterDocumentsComponent} from "./account/center/documents/documents.component";
+import {ProAccountCenterFilesComponent} from "./account/center/files/files.component";
 
 const routes: Routes = [
   {
@@ -86,6 +88,17 @@ const routes: Routes = [
           {
             path: 'applications',
             component: ProAccountCenterApplicationsComponent,
+            data: { titleI18n: 'pro-account-center' }
+          }
+          ,
+          {
+            path: 'documents',
+            component: ProAccountCenterDocumentsComponent,
+            data: { titleI18n: 'pro-account-center' }
+          } ,
+          {
+            path: 'files',
+            component: ProAccountCenterFilesComponent,
             data: { titleI18n: 'pro-account-center' }
           }
         ]

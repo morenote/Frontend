@@ -18,17 +18,22 @@ export class ProAccountCenterComponent implements OnInit, OnDestroy {
   notice: any;
   tabs = [
     {
-      key: 'articles',
-      tab: '文章 (8)'
-    },
-    {
-      key: 'applications',
-      tab: '应用 (8)'
-    },
-    {
       key: 'projects',
-      tab: '项目 (8)'
+      tab: '概览 (8)'
+    },
+    {
+      key: 'documents',
+      tab: '文档库 (8)'
+    },
+    {
+      key: 'files',
+      tab: '文件库 (8)'
+    },
+    {
+      key: 'articles',
+      tab: '收藏夹 (8)'
     }
+
   ];
   pos = 0;
   taging = false;

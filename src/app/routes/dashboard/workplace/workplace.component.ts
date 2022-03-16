@@ -103,6 +103,6 @@ export class DashboardWorkplaceComponent implements OnInit {
   }
 
   OnAllProject() {
-    this.router.navigate(['/pro/account/center/projects'],{queryParams:{id:'hello world'}})
+    this.router.navigate(['/pro/account/center/projects'])
   }
 }

@@ -36,6 +36,8 @@ import { ProProfileAdvancedComponent } from './profile/advanced/advanced.compone
 import { ProProfileBaseComponent } from './profile/basic/basic.component';
 import { ProResultFailComponent } from './result/fail/fail.component';
 import { ProResultSuccessComponent } from './result/success/success.component';
+import {ProAccountCenterDocumentsComponent} from "./account/center/documents/documents.component";
+import {ProAccountCenterFilesComponent} from "./account/center/files/files.component";
 
 const COMPONENTS = [
   BasicFormComponent,
@@ -48,6 +50,7 @@ const COMPONENTS = [
   ProListArticlesComponent,
   ProListProjectsComponent,
   ProListApplicationsComponent,
+
   ProProfileBaseComponent,
   ProProfileAdvancedComponent,
   ProResultSuccessComponent,
@@ -56,6 +59,8 @@ const COMPONENTS = [
   ProAccountCenterArticlesComponent,
   ProAccountCenterProjectsComponent,
   ProAccountCenterApplicationsComponent,
+  ProAccountCenterDocumentsComponent,
+  ProAccountCenterFilesComponent,
   ProAccountSettingsComponent,
   ProAccountSettingsBaseComponent,
   ProAccountSettingsSecurityComponent,

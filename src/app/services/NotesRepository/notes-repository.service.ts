@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {NotesRepository} from "../../models/entity/notes-repository";
 import {AuthService} from "../auth/auth.service";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {ConfigService} from "../config/config.service";
 import {ApiRe} from "../../models/api/api-re";
 import {Observable} from "rxjs";
@@ -25,7 +25,8 @@ export class NotesRepositoryService {
     let token = this.authService.GetToken();
     let config = this.configService.GetWebSiteConfig();
     let url = config.baseURL + '/api/NotesRepository/GetMyNoteRepository';
-    let result = this.http.get<ApiRe>(url);
+    let queryParams = new HttpParams().append('userId',userId!).append('token',token);
+    let result = this.http.get<ApiRe>(url,{params:queryParams});
     return result;
   }
 

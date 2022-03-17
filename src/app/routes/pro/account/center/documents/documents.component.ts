@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
+import {NotesRepositoryService} from "../../../../../services/NotesRepository/notes-repository.service";
+import {ApiRe} from "../../../../../models/api/api-re";
 
 @Component({
   selector: 'app-account-center-documents',
@@ -11,8 +13,12 @@ import { NzSafeAny } from 'ng-zorro-antd/core/types';
 export class ProAccountCenterDocumentsComponent {
   listLoading = true;
   list: any[] = [];
-  constructor(private http: _HttpClient, private cdr: ChangeDetectorRef) {
-
+  constructor(private http: _HttpClient, private cdr: ChangeDetectorRef,public  notesRepositoryService:NotesRepositoryService) {
+    notesRepositoryService.GetMyNoteRepository().subscribe(
+      (apiRe:ApiRe)=>{
+        console.log(apiRe.Ok)
+      }
+    )
     this.http.get('/api/list', { count: 8 }).subscribe((res: NzSafeAny[]) => {
       this.list = res.map(item => {
         item.activeUser = this.formatWan(item.activeUser);

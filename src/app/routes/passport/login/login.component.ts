@@ -51,7 +51,7 @@ export class UserLoginComponent implements OnDestroy {
       remember: [true]
     });
     this.configService = configService;
-    this.webSiteConfig = configService.getWebSiteConfig();
+    this.webSiteConfig = configService.GetWebSiteConfig();
   }
 
   // #region fields

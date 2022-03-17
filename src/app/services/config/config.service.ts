@@ -6,9 +6,11 @@ import { WebsiteConfig } from '../../models/config/website-config';
   providedIn: 'root'
 })
 export class ConfigService {
-  public getWebSiteConfig(): WebsiteConfig {
+
+  public GetWebSiteConfig(): WebsiteConfig {
     let config = new WebsiteConfig();
     config.baseURL = 'https://localhost:5001';
     return config;
   }
+
 }

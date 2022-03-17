@@ -20,7 +20,7 @@ export class ProAccountSettingsSecurityComponent {
               public helperService: HelperServiceService,
               public configService:ConfigService,
               public http: _HttpClient,) {
-    this.config=configService.getWebSiteConfig();
+    this.config=configService.GetWebSiteConfig();
   }
   fido2list:Map<string,string> =new Map<string, string>();
   OnBindUsbKey() {

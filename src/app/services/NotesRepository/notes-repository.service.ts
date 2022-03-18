@@ -25,8 +25,10 @@ export class NotesRepositoryService {
     let token = this.authService.GetToken();
     let config = this.configService.GetWebSiteConfig();
     let url = config.baseURL + '/api/NotesRepository/GetMyNoteRepository';
-    let queryParams = new HttpParams().append('userId',userId!).append('token',token);
-    let result = this.http.get<ApiRe>(url,{params:queryParams});
+    let queryParams = new HttpParams()
+      .append('userId', userId!)
+      .append('token', token);
+    let result = this.http.get<ApiRe>(url, {params: queryParams});
     return result;
   }
 

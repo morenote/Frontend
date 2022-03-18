@@ -27,22 +27,22 @@
             </ul>
           </nz-dropdown-menu>
         </ng-template>
-        <nz-card-meta [nzTitle]="item.title" [nzAvatar]="nzAvatar">
+        <nz-card-meta [nzTitle]="item.Name" [nzAvatar]="nzAvatar">
           <ng-template #nzAvatar>
-            <nz-avatar nzSize="small" [nzSrc]="item.avatar"></nz-avatar>
+            <nz-avatar nzSize="small" [nzSrc]="item.Avatar"></nz-avatar>
           </ng-template>
         </nz-card-meta>
         <div class="card-info d-flex">
           <div>
             <p>活跃用户</p>
             <p>
-              {{ item.activeUser }}
+              {{ item.StarCounter }}
               <em class="wan">万</em>
             </p>
           </div>
           <div>
             <p>新增用户</p>
-            <p>{{ item.newUser | number: '3.' }}</p>
+            <p>{{ item.ForkCounter | number: '3.' }}</p>
           </div>
         </div>
       </nz-card>

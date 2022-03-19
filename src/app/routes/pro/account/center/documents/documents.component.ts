@@ -54,4 +54,8 @@ export class ProAccountCenterDocumentsComponent {
     }
     return result.toString();
   }
+
+  OnCardClick(repository:NotesRepository) {
+      alert(repository.Name)
+  }
 }

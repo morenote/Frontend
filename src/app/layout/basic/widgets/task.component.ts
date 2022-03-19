@@ -12,7 +12,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
       (nzVisibleChange)="change()"
     >
       <nz-badge [nzDot]="true">
-        <i nz-icon nzType="bell" class="alain-default__nav-item-icon"></i>
+        <i nz-icon nzType="message" class="alain-default__nav-item-icon"></i>
       </nz-badge>
     </div>
     <nz-dropdown-menu #taskMenu="nzDropdownMenu">

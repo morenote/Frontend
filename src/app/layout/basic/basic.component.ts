@@ -34,6 +34,9 @@ import { environment } from '@env/environment';
         <header-task></header-task>
       </layout-default-header-item>
       <layout-default-header-item direction="right" hidden="mobile">
+        <header-create></header-create>
+      </layout-default-header-item>
+      <layout-default-header-item direction="right" hidden="mobile">
         <header-icon></header-icon>
       </layout-default-header-item>
       <layout-default-header-item direction="right" hidden="mobile">

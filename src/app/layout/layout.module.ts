@@ -38,6 +38,7 @@ const HEADERCOMPONENTS = [
   HeaderSearchComponent,
   HeaderNotifyComponent,
   HeaderTaskComponent,
+  HeaderCreateComponent,
   HeaderIconComponent,
   HeaderFullScreenComponent,
   HeaderI18nComponent,
@@ -50,6 +51,7 @@ const HEADERCOMPONENTS = [
 import { LayoutPassportComponent } from './passport/passport.component';
 
 import { NzTreeModule } from 'ng-zorro-antd/tree';
+import {HeaderCreateComponent} from "./basic/widgets/create.component";
 const PASSPORT = [LayoutPassportComponent];
 
 @NgModule({

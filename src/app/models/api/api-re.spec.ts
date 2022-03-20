@@ -1,7 +1,7 @@
-import { ApiRe } from './api-re';
+import { ApiRep } from './api-rep';
 
 describe('ApiRe', () => {
   it('should create an instance', () => {
-    expect(new ApiRe()).toBeTruthy();
+    expect(new ApiRep()).toBeTruthy();
   });
 });

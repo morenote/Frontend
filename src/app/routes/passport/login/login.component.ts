@@ -11,7 +11,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzTabChangeEvent } from 'ng-zorro-antd/tabs';
 import { concatWith, Observable, Subscription } from 'rxjs';
 
-import { ApiRe } from '../../../models/api/api-re';
+import { ApiRep } from '../../../models/api/api-rep';
 import { UserLoginSecurityStrategy } from '../../../models/auth/user-login-security-strategy';
 import { WebsiteConfig } from '../../../models/config/website-config';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -113,7 +113,7 @@ export class UserLoginComponent implements OnDestroy {
 
   getUserLoginSecurityStrategy(): Subscription {
     let url = `${this.webSiteConfig.baseURL}/api/User/GetUserLoginSecurityStrategy?_allow_anonymous=true&userName=${this.userName.value}`;
-    let obs: Subscription = this.http.get<ApiRe>(url).subscribe((apiRe: ApiRe) => {
+    let obs: Subscription = this.http.get<ApiRep>(url).subscribe((apiRe: ApiRep) => {
       let securityStrategy: UserLoginSecurityStrategy = apiRe.Data as UserLoginSecurityStrategy;
       // alert(securityStrategy.UserName);
       this.securityStrategy = securityStrategy;

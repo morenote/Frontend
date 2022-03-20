@@ -35,11 +35,14 @@ export class CreateRepositoryFormComponent implements OnInit {
 
   submit(): void {
     this.submitting = true;
+
+
+
     setTimeout(() => {
       this.submitting = false;
       this.msg.success(`提交成功`);
       this.cdr.detectChanges();
-    }, 1000);
+    }, 500);
   }
 
   //-----------------------

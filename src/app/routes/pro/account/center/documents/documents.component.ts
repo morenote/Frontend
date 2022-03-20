@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { _HttpClient } from '@delon/theme';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import {NotesRepositoryService} from "../../../../../services/NotesRepository/notes-repository.service";
-import {ApiRe} from "../../../../../models/api/api-re";
+import {ApiRep} from "../../../../../models/api/api-rep";
 import {NotesRepository} from "../../../../../models/entity/notes-repository";
 
 @Component({
@@ -16,7 +16,7 @@ export class ProAccountCenterDocumentsComponent {
   public list: Array<NotesRepository> = [];
   constructor(private http: _HttpClient, private cdr: ChangeDetectorRef,public  notesRepositoryService:NotesRepositoryService) {
     notesRepositoryService.GetMyNoteRepository().subscribe(
-      (apiRe:ApiRe)=>{
+      (apiRe:ApiRep)=>{
         console.log(apiRe.Ok)
         if(apiRe.Ok){
           let notesRepositoryList:Array<NotesRepository>=apiRe.Data as Array<NotesRepository>;

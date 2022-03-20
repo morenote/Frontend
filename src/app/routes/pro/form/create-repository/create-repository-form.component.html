@@ -1,0 +1,112 @@
+<page-header [title]="'创建文档库'"> 文档库用于托管文档和笔记，允许更多创作者参与到文档创作，可以站在更高的角度和更低的细粒度去融合创造力和想象力。</page-header>
+<nz-card [nzBordered]="false">
+  <form nz-form [formGroup]="form" (ngSubmit)="submit()" se-container="1" labelWidth="200">
+    <se label="仓库名称" error="请输入仓库名称（纯英文，不包含特殊符号）" required>
+      <input
+        nz-input
+        formControlName="title"
+        autocomplete="off"
+        [(ngModel)]="repositoryName"
+        (ngModelChange)="OnRepositoryNameChange()"
+        placeholder="请输入仓库名称（仅允许使用英文、数字，不允许含特殊符号和中文）"/>
+    </se>
+    <se label="归属" error="请输入标题" required>
+      <div nz-row>
+        <div nz-col nzFlex="20rem">
+          <nz-select formControlName="owner" nzShowSearch nzAllowClear nzPlaceHolder="选择用户或组织" [(ngModel)]="selectedOwner">
+            <nz-option nzCustomContent nzLabel="demo@qq.com" nzValue="demo@qq.com">
+              <i nz-icon nzType="plus"></i>
+              demo@qq.com
+            </nz-option>
+          </nz-select>
+        </div>
+        <div nz-col nzFlex="2rem">
+          <em style="text-align: center;vertical-align:center;font-size: 2rem;line-height: 0.8;">/</em>
+        </div>
+        <div nz-col nzFlex="auto">
+          <input nz-input formControlName="path"  placeholder="仓库访问地址（纯英文数字，不包含特殊符号）" [(ngModel)]="repositoryPath"/>
+        </div>
+      </div>
+    </se>
+
+    <se label="仓库描述">
+      <textarea nz-input formControlName="goal" [nzAutosize]="{ minRows: 4 }" placeholder="用简洁的话描述一下"></textarea>
+    </se>
+    <se label="初始化动作">
+      <label nz-checkbox [(ngModel)]="checked">初始化文件夹</label>
+      <label nz-checkbox [(ngModel)]="checked">初始化欢迎文档</label>
+      <label nz-checkbox [(ngModel)]="checked">初始化使用手册文档</label>
+    </se>
+
+    <se label="仓库模板">
+      <nz-select nzShowSearch nzAllowClear nzPlaceHolder="选择仓库生成模板" [(ngModel)]="selectedRepositoryTemplate">
+        <nz-option nzCustomContent nzLabel="内置默认模板" nzValue="default">
+          <i nz-icon nzType="plus"></i>
+          内置默认模板
+        </nz-option>
+      </nz-select>
+    </se>
+
+    <se label="可见性" extra="被邀请者默认被分享">
+      <nz-radio-group formControlName="public">
+        <label nz-radio [nzValue]="1">私有</label>
+        <label nz-radio [nzValue]="2">公开</label>
+        <label nz-radio [nzValue]="3">部分公开</label>
+      </nz-radio-group>
+      <nz-mention [nzSuggestions]="suggestions" (nzOnSelect)="onSelect($event)">
+        <input
+          placeholder="请直接 @姓名／id，最多可邀请 5 人"
+          nzMentionTrigger
+          autocomplete="off"
+          formControlName="publicUsers"
+          nz-input
+          *ngIf="form.value.public === 3"
+          [(ngModel)]="inputValue"
+          (ngModelChange)="onChange($event)"
+        />
+      </nz-mention>
+
+    </se>
+    <se label="CC协议"   extra="知识共享许可协议简称为 CC，是一种公共著作权许可协议，选择CC协议将允许其他人分发您拥有著作权保护的作品。">
+      <nz-select nzShowSearch nzAllowClear nzPlaceHolder="选择开源协议" [(ngModel)]="selectedLicense">
+        <nz-option nzCustomContent nzLabel="private 私有" nzValue="private">
+          <i nz-icon nzType="plus"></i> private 私有。
+        </nz-option>
+        <nz-option nzCustomContent nzLabel="CC-BY 署名" nzValue="CC-BY">
+          <i nz-icon nzType="plus"></i> Attribution 署名
+        </nz-option>
+        <nz-option nzCustomContent nzLabel="CC-BY-SA 署名-相同方式共享" nzValue="CC-BY-SA">
+          <i nz-icon nzType="plus"></i> Attribution-Share Alike 署名-相同方式共享
+        </nz-option>
+        <nz-option nzCustomContent nzLabel="CC-BY-ND 署名-禁止演绎" nzValue="CC-BY-ND">
+          <i nz-icon nzType="plus"></i> Attribution-No Derivatives 署名-禁止演绎
+        </nz-option>
+        <nz-option nzCustomContent nzLabel="CC-BY-NC 署名-非商业性使用" nzValue="CC-BY-NC">
+          <i nz-icon nzType="plus"></i> Attribution-Noncommercial 署名-非商业性使用
+        </nz-option>
+        <nz-option nzCustomContent nzLabel="CC-BY-NC-ND 署名-非商业性使用-相同方式共享" nzValue="CC-BY-NC-ND">
+          <i nz-icon nzType="plus"></i> Attribution-Noncommercial-Share Alike 署名-非商业性使用-相同方式共享
+        </nz-option>
+        <nz-option nzCustomContent nzLabel="署名-非商业使用-禁止演绎" nzValue="CC-BY-NC-ND">
+          <i nz-icon nzType="plus"></i> Attribution-Noncommercial-No Derivatives 署名-非商业使用-禁止演绎
+        </nz-option>
+      </nz-select>
+    </se>
+    <se label="邀评人" extra="邀评人将有权读取您的仓库">
+      <nz-mention [nzSuggestions]="suggestions" (nzOnSelect)="onSelect($event)">
+        <input
+          placeholder="请直接 @姓名／id，最多可邀请 5 人"
+          nzMentionTrigger
+          nz-input
+          autocomplete="off"
+          [(ngModel)]="inputValue"
+          (ngModelChange)="onChange($event)"
+        />
+      </nz-mention>
+    </se>
+    <se>
+      <button nz-button nzType="primary" [disabled]="form.invalid" type="submit" [nzLoading]="submitting">提交</button>
+      <button nz-button class="ml-sm">保存</button>
+    </se>
+  </form>
+</nz-card>

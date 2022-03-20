@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component({
-  selector: 'header-create',
+  selector: 'header-create-repository',
   template: `
     <div
       class="alain-default__nav-item"
@@ -17,7 +18,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
     </div>
     <nz-dropdown-menu #taskMenu="nzDropdownMenu">
       <ul nz-menu nzSelectable>
-        <li nz-menu-item ><i nz-icon nzType="file-markdown" nzTheme="outline"></i>创建文档型仓库</li>
+        <li nz-menu-item  (click)="createDocumentRepository()"><i nz-icon nzType="file-markdown" nzTheme="outline"></i>创建文档型仓库</li>
         <li nz-menu-item><i nz-icon nzType="hdd" nzTheme="outline"></i>创建文件型仓库</li>
         <li nz-menu-item><i nz-icon nzType="usergroup-add" nzTheme="outline"></i>创建自定义组织</li>
         <li nz-menu-item><i nz-icon nzType="import" nzTheme="outline"></i>导入第三方笔记</li>
@@ -26,15 +27,19 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderCreateComponent {
+export class HeaderCreateRepositoryComponent {
   loading = true;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef,private router: Router) {}
 
   change(): void {
     setTimeout(() => {
       this.loading = false;
       this.cdr.detectChanges();
     }, 100);
+  }
+
+  createDocumentRepository() {
+    this.router.navigateByUrl("/pro/form/create-repository-form")
   }
 }

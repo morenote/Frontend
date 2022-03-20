@@ -26,12 +26,14 @@ import { ProResultFailComponent } from './result/fail/fail.component';
 import { ProResultSuccessComponent } from './result/success/success.component';
 import {ProAccountCenterDocumentsComponent} from "./account/center/documents/documents.component";
 import {ProAccountCenterFilesComponent} from "./account/center/files/files.component";
+import {CreateRepositoryFormComponent} from "./form/create-repository/create-repository-form.component";
 
 const routes: Routes = [
   {
     path: 'form',
     children: [
       { path: 'basic-form', component: BasicFormComponent },
+      { path: 'create-repository-form', component: CreateRepositoryFormComponent },
       { path: 'step-form', component: StepFormComponent },
       { path: 'advanced-form', component: AdvancedFormComponent }
     ]

@@ -14,5 +14,6 @@ import { RepositoryType } from "../enum/repository-type";
   public License: string | undefined ;//开源协议
   public RepositoryOwnerType: RepositoryType | undefined ;//开源协议
   public OwnerId: string | undefined ;//开源协议
-  public Visible: boolean | undefined ;//开源协议
+  public Usn: number | undefined ;//USN
+  public CreateTime: Date | undefined ;//创建时间
 }

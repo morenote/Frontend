@@ -1,6 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {NzMessageService} from 'ng-zorro-antd/message';
+import {OrganizationService} from "../../../../services/organization/organization.service";
+import {OrganizationAuthorityEnum} from "../../../../models/enum/organization-authority-enum";
+import {ApiRep} from "../../../../models/api/api-rep";
+import {Organization} from "../../../../models/entity/organization";
+import {AuthService} from "../../../../services/auth/auth.service";
 
 @Component({
   selector: 'app-create-repository',
@@ -16,7 +21,16 @@ export class CreateRepositoryFormComponent implements OnInit {
   selectedRepositoryTemplate = null;
   value?: string;
   checked = true;
-  constructor(private fb: FormBuilder, private msg: NzMessageService, private cdr: ChangeDetectorRef) {}
+
+  ownerOptionArray:Array<string>=new Array<string>();
+
+  constructor(private fb: FormBuilder,
+              private msg: NzMessageService,
+              private cdr: ChangeDetectorRef,
+              private orgService:OrganizationService,
+              private authService:AuthService
+              ) {
+  }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -31,11 +45,23 @@ export class CreateRepositoryFormComponent implements OnInit {
       public: [1, [Validators.min(1), Validators.max(3)]],
       publicUsers: [null, []]
     });
+    let userName=this.authService.GetUserName();
+
+    this.ownerOptionArray.push(userName);
+    this.orgService.GetOrganizationListByAuthorityEnum(OrganizationAuthorityEnum.AddRepository).subscribe((apiRe:ApiRep)=>{
+      if (apiRe.Ok==true){
+        let orgs:Array<Organization>=apiRe.Data;
+        for (const org of orgs) {
+          this.ownerOptionArray.push(org.Name!);
+        }
+      }
+
+    });
+
   }
 
   submit(): void {
     this.submitting = true;
-
 
 
     setTimeout(() => {
@@ -60,6 +86,6 @@ export class CreateRepositoryFormComponent implements OnInit {
   }
 
   OnRepositoryNameChange() {
-    this.repositoryPath=this.repositoryName;
+    this.repositoryPath = this.repositoryName;
   }
 }

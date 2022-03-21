@@ -32,8 +32,9 @@ export class NotesRepositoryService {
     return result;
   }
 
-  public  CreateNoteRepository(){
+  public CreateNoteRepository() {
 
   }
+
 
 }

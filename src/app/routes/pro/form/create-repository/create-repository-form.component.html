@@ -13,10 +13,14 @@
     <se label="归属" error="请输入标题" required>
       <div nz-row>
         <div nz-col nzFlex="20rem">
-          <nz-select formControlName="owner" nzShowSearch nzAllowClear nzPlaceHolder="选择用户或组织" [(ngModel)]="selectedOwner">
-            <nz-option nzCustomContent nzLabel="demo@qq.com" nzValue="demo@qq.com">
+          <nz-select formControlName="owner"
+                     nzShowSearch nzAllowClear
+                     nzPlaceHolder="选择用户或组织"
+                     [(ngModel)]="selectedOwner"
+                     *ngFor="let item of ownerOptionArray">
+            <nz-option nzCustomContent [nzLabel]="item" [nzValue]="item" >
               <i nz-icon nzType="plus"></i>
-              demo@qq.com
+              {{item}}
             </nz-option>
           </nz-select>
         </div>

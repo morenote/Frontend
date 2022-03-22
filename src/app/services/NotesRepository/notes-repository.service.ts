@@ -5,14 +5,21 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {ConfigService} from "../config/config.service";
 import {ApiRep} from "../../models/api/api-rep";
 import {Observable} from "rxjs";
+import {WebsiteConfig} from "../../models/config/website-config";
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotesRepositoryService {
 
+  userId: string | null;
+  token: string | null;
+  config: WebsiteConfig;
 
   constructor(public authService: AuthService, public http: HttpClient, public configService: ConfigService) {
+    this.userId = this.authService.GetUserId();
+    this.token = this.authService.GetToken();
+    this.config = this.configService.GetWebSiteConfig();
   }
 
 
@@ -21,19 +28,21 @@ export class NotesRepositoryService {
    * @constructor
    */
   public GetMyNoteRepository(): Observable<ApiRep> {
-    let userId = this.authService.GetUserId();
-    let token = this.authService.GetToken();
-    let config = this.configService.GetWebSiteConfig();
-    let url = config.baseURL + '/api/NotesRepository/GetMyNoteRepository';
+    let url = this.config.baseURL + '/api/NotesRepository/GetMyNoteRepository';
     let queryParams = new HttpParams()
-      .append('userId', userId!)
-      .append('token', token);
+      .append('userId', (this.userId)!)
+      .append('token', this.token!);
     let result = this.http.get<ApiRep>(url, {params: queryParams});
     return result;
   }
 
-  public CreateNoteRepository() {
-
+  public CreateNoteRepository(notesRepository: NotesRepository): Observable<ApiRep> {
+    let url= this.config.baseURL + '/api/NotesRepository/CreateNoteRepository';
+    let fromData = new FormData()
+    fromData.set('token', this.token!)
+    fromData.set('data',JSON.stringify(notesRepository));
+    let result=this.http.post<ApiRep>(url,fromData);
+    return  result;
   }
 
 

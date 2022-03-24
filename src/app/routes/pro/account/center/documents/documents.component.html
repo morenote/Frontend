@@ -23,7 +23,7 @@
             <ul nz-menu>
               <li nz-menu-item>1st menu item</li>
               <li nz-menu-item>2st menu item</li>
-              <li nz-menu-item>3st menu item</li>
+              <li nz-menu-item (click)="OnDelete(item.Id)">删除仓库</li>
             </ul>
           </nz-dropdown-menu>
         </ng-template>

@@ -1,10 +1,12 @@
 <page-header [title]="'创建文档库'"> 文档库用于托管文档和笔记，允许更多创作者参与到文档创作，可以站在更高的角度和更低的细粒度去融合创造力和想象力。</page-header>
 <nz-card [nzBordered]="false">
   <form nz-form [formGroup]="form" (ngSubmit)="submit()" se-container="1" labelWidth="200">
+
+
     <se label="仓库名称" error="请输入仓库名称（纯英文，不包含特殊符号）" required>
       <input
         nz-input
-        formControlName="title"
+
         autocomplete="off"
         formControlName="repositoryName"
         (ngModelChange)="OnRepositoryNameChange($event)"

@@ -9,6 +9,7 @@ import {AuthService} from "../../../../services/auth/auth.service";
 import {NotesRepository} from "../../../../models/entity/notes-repository";
 import {RepositoryType} from "../../../../models/enum/repository-type";
 import {NotesRepositoryService} from "../../../../services/NotesRepository/notes-repository.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-create-repository',
@@ -31,6 +32,7 @@ export class CreateRepositoryFormComponent implements OnInit {
   ownerMap:Map<string,string>=new Map<string, string>();
   private visible: boolean=false;
   constructor(private fb: FormBuilder,
+              private router: Router,
               private msg: NzMessageService,
               private cdr: ChangeDetectorRef,
               private orgService:OrganizationService,
@@ -42,10 +44,10 @@ export class CreateRepositoryFormComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
 
-      owner: [null, [Validators.required]],
-      path: [null, [Validators.required]],
-      description: [null, []],
       repositoryName: [null, []],
+      path: [null, [Validators.required]],
+      owner: [null, [Validators.required]],
+      description: [null, []],
       selectedRepositoryTemplate: [null, []],
       selectedLicense: [null, []],
       suggestions: [null, []],
@@ -101,6 +103,9 @@ export class CreateRepositoryFormComponent implements OnInit {
       if (apiRe.Ok==true){
         let result:NotesRepository=apiRe.Data;
         this.msg.success(`创建成功:`+result.Id);
+        setTimeout(()=>{
+            this.router.navigateByUrl("/pro/account/center/documents");
+        },500);
       }else {
         this.msg.error(`创建失败:`+apiRe.Msg);
       }
@@ -134,6 +139,6 @@ export class CreateRepositoryFormComponent implements OnInit {
     if (this.value=='2'){
       this.visible=true;
     }
-
   }
+
 }

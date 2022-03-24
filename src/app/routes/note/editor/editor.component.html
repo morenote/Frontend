@@ -7,7 +7,9 @@
       <i nz-icon nzType="search"></i>
     </ng-template>
     <nz-tree
+      *ngIf="nodes.length > 0"
       [nzData]="nodes"
+
       nzAsyncData
       nzDraggable
       nzShowIcon

@@ -37,13 +37,23 @@ export class NotesRepositoryService {
   }
 
   public CreateNoteRepository(notesRepository: NotesRepository): Observable<ApiRep> {
-    let url= this.config.baseURL + '/api/NotesRepository/CreateNoteRepository';
+    let url = this.config.baseURL + '/api/NotesRepository/CreateNoteRepository';
     let fromData = new FormData()
     fromData.set('token', this.token!)
-    fromData.set('data',JSON.stringify(notesRepository));
-    let result=this.http.post<ApiRep>(url,fromData);
-    return  result;
+    fromData.set('data', JSON.stringify(notesRepository));
+    let result = this.http.post<ApiRep>(url, fromData);
+    return result;
   }
+
+  public DeleteNoteRepository(noteRepositoryId: string) : Observable<ApiRep> {
+    let url = this.config.baseURL + '/api/NotesRepository/DeleteNoteRepository';
+    let httpParams = new HttpParams()
+      .append('token', this.token!)
+      .append('noteRepositoryId', noteRepositoryId);
+    let result = this.http.delete<ApiRep>(url, {params:httpParams});
+    return result;
+  }
+
 
 
 }

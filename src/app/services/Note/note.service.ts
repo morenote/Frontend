@@ -28,4 +28,15 @@ export class NoteService {
     let result = this.http.get<ApiRep>(url, {params:httpParams});
     return result;
   }
+
+  public GetNoteContent(noteId: string): Observable<ApiRep>  {
+    let url = this.config.baseURL + '/api/Note/GetNoteContent';
+    let httpParams = new HttpParams()
+      .append('token', this.token!)
+      .append('noteId', noteId);
+    let result = this.http.get<ApiRep>(url, {params:httpParams});
+    return result;
+  }
+
+
 }

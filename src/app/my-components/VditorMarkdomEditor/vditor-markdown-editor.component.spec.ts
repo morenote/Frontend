@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VditorMarkdomEditorComponent } from './vditor-markdom-editor.component';
+import { VditorMarkdownEditorComponent } from './vditor-markdown-editor.component';
 
 describe('MyVditorComponent', () => {
-  let component: VditorMarkdomEditorComponent;
-  let fixture: ComponentFixture<VditorMarkdomEditorComponent>;
+  let component: VditorMarkdownEditorComponent;
+  let fixture: ComponentFixture<VditorMarkdownEditorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [VditorMarkdomEditorComponent]
+      declarations: [VditorMarkdownEditorComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(VditorMarkdomEditorComponent);
+    fixture = TestBed.createComponent(VditorMarkdownEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

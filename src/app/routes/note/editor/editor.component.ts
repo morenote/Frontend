@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {NzContextMenuService, NzDropdownMenuComponent, NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzFormatBeforeDropEvent, NzFormatEmitEvent, NzTreeNode, NzTreeNodeOptions} from 'ng-zorro-antd/tree';
@@ -12,6 +12,11 @@ import {TreeNodeModel} from "../../../models/model/tree-node-model";
 import {TreeNodeOptionsModel} from "../../../models/model/tree-node-options-model";
 import {NoteService} from "../../../services/Note/note.service";
 import {Note} from "../../../models/entity/note";
+import {NzMessageModule, NzMessageService} from "ng-zorro-antd/message";
+import {
+  VditorMarkdownEditorComponent
+} from "../../../my-components/VditorMarkdomEditor/vditor-markdown-editor.component";
+import {NoteContent} from "../../../models/entity/note-content";
 
 @Component({
   selector: 'app-myeditor',
@@ -22,18 +27,37 @@ export class EditorComponent implements OnInit {
   repositoryId!: string;
 
   searchValue = '';
+  noteTitle?: string;
+
 
   //<i nz-icon nzType="folder" nzTheme="outline"></i>
   constructor(private nzContextMenuService: NzContextMenuService,
               public route: ActivatedRoute,
+              public message: NzMessageService,
               private notebookService: NotebookService,
-              private  noteService:NoteService) {
+              private noteService: NoteService) {
 
 
   }
 
   //{title: 'leaf', key: '1001', icon: 'folder'},
   nodes = new Array<TreeNodeModel>();
+  tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
+  selectedIndex = 0;
+
+
+  @ViewChild('vditor')
+  vditor?:VditorMarkdownEditorComponent;
+
+  closeTab({index}: { index: number }): void {
+    this.tabs.splice(index, 1);
+  }
+
+  newTab(): void {
+    this.tabs.push('New Tab');
+    this.selectedIndex = this.tabs.length;
+  }
+
 
   nzEvent(event: NzFormatEmitEvent): void {
     console.log(event);
@@ -46,19 +70,35 @@ export class EditorComponent implements OnInit {
         });
       }
     }
+    if (event.eventName === 'click') {
+      const node = event.node;
+      let key: string = node!.key;
+      let title: string = node!.title;
+      let type=node?.isLeaf;
+      this.message.success(key+'='+title+type);
+      if (type!=null && type){
+        this.onClieckNote(key);
+        this.noteTitle=title;
+      }
+    }
   }
 
+  private  onClieckNote(noteId:string){
+    this.noteService.GetNoteContent(noteId).subscribe((apiRe:ApiRep)=>{
+      if (apiRe.Ok==true){
+        let noteContent:NoteContent=apiRe.Data;
+        this.vditor?.SetValue(noteContent.Content!);
+      }
+    })
+  }
   public nzOverlayClassName: string = '';
-
   //节点展开事件
   loadNode(key: string): Promise<NzTreeNodeOptions[]> {
     return new Promise(resolve => {
       setTimeout(
         () => {
           let array: Array<TreeNodeModel> = new Array<TreeNodeModel>();
-
-
-          let a= this.notebookService.GetNotebookChildren(key).subscribe((apiRe: ApiRep) => {
+          let a = this.notebookService.GetNotebookChildren(key).subscribe((apiRe: ApiRep) => {
               if (apiRe.Ok == true) {
                 let data: Array<Notebook> = apiRe.Data;
 
@@ -74,7 +114,7 @@ export class EditorComponent implements OnInit {
                 }
                 //{title: 'leaf', key: '1001', icon: 'folder'},
                 console.log(this.nodes)
-                let b=  this.noteService.GetNotebookChildren(key).subscribe((apiRe: ApiRep) => {
+                let b = this.noteService.GetNotebookChildren(key).subscribe((apiRe: ApiRep) => {
                   if (apiRe.Ok == true) {
                     let data: Array<Note> = apiRe.Data;
 
@@ -86,7 +126,7 @@ export class EditorComponent implements OnInit {
                       node.title = note.Title;
                       node.key = note.NoteId;
                       node.icon = 'file-markdown';
-                      node.isLeaf=true;
+                      node.isLeaf = true;
                       array.push(node)
                     }
                     //{title: 'leaf', key: '1001', icon: 'folder'},
@@ -99,7 +139,7 @@ export class EditorComponent implements OnInit {
           );
         }
         ,
-        200
+        10
       );
     });
   }
@@ -118,6 +158,8 @@ export class EditorComponent implements OnInit {
           }
           //{title: 'leaf', key: '1001', icon: 'folder'},
           console.log(this.nodes)
+        }else {
+          this.message.error("访问错误：您可能没有权限访问该仓库");
         }
       }
     );

@@ -1,47 +1,73 @@
-<div class="ant-drawer-content-wrapper">
-  <aside class="sidebar">
-    <nz-input-group [nzSuffix]="suffixIcon">
-      <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
-    </nz-input-group>
-    <ng-template #suffixIcon>
-      <i nz-icon nzType="search"></i>
-    </ng-template>
-    <nz-tree
-      *ngIf="nodes.length > 0"
-      [nzData]="nodes"
+<div class="ant-card " style="margin: 0;">
+  <div nz-row>
+    <div nz-col nzFlex="300px">
+      <nz-input-group [nzSuffix]="suffixIcon">
+        <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue"/>
+      </nz-input-group>
+      <ng-template #suffixIcon>
+        <i nz-icon nzType="search"></i>
+      </ng-template>
+      <nz-tree
 
-      nzAsyncData
-      nzDraggable
-      nzShowIcon
-      [nzBeforeDrop]="beforeDrop"
-      nzVirtualHeight
-      (nzClick)="nzEvent($event)"
-      (nzOnDrop)="nzEvent($event)"
-      (nzContextMenu)="contextMenu($event, menu)"
-      [nzSearchValue]="searchValue"
-      (nzExpandChange)="nzEvent($event)"
-    ></nz-tree>
-    <nz-dropdown-menu #menu="nzDropdownMenu" #action="nzDropdownMenu">
-      <ul nz-menu>
-        <li nz-menu-item>1st menu item</li>
-        <li nz-menu-item>2nd menu item</li>
-        <li nz-menu-item nzDisabled>disabled menu item</li>
-        <li nz-submenu nzTitle="sub menu">
-          <ul>
-            <li nz-menu-item>3rd menu item</li>
-            <li nz-menu-item>4th menu item</li>
-          </ul>
-        </li>
-        <li nz-submenu nzDisabled nzTitle="disabled sub menu">
-          <ul>
-            <li nz-menu-item>3rd menu item</li>
-            <li nz-menu-item>4th menu item</li>
-          </ul>
-        </li>
-      </ul>
-    </nz-dropdown-menu>
-  </aside>
-  <main class="page ant-drawer-content-wrapper">
-    <app-VditorMarkdomEditor></app-VditorMarkdomEditor>
-  </main>
+        *ngIf="nodes.length > 0"
+        [nzData]="nodes"
+        nzBlockNode
+        nzVirtualHeight="888px"
+        nzAsyncData
+        nzDraggable
+        nzShowIcon
+
+
+        [nzBeforeDrop]="beforeDrop"
+
+        (nzClick)="nzEvent($event)"
+        (nzOnDrop)="nzEvent($event)"
+        (nzContextMenu)="contextMenu($event, menu)"
+        [nzSearchValue]="searchValue"
+        (nzExpandChange)="nzEvent($event)"
+      ></nz-tree>
+      <nz-dropdown-menu #menu="nzDropdownMenu" #action="nzDropdownMenu">
+        <ul nz-menu>
+          <li nz-menu-item>1st menu item</li>
+          <li nz-menu-item>2nd menu item</li>
+          <li nz-menu-item nzDisabled>disabled menu item</li>
+          <li nz-submenu nzTitle="sub menu">
+            <ul>
+              <li nz-menu-item>3rd menu item</li>
+              <li nz-menu-item>4th menu item</li>
+            </ul>
+          </li>
+          <li nz-submenu nzDisabled nzTitle="disabled sub menu">
+            <ul>
+              <li nz-menu-item>3rd menu item</li>
+              <li nz-menu-item>4th menu item</li>
+            </ul>
+          </li>
+        </ul>
+      </nz-dropdown-menu>
+    </div>
+    <div nz-col nzFlex="auto">
+      <div nz-row>
+
+        <input nz-input placeholder="Basic usage" [(ngModel)]="noteTitle"   style="width: 500px"/>
+         <div style="vertical-align: center">
+           <nz-tag [nzColor]="'magenta'">magenta</nz-tag>
+           <nz-tag [nzColor]="'red'">red</nz-tag>
+           <nz-tag [nzColor]="'volcano'">volcano</nz-tag>
+           <nz-tag [nzColor]="'orange'">orange</nz-tag>
+           <nz-tag [nzColor]="'gold'">gold</nz-tag>
+           <nz-tag [nzColor]="'lime'">lime</nz-tag>
+           <nz-tag [nzColor]="'green'">green</nz-tag>
+           <nz-tag [nzColor]="'cyan'">cyan</nz-tag>
+           <nz-tag [nzColor]="'blue'">blue</nz-tag>
+           <nz-tag [nzColor]="'geekblue'">geekblue</nz-tag>
+           <nz-tag [nzColor]="'purple'">purple</nz-tag>
+         </div>
+      </div>
+      <nz-row>
+        <app-VditorMarkdownEditor #vditor></app-VditorMarkdownEditor>
+      </nz-row>
+
+    </div>
+  </div>
 </div>

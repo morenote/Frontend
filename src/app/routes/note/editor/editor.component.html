@@ -26,23 +26,37 @@
         [nzSearchValue]="searchValue"
         (nzExpandChange)="nzEvent($event)"
       ></nz-tree>
-      <nz-dropdown-menu #menu="nzDropdownMenu" #action="nzDropdownMenu">
-        <ul nz-menu>
-          <li nz-menu-item>1st menu item</li>
-          <li nz-menu-item>2nd menu item</li>
-          <li nz-menu-item nzDisabled>disabled menu item</li>
-          <li nz-submenu nzTitle="sub menu">
+      <nz-dropdown-menu #menu="nzDropdownMenu" #action="nzDropdownMenu" >
+        <ul nz-menu style="min-width:8rem">
+          <li nz-menu-item>复制</li>
+          <li nz-menu-item>剪切</li>
+          <li nz-menu-item>重命名</li>
+          <li nz-menu-item>删除</li>
+          <li nz-submenu nzTitle="分享">
             <ul>
-              <li nz-menu-item>3rd menu item</li>
-              <li nz-menu-item>4th menu item</li>
+              <li nz-menu-item>发送到我的好友</li>
+              <li nz-menu-item>生成分享链接</li>
+              <li nz-menu-item>生成分享链接</li>
             </ul>
           </li>
-          <li nz-submenu nzDisabled nzTitle="disabled sub menu">
+          <li nz-submenu nzTitle="导出">
             <ul>
-              <li nz-menu-item>3rd menu item</li>
-              <li nz-menu-item>4th menu item</li>
+              <li nz-menu-item>zip压缩包（仅最新记录记录）</li>
+              <li nz-menu-item>zip压缩包（含历史记录）</li>
+              <li nz-menu-item>单文档文件（md或html）</li>
+              <li nz-menu-item>PDF文档</li>
+              <li nz-menu-item>PNG图片</li>
             </ul>
           </li>
+
+          <li   nz-submenu  nzTitle="新建" >
+            <ul>
+              <li nz-menu-item>文件夹</li>
+              <li nz-menu-item>markdown</li>
+              <li nz-menu-item>富文本</li>
+            </ul>
+          </li>
+          <li nz-menu-item>属性</li>
         </ul>
       </nz-dropdown-menu>
     </div>
@@ -65,7 +79,8 @@
          </div>
       </div>
       <nz-row>
-        <app-VditorMarkdownEditor #vditor></app-VditorMarkdownEditor>
+        <app-VditorMarkdownEditor #vditor  *ngIf="isMarkdown"></app-VditorMarkdownEditor>
+        <app-textbus-editor #textbus *ngIf="!isMarkdown"></app-textbus-editor>
       </nz-row>
 
     </div>

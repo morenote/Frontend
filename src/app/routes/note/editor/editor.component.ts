@@ -15,8 +15,9 @@ import {Note} from "../../../models/entity/note";
 import {NzMessageModule, NzMessageService} from "ng-zorro-antd/message";
 import {
   VditorMarkdownEditorComponent
-} from "../../../my-components/VditorMarkdomEditor/vditor-markdown-editor.component";
+} from "../../../my-components/Editor/VditorMarkdomEditor/vditor-markdown-editor.component";
 import {NoteContent} from "../../../models/entity/note-content";
+import {TextbusEditorComponent} from "../../../my-components/Editor/TextbusEditor/textbus-editor.component";
 
 @Component({
   selector: 'app-myeditor',
@@ -36,8 +37,6 @@ export class EditorComponent implements OnInit {
               public message: NzMessageService,
               private notebookService: NotebookService,
               private noteService: NoteService) {
-
-
   }
 
   //{title: 'leaf', key: '1001', icon: 'folder'},
@@ -48,6 +47,9 @@ export class EditorComponent implements OnInit {
 
   @ViewChild('vditor')
   vditor?:VditorMarkdownEditorComponent;
+  @ViewChild('textbus')
+  textbusEditor?:TextbusEditorComponent;
+  isMarkdown:boolean=true;
 
   closeTab({index}: { index: number }): void {
     this.tabs.splice(index, 1);
@@ -62,8 +64,9 @@ export class EditorComponent implements OnInit {
   nzEvent(event: NzFormatEmitEvent): void {
     console.log(event);
     // load child async
+
     if (event.eventName === 'expand') {
-      const node = event.node;
+      let node:TreeNodeModel =<TreeNodeModel> event.node ;
       if (node?.getChildren().length === 0 && node?.isExpanded) {
         this.loadNode(node.key).then(data => {
           node.addChildren(data);
@@ -71,23 +74,29 @@ export class EditorComponent implements OnInit {
       }
     }
     if (event.eventName === 'click') {
-      const node = event.node;
+      let node:TreeNodeModel = <TreeNodeModel>event.node ;
       let key: string = node!.key;
       let title: string = node!.title;
       let type=node?.isLeaf;
       this.message.success(key+'='+title+type);
       if (type!=null && type){
-        this.onClieckNote(key);
+        this.onClieckNote(key,node.isMarkdown);
         this.noteTitle=title;
       }
     }
   }
 
-  private  onClieckNote(noteId:string){
+  private  onClieckNote(noteId:string,isMarkdown?:boolean){
     this.noteService.GetNoteContent(noteId).subscribe((apiRe:ApiRep)=>{
       if (apiRe.Ok==true){
-        let noteContent:NoteContent=apiRe.Data;
-        this.vditor?.SetValue(noteContent.Content!);
+        let noteContent:NoteContent=apiRe.Data
+        this.isMarkdown=isMarkdown!;
+        this.message.info(this.isMarkdown+'?');
+        if (isMarkdown){
+          this.vditor?.SetValue(noteContent.Content!);
+        }else {
+          this.textbusEditor?.SetValue(noteContent.Content!);
+        }
       }
     })
   }
@@ -109,6 +118,7 @@ export class EditorComponent implements OnInit {
                   let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.NotebookId, notebook.Title));
                   node.title = notebook.Title;
                   node.key = notebook.NotebookId;
+
                   node.icon = 'folder';
                   array.push(node)
                 }
@@ -127,6 +137,7 @@ export class EditorComponent implements OnInit {
                       node.key = note.NoteId;
                       node.icon = 'file-markdown';
                       node.isLeaf = true;
+                      node.isMarkdown=note.IsMarkdown;
                       array.push(node)
                     }
                     //{title: 'leaf', key: '1001', icon: 'folder'},
@@ -177,6 +188,7 @@ export class EditorComponent implements OnInit {
   contextMenu(event: NzFormatEmitEvent, menu: NzDropdownMenuComponent): void {
     //console.log(menu.nzOverlayClassName)
     console.log(event.node);
+    this.message.info('右键='+event!.node!.title);
     this.nzContextMenuService.create(event.event!, menu);
   }
 

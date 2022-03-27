@@ -68,6 +68,8 @@
             "styles": [
               "src/styles.less",
               "node_modules/vditor/src/assets/scss/index.scss"
+
+
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [

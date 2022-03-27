@@ -18,7 +18,7 @@ export class Note {
   public  ReadNum?:number;
   public  LikeNum?:number;
   public  CommentNum?:number;
-  public  IsMarkdown?:number;
+  public  IsMarkdown?:boolean;
   public  AttachNum?:number;
   public  CreatedTime?:Date;
   public  UpdatedTime?:Date;

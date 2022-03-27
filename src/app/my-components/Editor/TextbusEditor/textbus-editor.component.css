@@ -1,0 +1,18 @@
+#textbus {
+  position: absolute;
+  top: 33px;
+  right: 0;
+  bottom: 0;
+  left: 5px;
+  z-index: 0;
+}
+
+/* todo:不要使用ng deep，因为它已被弃用。 */
+:host::ng-deep .textbus-container {
+  position: absolute  ;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: auto;
+}

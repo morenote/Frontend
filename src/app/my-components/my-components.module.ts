@@ -1,8 +1,9 @@
 import { NgModule, Type } from '@angular/core';
 import { SharedModule } from '@shared';
 
-import { VditorMarkdownEditorComponent } from './VditorMarkdomEditor/vditor-markdown-editor.component';
+
 import { MyComponentsRoutingModule } from './my-components-routing.module';
+import {TextbusEditorComponent} from "./Editor/TextbusEditor/textbus-editor.component";
 
 const COMPONENTS: Array<Type<void>> = [];
 

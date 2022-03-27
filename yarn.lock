@@ -1890,6 +1890,249 @@
   resolved "https://registry.npmmirror.com/@socket.io/base64-arraybuffer/download/@socket.io/base64-arraybuffer-1.0.2.tgz#568d9beae00b0d835f4f8c53fd55714986492e61"
   integrity sha512-dOlCBKnDw4iShaIsH/bxujKTM18+2TOAsYz+KSc11Am38H4q5Xw8Bbz97ZYdrVNM+um3p7w86Bvvmcn9q+5+eQ==
 
+"@tanbo/bezier@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/@tanbo/bezier/-/bezier-1.0.0.tgz#2ba1675befd7158c01a7459a875b0f4e382b9c03"
+  integrity sha512-aFCmneBSjF3et8RKI908EdRpmmfoTfi7dowjynBwlvW3tZREbhmYLr+zr8M7pLCWHkwtgtMCUi2b06HNBlcNKg==
+
+"@tanbo/color-picker@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.npmmirror.com/@tanbo/color-picker/-/color-picker-0.1.2.tgz#9dcb5bb4cf778e95056fac49460b71bb7681e1d9"
+  integrity sha512-C6gPnRl4pZMBw6N9uhKugenHJWvVRGSq2nD76KHLB7fzqU/khqCFuoNaT3DEWwp5ifOGp6gfI5LO1oZ2lSMyWA==
+
+"@tanbo/color@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.npmmirror.com/@tanbo/color/-/color-0.0.3.tgz#e3000a55ef0acf7cc52d3b8b939eb7524fd307ce"
+  integrity sha512-lMq3MRF+9GyyygS3cfEFEONmAGRAEKF8QTVTmenuI6kv19c894Ej2Sekr54K5IN0F3oCwxYGRbyCC70T9GqMlQ==
+
+"@tanbo/css-themes@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.npmmirror.com/@tanbo/css-themes/-/css-themes-0.0.1.tgz#b72927cfbf75cb68799e9ea20791cd14d37c01a3"
+  integrity sha512-0OKxDNskmWshWWgFgHAmgKEwBpX+JbYtNPIoImeQWeoAm1KRoONPGMGNccZJr++XLZYF1lAkgzGg2uV1JfvjmQ==
+
+"@tanbo/di@^1.0.4", "@tanbo/di@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.npmmirror.com/@tanbo/di/-/di-1.0.7.tgz#36e6c4ccf6ed698f115425179947f18b6026c3f7"
+  integrity sha512-t4DVUKA4hQJqPaOa1p6+VLWnXWWpvVoXV7+Exstukg3zvcWARYJ43DuFJVltcIjXOcOF6kPrbzYGa72IAnLJuQ==
+
+"@tanbo/stream@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.npmmirror.com/@tanbo/stream/-/stream-0.0.12.tgz#2c8eca527f69ff27b3cf3dda2356357a5a6a2d02"
+  integrity sha512-vcrZMVlZ44efMMjf1sAcErw0gaLljxa8827/LgUex2rlBgLBij6EccNz6y45m2PuyFmxf3r4CouJZzEmzAMANA==
+
+"@textbus/browser@^2.0.0-alpha.50":
+  version "2.0.0-alpha.50"
+  resolved "https://registry.npmmirror.com/@textbus/browser/-/browser-2.0.0-alpha.50.tgz#51dca3f9249f120ceee8c2c8a5929eae643cd3d4"
+  integrity sha512-yUXOVe4GR+Q2hwO2cgJFnEGBzzKBWfXY6EosWH0eyE5tV4c4Z4sP4zu3NJeSUfjXn1WSqofW7gth/ZF1ETqlFQ==
+  dependencies:
+    "@tanbo/di" "^1.0.7"
+    "@tanbo/stream" "^0.0.12"
+    "@textbus/core" "^2.0.0-alpha.50"
+    reflect-metadata "^0.1.13"
+
+"@textbus/component-library-plugin@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/component-library-plugin/-/component-library-plugin-1.1.8.tgz#24f789107bc62a401a92d71a8ae64e6e8fe96c66"
+  integrity sha512-LQS20XVKFWTPZxvgSazDonX/iDEPbsAc4n8XDFSLjs6POaPjnqJwqjTNs6y+m1RQ8YHEVrIQiSHdKIrYq6rNig==
+  dependencies:
+    "@tanbo/css-themes" "^0.0.1"
+    "@textbus/components" "^1.1.8"
+    "@textbus/core" "^1.1.8"
+    "@textbus/formatters" "^1.1.8"
+    "@textbus/uikit" "^1.1.8"
+    katex "^0.13.0"
+    rxjs "^6.0.0"
+
+"@textbus/components@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/components/-/components-1.1.8.tgz#aef13ab4519413dfda4ff92646f1a454890af72b"
+  integrity sha512-vbeKeTR1JMR/yNPBJgxsGtHG+r+Fuq8zVhFFmmKqeHGmWw6bKtZwaxUx729WQxNTW1D6jv+TFAwDrB11lBPfnA==
+  dependencies:
+    "@textbus/core" "^1.1.8"
+    prismjs "^1.23.0"
+    rxjs "^6.0.0"
+
+"@textbus/contextmenu-plugin@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/contextmenu-plugin/-/contextmenu-plugin-1.1.8.tgz#25a651786ce82fa6221ab0078d77b51f6d922225"
+  integrity sha512-BIIUVV95UmZickkdDAiWQmMj2V9Fzuq4d9Vgu7b/koiO6xoayb5WZlyNqJnylemS+YbbSX5HUV7Jnboff6Z2FQ==
+  dependencies:
+    "@textbus/components" "^1.1.8"
+    "@textbus/core" "^1.1.8"
+    rxjs "^6.0.0"
+
+"@textbus/core@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/core/-/core-1.1.8.tgz#2488c9f03e3aca2f69cbd4009cb534a13c2b7ff3"
+  integrity sha512-QSnlp+1BjxWiu1y+TPQQBqVsuK7p7SmyiXjnpcn+AYbXUhUFampPGguOrctlMaWyCkjHftj6e5GouuvJ/ce04Q==
+  dependencies:
+    "@tanbo/color" "^0.0.3"
+    "@tanbo/css-themes" "^0.0.1"
+    "@tanbo/di" "^1.0.4"
+    reflect-metadata "^0.1.13"
+    rxjs "^6.0.0"
+
+"@textbus/core@^2.0.0-alpha.50":
+  version "2.0.0-alpha.50"
+  resolved "https://registry.npmmirror.com/@textbus/core/-/core-2.0.0-alpha.50.tgz#3ed622af4698b113d3a7bc1632af10e4cfe4b87f"
+  integrity sha512-FKC2+lEnCDOS88RGUXkGV/CmUe3taM0h96iVWmkJga7WtZeV6Z+40Rf7TcuQXBw0tGnVQAEMSO0XtR3ejID0KQ==
+  dependencies:
+    "@tanbo/di" "^1.0.7"
+    "@tanbo/stream" "^0.0.12"
+    immer "^9.0.12"
+
+"@textbus/device-toggle-plugin@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/device-toggle-plugin/-/device-toggle-plugin-1.1.8.tgz#cd9191d3866eccc0c8ed6497bb3b80ad8237c02e"
+  integrity sha512-euoLpmibpv5AMv2Rf+l/N39ZHH+xuCpzQNxaTa3YXy/dMIJCONhPEID0p3wWjc9g89wtij498tBdTezDdEgtsQ==
+  dependencies:
+    "@tanbo/css-themes" "^0.0.1"
+    "@textbus/core" "^1.1.8"
+    rxjs "^6.0.0"
+
+"@textbus/editor@^2.0.0-alpha.52":
+  version "2.0.0-alpha.52"
+  resolved "https://registry.npmmirror.com/@textbus/editor/-/editor-2.0.0-alpha.52.tgz#c90bdef355c03d656c699b3fb0bcc5de9f62afff"
+  integrity sha512-US+6CT4PBUdIFc4FdWztpLG3NjZXTqWWsfYhwRqTSxzkd8F6sw1iz92tXf9SZuF3zTn3AB8SrSzU7b4/M0evJA==
+  dependencies:
+    "@tanbo/bezier" "^1.0.0"
+    "@tanbo/color" "^0.0.3"
+    "@tanbo/color-picker" "^0.1.2"
+    "@tanbo/css-themes" "^0.0.1"
+    "@tanbo/di" "^1.0.7"
+    "@tanbo/stream" "^0.0.12"
+    "@textbus/browser" "^2.0.0-alpha.50"
+    "@textbus/core" "^2.0.0-alpha.50"
+    prismjs "^1.23.0"
+
+"@textbus/formatters@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/formatters/-/formatters-1.1.8.tgz#2c46705cb44ae80e557e35b16b125fa2e2bedf3c"
+  integrity sha512-/cBJ/BJ11snwo8dP/ED14dYfiAMO0I+CnCwpiIV1SH1U8TGW0FW7/tUuWmqCt8V6sBPx5+st2LQbG9hvXzlHEA==
+  dependencies:
+    "@tanbo/color" "^0.0.3"
+    "@textbus/core" "^1.1.8"
+
+"@textbus/full-screen-plugin@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/full-screen-plugin/-/full-screen-plugin-1.1.8.tgz#5cb63c2da3912ba9b5e516296f34412dd58e2df5"
+  integrity sha512-jLv+vJdMC5ZaR4o0Gd+CnIVh7D6HTonZDbdKKSURAGgUUNZJpiAURVOiP88uEpjhabU5xhkIfL7mkDX/p8VV3Q==
+  dependencies:
+    "@textbus/core" "^1.1.8"
+    rxjs "^6.0.0"
+
+"@textbus/guard-end-block-plugin@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/guard-end-block-plugin/-/guard-end-block-plugin-1.1.8.tgz#798826f7a5b041f9acd9bdb7a494a71f0742d82c"
+  integrity sha512-vQmWNm79QjCzmmcTHQMdg/9T5d8u9ACjFf5jHkv6C6OexeSDlQ0OV55d49/3iO6m/b4HDoq1vHpQUrHYcHm6wA==
+  dependencies:
+    "@textbus/components" "^1.1.8"
+    "@textbus/core" "^1.1.8"
+    rxjs "^6.0.0"
+
+"@textbus/image-and-video-drag-resize-plugin@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/image-and-video-drag-resize-plugin/-/image-and-video-drag-resize-plugin-1.1.8.tgz#92419b800aacd391ad42ef1b81ac2979c1fe57c6"
+  integrity sha512-rBqCrCZbBnKc/G9EKenXn3NWktKK4pBFU06W+xCDaqrxkOjXTSA/vpZKtFynFQ8hare3dVUOm8mBKP785oNgVw==
+  dependencies:
+    "@textbus/components" "^1.1.8"
+    "@textbus/core" "^1.1.8"
+    rxjs "^6.0.0"
+
+"@textbus/link-jump-tip-plugin@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/link-jump-tip-plugin/-/link-jump-tip-plugin-1.1.8.tgz#3f8aa63620b708633cddb8dc80f94ff2c1384829"
+  integrity sha512-b04eO++KfIt45DXZRmIToiRhANt2LJu9zI+OGlCLztt3elxFsqsmEk2OiHemRbTmBBVA42DMp1tE3vzxFGaxxw==
+  dependencies:
+    "@textbus/core" "^1.1.8"
+    rxjs "^6.0.0"
+
+"@textbus/outlines-plugin@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/outlines-plugin/-/outlines-plugin-1.1.8.tgz#f57fb6558b54770bf9df4dbf087b9033a8aa2464"
+  integrity sha512-XxueHhxmhQjg90cD9cbiDo65i7U9sysXBOnYEzaoemdtNCSwpRmA9LoMi0koPvE13ZQlkzR46aA3AhKgfyqAXA==
+  dependencies:
+    "@tanbo/css-themes" "^0.0.1"
+    "@textbus/components" "^1.1.8"
+    "@textbus/core" "^1.1.8"
+    rxjs "^6.0.0"
+
+"@textbus/paste-upload-emitter-plugin@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/paste-upload-emitter-plugin/-/paste-upload-emitter-plugin-1.1.8.tgz#b440761befea5e4fcd3452063c52cba331f891a6"
+  integrity sha512-iyB0geZ1Dbrx4kX8Y8tZLOhklEDtW7B9mJK//WCSG8GpMbmxupyrJKA4x+aAbS9RdGMC+0dJtGah+6Y+oThcHw==
+  dependencies:
+    "@textbus/core" "^1.1.8"
+    "@textbus/uikit" "^1.1.8"
+    rxjs "^6.0.0"
+
+"@textbus/sourcecode-mode-plugin@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/sourcecode-mode-plugin/-/sourcecode-mode-plugin-1.1.8.tgz#75d4912353fe195684ad83196996a9fa2392eb47"
+  integrity sha512-FaHBSZ5JN1BFMLCAQSfLWxbtr1S+ehIsIbEiVS0R7HhJa5wBSfwKFtSHeC9k/iNSETK1HV5Q1ECst4/yTCKE2Q==
+  dependencies:
+    "@tanbo/css-themes" "^0.0.1"
+    "@textbus/core" "^1.1.8"
+    codemirror "^5.60.0"
+    pretty "^2.0.0"
+    rxjs "^6.0.0"
+
+"@textbus/table-edit-enhance-plugin@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/table-edit-enhance-plugin/-/table-edit-enhance-plugin-1.1.8.tgz#a2b240c13a765116e0bd57dae1c571a9ed8e2bee"
+  integrity sha512-XfqylZLsAvtr1IQ0IljGf+i8K9L90f86tVCdmlCvnK/O2kYfsdoK5fsGEDobht/KoZJejA+9Vxvvw//B5S5jbQ==
+  dependencies:
+    "@tanbo/bezier" "^1.0.0"
+    "@textbus/components" "^1.1.8"
+    "@textbus/core" "^1.1.8"
+    rxjs "^6.0.0"
+
+"@textbus/textbus@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/textbus/-/textbus-1.1.8.tgz#a00ddf48849d32499f51f6cc90783aad22d58663"
+  integrity sha512-QeUMDkB/MTSjcIXsPMoC3ZX6Z0oVW0/j6GQIIW4fJqFtF5aN7XpTPE8idiIeYRfdPAlq6Zk0wb+DGUbc+NadiQ==
+  dependencies:
+    "@tanbo/css-themes" "^0.0.1"
+    "@textbus/component-library-plugin" "^1.1.8"
+    "@textbus/components" "^1.1.8"
+    "@textbus/contextmenu-plugin" "^1.1.8"
+    "@textbus/core" "^1.1.8"
+    "@textbus/device-toggle-plugin" "^1.1.8"
+    "@textbus/formatters" "^1.1.8"
+    "@textbus/full-screen-plugin" "^1.1.8"
+    "@textbus/guard-end-block-plugin" "^1.1.8"
+    "@textbus/image-and-video-drag-resize-plugin" "^1.1.8"
+    "@textbus/link-jump-tip-plugin" "^1.1.8"
+    "@textbus/outlines-plugin" "^1.1.8"
+    "@textbus/paste-upload-emitter-plugin" "^1.1.8"
+    "@textbus/sourcecode-mode-plugin" "^1.1.8"
+    "@textbus/table-edit-enhance-plugin" "^1.1.8"
+    "@textbus/toolbar" "^1.1.8"
+    "@textbus/uikit" "^1.1.8"
+
+"@textbus/toolbar@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/toolbar/-/toolbar-1.1.8.tgz#2fbff45ff7dc71d5d8fbae3dbd7a06e38daf06f4"
+  integrity sha512-YZqRyWEuUIr8lh1W/UUwtEfssU4TBxuhL+w5lDaKTbLK7x9q3TyvoM0zn0NovZ2tnQi3NasE6/qHRlS7jAsXvA==
+  dependencies:
+    "@tanbo/color" "^0.0.3"
+    "@tanbo/color-picker" "^0.1.2"
+    "@tanbo/css-themes" "^0.0.1"
+    "@textbus/components" "^1.1.8"
+    "@textbus/core" "^1.1.8"
+    "@textbus/formatters" "^1.1.8"
+    "@textbus/uikit" "^1.1.8"
+    rxjs "^6.0.0"
+
+"@textbus/uikit@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.npmmirror.com/@textbus/uikit/-/uikit-1.1.8.tgz#1ffb4747257f992cd8277ebb37c4d06d01aec0a3"
+  integrity sha512-JKgfa0Zg2UEZeSbhsVDHHz/dVSSS7BPCHe1KjHo6FKCYYXTNx5jh8bA0rEs3OKzwcmAkPmlG+pCKM9YEvIW66g==
+  dependencies:
+    "@tanbo/css-themes" "^0.0.1"
+    "@textbus/core" "^1.1.8"
+    rxjs "^6.0.0"
+
 "@tootallnate/once@1":
   version "1.1.2"
   resolved "https://registry.npmmirror.com/@tootallnate/once/download/@tootallnate/once-1.1.2.tgz?cache=0&sync_timestamp=1632734160633&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40tootallnate%2Fonce%2Fdownload%2F%40tootallnate%2Fonce-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
@@ -3415,6 +3658,11 @@ clone@^1.0.2:
   resolved "https://registry.npm.taobao.org/clone/download/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
 
+codemirror@^5.60.0:
+  version "5.65.2"
+  resolved "https://registry.npmmirror.com/codemirror/-/codemirror-5.65.2.tgz#5799a70cb3d706e10f60e267245e3a75205d3dd9"
+  integrity sha512-SZM4Zq7XEC8Fhroqe3LxbEEX1zUPWH1wMr5zxiBuiUF64iYOUH/JI88v4tBag8MiBS8B8gRv8O1pPXGYXQ4ErA==
+
 codepage@~1.15.0:
   version "1.15.0"
   resolved "https://registry.nlark.com/codepage/download/codepage-1.15.0.tgz#2e00519024b39424ec66eeb3ec07227e692618ab"
@@ -3484,12 +3732,12 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@*, commander@^8.3.0:
+commander@*, commander@^8.0.0, commander@^8.3.0:
   version "8.3.0"
   resolved "https://registry.npmmirror.com/commander/download/commander-8.3.0.tgz#4837ea1b2da67b9c616a67afbb0fafee567bca66"
   integrity sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==
 
-commander@2, commander@^2.20.0:
+commander@2, commander@^2.19.0, commander@^2.20.0:
   version "2.20.3"
   resolved "https://registry.npmmirror.com/commander/download/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
@@ -3545,6 +3793,23 @@ concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.npm.taobao.org/concat-map/download/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
+
+condense-newlines@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.npmmirror.com/condense-newlines/-/condense-newlines-0.2.1.tgz#3de985553139475d32502c83b02f60684d24c55f"
+  integrity sha512-P7X+QL9Hb9B/c8HI5BFFKmjgBu2XpQuF98WZ9XkO+dBGgk5XgwiQz7o1SmpglNWId3581UcS0SFAWfoIhMHPfg==
+  dependencies:
+    extend-shallow "^2.0.1"
+    is-whitespace "^0.3.0"
+    kind-of "^3.0.2"
+
+config-chain@^1.1.12:
+  version "1.1.13"
+  resolved "https://registry.npmmirror.com/config-chain/-/config-chain-1.1.13.tgz#fad0795aa6a6cdaff9ed1b68e9dff94372c232f4"
+  integrity sha512-qj+f8APARXHrM0hraqXYb2/bOVSV4PvJQlNZ/DVj0QrmNM2q2euizkeuVckQ57J+W0mRH6Hvi+k50M4Jul2VRQ==
+  dependencies:
+    ini "^1.3.4"
+    proto-list "~1.2.1"
 
 connect-history-api-fallback@^1.6.0:
   version "1.6.0"
@@ -4283,6 +4548,16 @@ echarts@^5.2.2:
   dependencies:
     tslib "2.3.0"
     zrender "5.2.1"
+
+editorconfig@^0.15.3:
+  version "0.15.3"
+  resolved "https://registry.npmmirror.com/editorconfig/-/editorconfig-0.15.3.tgz#bef84c4e75fb8dcb0ce5cee8efd51c15999befc5"
+  integrity sha512-M9wIMFx96vq0R4F+gRpY3o2exzb8hEj/n9S8unZtHSvYjibBp/iMufSzvmOcV/laG0ZtuTVGtiJggPOSW2r93g==
+  dependencies:
+    commander "^2.19.0"
+    lru-cache "^4.1.5"
+    semver "^5.6.0"
+    sigmund "^1.0.1"
 
 ee-first@1.1.1:
   version "1.1.1"
@@ -5845,6 +6120,11 @@ immediate@~3.0.5:
   resolved "https://registry.nlark.com/immediate/download/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
   integrity sha1-nbHb0Pr43m++D13V5Wu2BigN5ps=
 
+immer@^9.0.12:
+  version "9.0.12"
+  resolved "https://registry.npmmirror.com/immer/-/immer-9.0.12.tgz#2d33ddf3ee1d247deab9d707ca472c8c942a0f20"
+  integrity sha512-lk7UNmSbAukB5B6dh9fnh5D0bJTOFKxVg2cyJWTYrWRfhLrLMBquONcUs3aFq507hNoIZEDDh8lb8UtOizSMhA==
+
 immutable@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmmirror.com/immutable/download/immutable-4.0.0.tgz#b86f78de6adef3608395efb269a91462797e2c23"
@@ -6336,6 +6616,11 @@ is-whitespace-character@^1.0.0:
   resolved "https://registry.npmmirror.com/is-whitespace-character/download/is-whitespace-character-1.0.4.tgz?cache=0&sync_timestamp=1636008314424&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fis-whitespace-character%2Fdownload%2Fis-whitespace-character-1.0.4.tgz#0858edd94a95594c7c9dd0b5c174ec6e45ee4aa7"
   integrity sha1-CFjt2UqVWUx8ndC1wXTsbkXuSqc=
 
+is-whitespace@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.npmmirror.com/is-whitespace/-/is-whitespace-0.3.0.tgz#1639ecb1be036aec69a54cbb401cfbed7114ab7f"
+  integrity sha512-RydPhl4S6JwAyj0JJjshWJEFG6hNye3pZFBRZaTUfZFwGHxzppNaNOVgQuS/E/SlhrApuMXrpnK1EEIXfdo3Dg==
+
 is-windows@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/is-windows/download/is-windows-1.0.2.tgz#d1850eb9791ecd18e6182ce12a30f396634bb19d"
@@ -6501,6 +6786,16 @@ jest-worker@^27.4.1:
     "@types/node" "*"
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
+
+js-beautify@^1.6.12:
+  version "1.14.0"
+  resolved "https://registry.npmmirror.com/js-beautify/-/js-beautify-1.14.0.tgz#2ce790c555d53ce1e3d7363227acf5dc69024c2d"
+  integrity sha512-yuck9KirNSCAwyNJbqW+BxJqJ0NLJ4PwBUzQQACl5O3qHMBXVkXb/rD0ilh/Lat/tn88zSZ+CAHOlk0DsY7GuQ==
+  dependencies:
+    config-chain "^1.1.12"
+    editorconfig "^0.15.3"
+    glob "^7.1.3"
+    nopt "^5.0.0"
 
 js-tokens@^4.0.0:
   version "4.0.0"
@@ -6708,6 +7003,13 @@ karma@~6.3.0:
     tmp "^0.2.1"
     ua-parser-js "^0.7.30"
     yargs "^16.1.1"
+
+katex@^0.13.0:
+  version "0.13.24"
+  resolved "https://registry.npmmirror.com/katex/-/katex-0.13.24.tgz#fe55455eb455698cb24b911a353d16a3c855d905"
+  integrity sha512-jZxYuKCma3VS5UuxOx/rFV1QyGSl3Uy/i0kTJF3HgQ5xMinCQVF8Zd4bMY/9aI9b9A2pjIBOsjSSm68ykTAr8w==
+  dependencies:
+    commander "^8.0.0"
 
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
@@ -6985,6 +7287,14 @@ loud-rejection@^1.0.0:
   dependencies:
     currently-unhandled "^0.4.1"
     signal-exit "^3.0.0"
+
+lru-cache@^4.1.5:
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/lru-cache/-/lru-cache-4.1.5.tgz#8bbe50ea85bed59bc9e33dcab8235ee9bcf443cd"
+  integrity sha512-sWZlbEP2OsHNkXrMl5GYk/jKk70MBng6UU4YI/qGDYbgf6YbP4EvmqISbXCoJiRKs+1bSpFHVgQxvJ17F2li5g==
+  dependencies:
+    pseudomap "^1.0.2"
+    yallist "^2.1.2"
 
 lru-cache@^6.0.0:
   version "6.0.0"
@@ -8692,6 +9002,15 @@ pretty-bytes@^5.3.0:
   resolved "https://registry.npm.taobao.org/pretty-bytes/download/pretty-bytes-5.6.0.tgz?cache=0&sync_timestamp=1613916423464&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fpretty-bytes%2Fdownload%2Fpretty-bytes-5.6.0.tgz#356256f643804773c82f64723fe78c92c62beaeb"
   integrity sha1-NWJW9kOAR3PIL2RyP+eMksYr6us=
 
+pretty@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmmirror.com/pretty/-/pretty-2.0.0.tgz#adbc7960b7bbfe289a557dc5f737619a220d06a5"
+  integrity sha512-G9xUchgTEiNpormdYBl+Pha50gOUovT18IvAe7EYMZ1/f9W/WWMPRn+xI68yXNMUk3QXHDwo/1wV/4NejVNe1w==
+  dependencies:
+    condense-newlines "^0.2.1"
+    extend-shallow "^2.0.1"
+    js-beautify "^1.6.12"
+
 printj@~1.1.0:
   version "1.1.2"
   resolved "https://registry.nlark.com/printj/download/printj-1.1.2.tgz?cache=0&sync_timestamp=1630360919903&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fprintj%2Fdownload%2Fprintj-1.1.2.tgz#d90deb2975a8b9f600fb3a1c94e3f4c53c78a222"
@@ -8706,6 +9025,11 @@ printj@~1.3.0:
   version "1.3.0"
   resolved "https://registry.nlark.com/printj/download/printj-1.3.0.tgz?cache=0&sync_timestamp=1630360919903&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fprintj%2Fdownload%2Fprintj-1.3.0.tgz#9018a918a790e43707f10625d6e10187a367cff6"
   integrity sha1-kBipGKeQ5DcH8QYl1uEBh6Nnz/Y=
+
+prismjs@^1.23.0:
+  version "1.27.0"
+  resolved "https://registry.npmmirror.com/prismjs/-/prismjs-1.27.0.tgz#bb6ee3138a0b438a3653dd4d6ce0cc6510a45057"
+  integrity sha512-t13BGPUlFDR7wRB5kQDG4jjl7XeuH6jbJGt11JHPL96qwsEHNX2+68tFXqc1/k+/jALsbSWJKUOT/hcYAZ5LkA==
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
@@ -8731,6 +9055,11 @@ promise@~7.0.1:
   integrity sha1-Nj6EpMNsg1a4kP7WLJHOhdAu1Tk=
   dependencies:
     asap "~2.0.3"
+
+proto-list@~1.2.1:
+  version "1.2.4"
+  resolved "https://registry.npmmirror.com/proto-list/-/proto-list-1.2.4.tgz#212d5bfe1318306a420f6402b8e26ff39647a849"
+  integrity sha512-vtK/94akxsTMhe0/cbfpR+syPuszcuwhqVjJq26CuNDgFGj682oRBXOP5MJpv2r7JtE8MsiepGIqvvOTBwn2vA==
 
 protractor@~7.0.0:
   version "7.0.0"
@@ -8765,6 +9094,11 @@ prr@~1.0.1:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/prr/download/prr-1.0.1.tgz#d3fc114ba06995a45ec6893f484ceb1d78f5f476"
   integrity sha1-0/wRS6BplaRexok/SEzrHXj19HY=
+
+pseudomap@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmmirror.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
+  integrity sha512-b/YwNhb8lk1Zz2+bXXpS/LK9OisiZZ1SNsSLxN1x2OXVEhW2Ckr/7mWE5vrC1ZTiJlD9g19jWszTmJsB+oEpFQ==
 
 psl@^1.1.28:
   version "1.8.0"
@@ -8934,7 +9268,7 @@ redent@^3.0.0:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
 
-reflect-metadata@^0.1.2:
+reflect-metadata@^0.1.13, reflect-metadata@^0.1.2:
   version "0.1.13"
   resolved "https://registry.npm.taobao.org/reflect-metadata/download/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
   integrity sha1-Z648pXyXKiqhZCsQ/jY/4y1J3Ag=
@@ -9269,7 +9603,7 @@ rxjs-for-await@0.0.2:
   resolved "https://registry.npmmirror.com/rxjs-for-await/download/rxjs-for-await-0.0.2.tgz#26598a1d6167147cc192172970e7eed4e620384b"
   integrity sha1-JlmKHWFnFHzBkhcpcOfu1OYgOEs=
 
-rxjs@6.6.7, rxjs@^6.5.4:
+rxjs@6.6.7, rxjs@^6.0.0, rxjs@^6.5.4:
   version "6.6.7"
   resolved "https://registry.npmmirror.com/rxjs/download/rxjs-6.6.7.tgz#90ac018acabf491bf65044235d5863c4dab804c9"
   integrity sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ==
@@ -9575,6 +9909,11 @@ side-channel@^1.0.4:
     call-bind "^1.0.0"
     get-intrinsic "^1.0.2"
     object-inspect "^1.9.0"
+
+sigmund@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmmirror.com/sigmund/-/sigmund-1.0.1.tgz#3ff21f198cad2175f9f3b781853fd94d0d19b590"
+  integrity sha512-fCvEXfh6NWpm+YSuY2bpXb/VIihqWA6hLsgboC+0nl71Q7N7o2eaCW8mJa/NLvQhs6jpd3VZV4UiUQlV6+lc8g==
 
 signal-exit@^3.0.0, signal-exit@^3.0.2, signal-exit@^3.0.3:
   version "3.0.6"
@@ -11282,6 +11621,11 @@ y18n@^5.0.5:
   version "5.0.8"
   resolved "https://registry.npm.taobao.org/y18n/download/y18n-5.0.8.tgz?cache=0&sync_timestamp=1617822642544&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fy18n%2Fdownload%2Fy18n-5.0.8.tgz#7f4934d0f7ca8c56f95314939ddcd2dd91ce1d55"
   integrity sha1-f0k00PfKjFb5UxSTndzS3ZHOHVU=
+
+yallist@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.npmmirror.com/yallist/-/yallist-2.1.2.tgz#1c11f9218f076089a47dd512f93c6699a6a81d52"
+  integrity sha512-ncTzHV7NvsQZkYe1DW7cbDLm0YpzHmZF5r/iyP3ZnQtMiJ+pjzisCiMNI+Sj+xQF5pXhSHxSB3uDbsBTzY/c2A==
 
 yallist@^4.0.0:
   version "4.0.0"

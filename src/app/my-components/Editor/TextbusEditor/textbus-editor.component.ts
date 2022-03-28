@@ -28,7 +28,11 @@ export class TextbusEditorComponent implements OnInit, EditorInterface {
 
   }
 
+
   SetValue(value: string): void {
 
+    console.log('SetValue is'+value.length);
+
+    this.editor?.replaceContent(value);
   }
 }

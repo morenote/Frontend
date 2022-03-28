@@ -49,6 +49,7 @@ export class EditorComponent implements OnInit {
   vditor?:VditorMarkdownEditorComponent;
   @ViewChild('textbus')
   textbusEditor?:TextbusEditorComponent;
+
   isMarkdown:boolean=true;
 
   closeTab({index}: { index: number }): void {
@@ -95,7 +96,12 @@ export class EditorComponent implements OnInit {
         if (isMarkdown){
           this.vditor?.SetValue(noteContent.Content!);
         }else {
-          this.textbusEditor?.SetValue(noteContent.Content!);
+          console.log('note is textbus')
+          console.log('Content is '+noteContent.Content?.length)
+          setTimeout(()=>{
+            //todo:textbus在ready之后才可以使用
+            this.textbusEditor!.SetValue(noteContent.Content!);
+          },100);
         }
       }
     })
@@ -135,9 +141,15 @@ export class EditorComponent implements OnInit {
                       let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
                       node.title = note.Title;
                       node.key = note.NoteId;
-                      node.icon = 'file-markdown';
                       node.isLeaf = true;
                       node.isMarkdown=note.IsMarkdown;
+                      if (node.isMarkdown){
+                        node.icon = 'file-markdown';
+                      }else {
+                        //<i nz-icon nzType="html5" nzTheme="outline"></i>
+                        node.icon = 'html5';
+                      }
+
                       array.push(node)
                     }
                     //{title: 'leaf', key: '1001', icon: 'folder'},

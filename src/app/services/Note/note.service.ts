@@ -38,5 +38,18 @@ export class NoteService {
     return result;
   }
 
+  public CreateNote(noteTitle: string,notebookId:string,isMarkdown:boolean) : Observable<ApiRep> {
+    let url = this.config.baseURL + '/api/Note/CreateNote';
+    let formData = new FormData();
+    formData.set('token', this.token!);
+    formData.set('noteTitle', noteTitle);
+    formData.set('notebookId', notebookId);
+    formData.set('isMarkdown', isMarkdown+'');
+    let result = this.http.post<ApiRep>(url, formData);
+    return result;
+  }
+
+
+
 
 }

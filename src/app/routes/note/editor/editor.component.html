@@ -1,85 +1,123 @@
-<div class="ant-card " style="margin: 0;">
+<div class="ant-card ">
   <div nz-row>
     <div nz-col nzFlex="300px">
-      <nz-input-group [nzSuffix]="suffixIcon">
-        <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue"/>
-      </nz-input-group>
-      <ng-template #suffixIcon>
-        <i nz-icon nzType="search"></i>
-      </ng-template>
-      <nz-tree
+      <nz-tabset nzType="card">
+        <nz-tab  nzTitle='仓库'>
+          <nz-input-group [nzSuffix]="suffixIcon" style="margin-bottom: 1rem">
+            <input type="text" nz-input placeholder="搜索笔记" [(ngModel)]="searchValue"  />
+          </nz-input-group>
+          <ng-template #suffixIcon>
+            <i nz-icon nzType="search"></i>
+          </ng-template>
+          <nz-tree
+            #nzTree
+            *ngIf="nodes.length > 0"
+            [nzData]="nodes"
+            nzBlockNode
+            nzVirtualHeight="50rem"
+            nzAsyncData
+            nzDraggable
+            nzShowIcon
+            [nzBeforeDrop]="beforeDrop"
+            (nzClick)="nzEvent($event)"
+            (nzOnDrop)="nzEvent($event)"
+            (nzContextMenu)="contextMenu($event, menu)"
+            [nzSearchValue]="searchValue"
+            (nzExpandChange)="nzEvent($event)"
+          ></nz-tree>
+          <nz-dropdown-menu #menu="nzDropdownMenu" #action="nzDropdownMenu">
+            <ul nz-menu style="min-width:8rem">
+              <li nz-menu-item>复制</li>
+              <li nz-menu-item>剪切</li>
+              <li nz-menu-item>重命名</li>
+              <li nz-menu-item (click)="onMenuDelete()">删除</li>
+              <li nz-submenu nzTitle="分享">
+                <ul>
+                  <li nz-menu-item>发送到我的好友</li>
+                  <li nz-menu-item>生成分享链接</li>
+                  <li nz-menu-item>生成分享链接</li>
+                </ul>
+              </li>
+              <li nz-submenu nzTitle="导出">
+                <ul>
+                  <li nz-menu-item>zip压缩包（仅最新记录记录）</li>
+                  <li nz-menu-item>zip压缩包（含历史记录）</li>
+                  <li nz-menu-item>单文档文件（md或html）</li>
+                  <li nz-menu-item>PDF文档</li>
+                  <li nz-menu-item>PNG图片</li>
+                </ul>
+              </li>
 
-        *ngIf="nodes.length > 0"
-        [nzData]="nodes"
-        nzBlockNode
-        nzVirtualHeight="888px"
-        nzAsyncData
-        nzDraggable
-        nzShowIcon
-
-
-        [nzBeforeDrop]="beforeDrop"
-
-        (nzClick)="nzEvent($event)"
-        (nzOnDrop)="nzEvent($event)"
-        (nzContextMenu)="contextMenu($event, menu)"
-        [nzSearchValue]="searchValue"
-        (nzExpandChange)="nzEvent($event)"
-      ></nz-tree>
-      <nz-dropdown-menu #menu="nzDropdownMenu" #action="nzDropdownMenu" >
-        <ul nz-menu style="min-width:8rem">
-          <li nz-menu-item>复制</li>
-          <li nz-menu-item>剪切</li>
-          <li nz-menu-item>重命名</li>
-          <li nz-menu-item>删除</li>
-          <li nz-submenu nzTitle="分享">
-            <ul>
-              <li nz-menu-item>发送到我的好友</li>
-              <li nz-menu-item>生成分享链接</li>
-              <li nz-menu-item>生成分享链接</li>
+              <li nz-submenu nzTitle="新建">
+                <ul>
+                  <li nz-menu-item (click)="onCreateNotebook($event)">文件夹</li>
+                  <li nz-menu-item (click)="onCreateMdDoc()">markdown</li>
+                  <li nz-menu-item (click)="onCreateHtmlDoc()">富文本</li>
+                </ul>
+              </li>
+              <li nz-menu-item>属性</li>
             </ul>
-          </li>
-          <li nz-submenu nzTitle="导出">
-            <ul>
-              <li nz-menu-item>zip压缩包（仅最新记录记录）</li>
-              <li nz-menu-item>zip压缩包（含历史记录）</li>
-              <li nz-menu-item>单文档文件（md或html）</li>
-              <li nz-menu-item>PDF文档</li>
-              <li nz-menu-item>PNG图片</li>
-            </ul>
-          </li>
+          </nz-dropdown-menu>
+        </nz-tab>
+        <nz-tab  nzTitle='工具'>
+          <div style="height:50rem">
+            <ul nz-menu nzMode="inline" nzTheme='light' style="margin-bottom: 1rem">
+              <li nz-submenu nzTitle="搜索" nzIcon="search">
+                <ul>
+                  <li nz-menu-item >搜索笔记</li>
+                  <li nz-menu-item >搜索附件 </li>
+                </ul>
+              </li>
+              <li nz-submenu nzTitle="管理" nzIcon="setting">
+                <ul>
+                  <li nz-menu-item>仓库设置</li>
+                  <li nz-menu-item>仓库附件</li>
+                  <li nz-menu-item>仓库成员</li>
+                  <li nz-menu-item>WebHook</li>
+                </ul>
+              </li>
+              <li nz-submenu nzTitle="回收" nzIcon="delete">
+                <ul>
+                  <li nz-menu-item>笔记回收站</li>
+                  <li nz-menu-item>附件回收站</li>
+                  <li nz-menu-item>图片回收站</li>
+                </ul>
+              </li>
 
-          <li   nz-submenu  nzTitle="新建" >
-            <ul>
-              <li nz-menu-item>文件夹</li>
-              <li nz-menu-item>markdown</li>
-              <li nz-menu-item>富文本</li>
+              <li nz-submenu nzTitle="增加" nzIcon="folder-add">
+                <ul>
+                  <li nz-menu-item>增加文件夹</li>
+
+                </ul>
+              </li>
             </ul>
-          </li>
-          <li nz-menu-item>属性</li>
-        </ul>
-      </nz-dropdown-menu>
+
+          </div>
+
+        </nz-tab>
+      </nz-tabset>
+
+
     </div>
     <div nz-col nzFlex="auto">
       <div nz-row>
-
-        <input nz-input placeholder="Basic usage" [(ngModel)]="noteTitle"   style="width: 500px"/>
-         <div style="vertical-align: center">
-           <nz-tag [nzColor]="'magenta'">magenta</nz-tag>
-           <nz-tag [nzColor]="'red'">red</nz-tag>
-           <nz-tag [nzColor]="'volcano'">volcano</nz-tag>
-           <nz-tag [nzColor]="'orange'">orange</nz-tag>
-           <nz-tag [nzColor]="'gold'">gold</nz-tag>
-           <nz-tag [nzColor]="'lime'">lime</nz-tag>
-           <nz-tag [nzColor]="'green'">green</nz-tag>
-           <nz-tag [nzColor]="'cyan'">cyan</nz-tag>
-           <nz-tag [nzColor]="'blue'">blue</nz-tag>
-           <nz-tag [nzColor]="'geekblue'">geekblue</nz-tag>
-           <nz-tag [nzColor]="'purple'">purple</nz-tag>
-         </div>
+        <input nz-input placeholder="Basic usage" [(ngModel)]="noteTitle" style="width: 500px"/>
+        <div style="vertical-align: center">
+          <nz-tag [nzColor]="'magenta'">magenta</nz-tag>
+          <nz-tag [nzColor]="'red'">red</nz-tag>
+          <nz-tag [nzColor]="'volcano'">volcano</nz-tag>
+          <nz-tag [nzColor]="'orange'">orange</nz-tag>
+          <nz-tag [nzColor]="'gold'">gold</nz-tag>
+          <nz-tag [nzColor]="'lime'">lime</nz-tag>
+          <nz-tag [nzColor]="'green'">green</nz-tag>
+          <nz-tag [nzColor]="'cyan'">cyan</nz-tag>
+          <nz-tag [nzColor]="'blue'">blue</nz-tag>
+          <nz-tag [nzColor]="'geekblue'">geekblue</nz-tag>
+          <nz-tag [nzColor]="'purple'">purple</nz-tag>
+        </div>
       </div>
       <nz-row>
-        <app-VditorMarkdownEditor #vditor  *ngIf="isMarkdown"></app-VditorMarkdownEditor>
+        <app-VditorMarkdownEditor #vditor *ngIf="isMarkdown"></app-VditorMarkdownEditor>
         <app-textbus-editor #textbus *ngIf="!isMarkdown"></app-textbus-editor>
       </nz-row>
 

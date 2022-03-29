@@ -18,6 +18,7 @@ import {
 } from "../../../my-components/Editor/VditorMarkdomEditor/vditor-markdown-editor.component";
 import {NoteContent} from "../../../models/entity/note-content";
 import {TextbusEditorComponent} from "../../../my-components/Editor/TextbusEditor/textbus-editor.component";
+import {NzTreeComponent} from "ng-zorro-antd/tree/tree.component";
 
 @Component({
   selector: 'app-myeditor',
@@ -44,11 +45,15 @@ export class EditorComponent implements OnInit {
   tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
   selectedIndex = 0;
 
+  rightClickNode!:TreeNodeModel;//右键选中
 
   @ViewChild('vditor')
   vditor?:VditorMarkdownEditorComponent;
   @ViewChild('textbus')
   textbusEditor?:TextbusEditorComponent;
+  @ViewChild('nzTree')
+  nzTree?:NzTreeComponent;
+
 
   isMarkdown:boolean=true;
 
@@ -75,6 +80,7 @@ export class EditorComponent implements OnInit {
       }
     }
     if (event.eventName === 'click') {
+      this.message.info('getChildren='+this.nzTree?.getTreeNodes().length)
       let node:TreeNodeModel = <TreeNodeModel>event.node ;
       let key: string = node!.key;
       let title: string = node!.title;
@@ -201,10 +207,75 @@ export class EditorComponent implements OnInit {
     //console.log(menu.nzOverlayClassName)
     console.log(event.node);
     this.message.info('右键='+event!.node!.title);
+    this.rightClickNode=<TreeNodeModel>event!.node;
     this.nzContextMenuService.create(event.event!, menu);
   }
 
+
   closeMenu(): void {
     this.nzContextMenuService.close();
+  }
+
+  onCreateNotebook($event: MouseEvent) {
+    this.notebookService.CreateNoteBook('test',this.rightClickNode!.key).subscribe((apiRe:ApiRep)=>{
+      if (apiRe.Ok==true){
+        let notebook:Notebook=apiRe.Data;
+        let node:TreeNodeModel=new TreeNodeModel(new TreeNodeOptionsModel(notebook.NotebookId, notebook.Title));
+        node.title = notebook.Title;
+        node.key = notebook.NotebookId;
+        node.icon = 'folder';
+        node.parentNode=this.rightClickNode;
+        let array=new Array<TreeNodeModel>();
+        array.push(node)
+        this.rightClickNode?.addChildren(array);
+      }
+    })
+  }
+
+  onMenuDelete() {
+    if (this.rightClickNode.isLeaf){
+      //是笔记
+    }else {
+      //是笔记本
+
+    }
+  }
+
+  /**
+   * 新建markdown文档
+   */
+  onCreateMdDoc() {
+    this.noteService.CreateNote('test',this.rightClickNode!.key,true).subscribe((apiRe:ApiRep)=>{
+      if (apiRe.Ok==true){
+        let note:Note=apiRe.Data;
+        let node:TreeNodeModel=new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
+        node.icon = 'file-markdown';
+        node.isLeaf=true;
+        node.isMarkdown=true;
+        node.parentNode=this.rightClickNode;
+        let array=new Array<TreeNodeModel>();
+        array.push(node)
+        this.rightClickNode?.addChildren(array);
+      }
+    });
+  }
+
+  /**
+   * 新建富文本文档
+   */
+  onCreateHtmlDoc() {
+    this.noteService.CreateNote('test',this.rightClickNode!.key,false).subscribe((apiRe:ApiRep)=>{
+      if (apiRe.Ok==true){
+        let note:Note=apiRe.Data;
+        let node:TreeNodeModel=new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
+        node.icon = 'html5';
+        node.isLeaf=true;
+        node.isMarkdown=true;
+        node.parentNode=this.rightClickNode;
+        let array=new Array<TreeNodeModel>();
+        array.push(node)
+        this.rightClickNode?.addChildren(array);
+      }
+    });
   }
 }

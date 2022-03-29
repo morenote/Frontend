@@ -270,7 +270,7 @@ export class EditorComponent implements OnInit {
         let node:TreeNodeModel=new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
         node.icon = 'html5';
         node.isLeaf=true;
-        node.isMarkdown=true;
+        node.isMarkdown=false;
         node.parentNode=this.rightClickNode;
         let array=new Array<TreeNodeModel>();
         array.push(node)

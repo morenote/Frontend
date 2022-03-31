@@ -19,6 +19,7 @@ import {
 import {NoteContent} from "../../../models/entity/note-content";
 import {TextbusEditorComponent} from "../../../my-components/Editor/TextbusEditor/textbus-editor.component";
 import {NzTreeComponent} from "ng-zorro-antd/tree/tree.component";
+import {EditorInterface} from "../../../my-components/Editor/editor-interface";
 
 @Component({
   selector: 'app-myeditor',
@@ -30,7 +31,7 @@ export class EditorComponent implements OnInit {
 
   searchValue = '';
   noteTitle?: string;
-
+  isSpinning = false;
 
   //<i nz-icon nzType="folder" nzTheme="outline"></i>
   constructor(private nzContextMenuService: NzContextMenuService,
@@ -55,6 +56,7 @@ export class EditorComponent implements OnInit {
   @ViewChild('nzTree')
   nzTree?:NzTreeComponent;
 
+  editor: EditorInterface | undefined;
 
   isMarkdown:boolean=true;
 
@@ -97,19 +99,23 @@ export class EditorComponent implements OnInit {
 
   private  onClieckNote(noteId:string,isMarkdown?:boolean){
     this.noteService.GetNoteContent(noteId).subscribe((apiRe:ApiRep)=>{
-      if (apiRe.Ok==true){
-        let noteContent:NoteContent=apiRe.Data
-        this.isMarkdown=isMarkdown!;
-        this.message.info(this.isMarkdown+'?');
-        if (isMarkdown){
-          this.vditor?.SetValue(noteContent.Content!);
-        }else {
+
+      if (apiRe.Ok == true) {
+        let noteContent: NoteContent = apiRe.Data
+        this.isMarkdown = isMarkdown!;
+        this.message.info(this.isMarkdown + '?');
+        if (isMarkdown) {
+          this.vditor?.SetContent(noteContent.Content!,true);
+          this.editor = this.vditor;
+        } else {
           console.log('note is textbus')
-          console.log('Content is '+noteContent.Content?.length)
-          setTimeout(()=>{
+          console.log('Content is ' + noteContent.Content?.length)
+          setTimeout(() => {
             //todo:textbus在ready之后才可以使用
-            this.textbusEditor!.SetValue(noteContent.Content!);
-          },100);
+            this.textbusEditor!.SetContent(noteContent.Content!,true);
+            this.editor = this.textbusEditor;
+          }, 100);
+
         }
       }
     })
@@ -239,7 +245,6 @@ export class EditorComponent implements OnInit {
       //是笔记
     }else {
       //是笔记本
-
     }
   }
 
@@ -280,22 +285,35 @@ export class EditorComponent implements OnInit {
       }
     });
   }
-
+   saveMessageId!:string;
   onKeyDown(event: KeyboardEvent) {
      if (event.ctrlKey &&event.code=='KeyS'){
-       this.message.warning('正在保存笔记，请勿关闭浏览器',{
-         nzDuration: 3000
-       });
+       if (this.clickNode==null){
+         event.preventDefault();
+         this.message.info('未选择笔记，无需保存')
+         return;
+       }
+       this.saveMessageId = this.message.loading('正在保存笔记，请勿进行其他操作', { nzDuration: 0 }).messageId;
        this.updateNote();
        event.preventDefault();
      }
   }
   updateNote(){
     let noteId=this.clickNode.key;
-    let noteTitle='hello';
-    let content='hello';
+    let title=this.noteTitle;
+    let content=this.editor?.GetContent();
 
-    this.noteService.UpdateNoteTitleAndContent(noteId,noteTitle,content).subscribe((apiRe:ApiRep)=>{
+    this.noteService.UpdateNoteTitleAndContent(noteId,title!,content!).subscribe((apiRe:ApiRep)=>{
+      if(apiRe.Ok){
+        this.clickNode.title=title!;
+      }
+      setTimeout(()=>{
+        if (this.saveMessageId!=null){
+          this.message.remove(this.saveMessageId);
+          this.message.success('保存成功')
+        }
+      },1000)
+
 
     })
   }

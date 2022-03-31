@@ -117,10 +117,11 @@
         </div>
       </div>
       <nz-row  >
-        <app-VditorMarkdownEditor (keydown)="onKeyDown($event)" #vditor *ngIf="isMarkdown"></app-VditorMarkdownEditor>
-        <app-textbus-editor (keydown)="onKeyDown($event)" #textbus *ngIf="!isMarkdown"></app-textbus-editor>
+        <div>
+          <app-VditorMarkdownEditor (keydown)="onKeyDown($event)" #vditor *ngIf="isMarkdown"  ></app-VditorMarkdownEditor>
+          <app-textbus-editor (keydown)="onKeyDown($event)" #textbus *ngIf="!isMarkdown"></app-textbus-editor>
+        </div>
       </nz-row>
-
     </div>
   </div>
 </div>

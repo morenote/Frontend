@@ -2,5 +2,7 @@
  * 编辑器抽象接口
  */
 export interface EditorInterface {
-  SetValue(value:string):void;
+  SetContent(value:string,clearCache :boolean):void;
+  GetContent():string;
+  Destroy():void;
 }

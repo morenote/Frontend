@@ -24,7 +24,7 @@ export class Note {
   public  UpdatedTime?:Date;
   public  RecommendTime?:Date;
   public  PublicTime?:Date;
-  public  usn?:number;
+  public  Usn?:number;
   public  IsDeleted?:boolean;
   public  IsPublicShare?:boolean;
   public  ContentId?:string;

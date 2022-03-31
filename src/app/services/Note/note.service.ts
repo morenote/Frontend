@@ -49,6 +49,16 @@ export class NoteService {
     return result;
   }
 
+  public UpdateNoteTitleAndContent(noteId:string,noteTitle: string,content:string) : Observable<ApiRep> {
+    let url = this.config.baseURL + '/api/Note/UpdateNoteTitleAndContent';
+    let formData = new FormData();
+    formData.set('token', this.token!);
+    formData.set('noteId', noteId);
+    formData.set('noteTitle', noteTitle);
+    formData.set('content', content);
+    let result = this.http.post<ApiRep>(url, formData);
+    return result;
+  }
 
 
 

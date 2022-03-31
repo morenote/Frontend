@@ -101,7 +101,7 @@
     </div>
     <div nz-col nzFlex="auto">
       <div nz-row>
-        <input nz-input placeholder="Basic usage" [(ngModel)]="noteTitle" style="width: 500px"/>
+        <input nz-input placeholder="Basic usage" [(ngModel)]="noteTitle" (keydown)="onKeyDown($event)" style="width: 500px"/>
         <div style="vertical-align: center">
           <nz-tag [nzColor]="'magenta'">magenta</nz-tag>
           <nz-tag [nzColor]="'red'">red</nz-tag>
@@ -116,9 +116,9 @@
           <nz-tag [nzColor]="'purple'">purple</nz-tag>
         </div>
       </div>
-      <nz-row>
-        <app-VditorMarkdownEditor #vditor *ngIf="isMarkdown"></app-VditorMarkdownEditor>
-        <app-textbus-editor #textbus *ngIf="!isMarkdown"></app-textbus-editor>
+      <nz-row  >
+        <app-VditorMarkdownEditor (keydown)="onKeyDown($event)" #vditor *ngIf="isMarkdown"></app-VditorMarkdownEditor>
+        <app-textbus-editor (keydown)="onKeyDown($event)" #textbus *ngIf="!isMarkdown"></app-textbus-editor>
       </nz-row>
 
     </div>

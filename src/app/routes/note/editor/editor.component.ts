@@ -46,6 +46,7 @@ export class EditorComponent implements OnInit {
   selectedIndex = 0;
 
   rightClickNode!:TreeNodeModel;//右键选中
+  clickNode!:TreeNodeModel;//单击选中
 
   @ViewChild('vditor')
   vditor?:VditorMarkdownEditorComponent;
@@ -84,6 +85,7 @@ export class EditorComponent implements OnInit {
       let node:TreeNodeModel = <TreeNodeModel>event.node ;
       let key: string = node!.key;
       let title: string = node!.title;
+      this.clickNode=node;
       let type=node?.isLeaf;
       this.message.success(key+'='+title+type);
       if (type!=null && type){
@@ -277,5 +279,24 @@ export class EditorComponent implements OnInit {
         this.rightClickNode?.addChildren(array);
       }
     });
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+     if (event.ctrlKey &&event.code=='KeyS'){
+       this.message.warning('正在保存笔记，请勿关闭浏览器',{
+         nzDuration: 3000
+       });
+       this.updateNote();
+       event.preventDefault();
+     }
+  }
+  updateNote(){
+    let noteId=this.clickNode.key;
+    let noteTitle='hello';
+    let content='hello';
+
+    this.noteService.UpdateNoteTitleAndContent(noteId,noteTitle,content).subscribe((apiRe:ApiRep)=>{
+
+    })
   }
 }

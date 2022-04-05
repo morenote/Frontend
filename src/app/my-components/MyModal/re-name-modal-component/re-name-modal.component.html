@@ -1,0 +1,13 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="重命名"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkLoading]="isOkLoading"
+>
+  <div *nzModalContent>
+    <input nz-input placeholder="Basic usage" [(ngModel)]="value"/>
+  </div>
+
+</nz-modal>
+

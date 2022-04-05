@@ -7,6 +7,7 @@ import { HelperServiceService } from '../../../../../services/helper/helper-serv
 import {ConfigService} from "../../../../../services/config/config.service";
 import {WebsiteConfig} from "../../../../../models/config/website-config";
 import {_HttpClient} from "@delon/theme";
+import {UserToken} from "../../../../../models/DTO/user-token";
 
 @Component({
   selector: 'app-account-settings-security',
@@ -14,13 +15,16 @@ import {_HttpClient} from "@delon/theme";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProAccountSettingsSecurityComponent {
-  public token:string="";
+
   public config: WebsiteConfig ;
+  userToken!:UserToken;
+
   constructor(public authService: AuthService,
               public helperService: HelperServiceService,
               public configService:ConfigService,
               public http: _HttpClient,) {
     this.config=configService.GetWebSiteConfig();
+    this.userToken=this.authService.GetUserToken();
   }
   fido2list:Map<string,string> =new Map<string, string>();
   OnBindUsbKey() {
@@ -33,7 +37,7 @@ export class ProAccountSettingsSecurityComponent {
   this.fido2list.set("key4","key4 — 已于 2021 年 01 月 01 日注册");
   this.fido2list.set("key5","key5 — 已于 2021 年 01 月 01 日注册");
 
-   this.token=this.authService.GetToken()
+
   }
   unBindFIDO2(keyid:string){
     if (this.fido2list.has(keyid)){
@@ -48,8 +52,8 @@ export class ProAccountSettingsSecurityComponent {
    * 注册请求
    */
   async handleRegisterSubmit() {
-    let username = this.authService.GetUserName();
-    let displayName = this.authService.GetUserName();
+    let username = this.userToken.Username;
+    let displayName =  this.userToken.Username;
 
     // possible values: none, direct, indirect
     let attestation_type = 'none';
@@ -70,8 +74,8 @@ export class ProAccountSettingsSecurityComponent {
     data.append('authType', authenticator_attachment);
     data.append('userVerification', user_verification);
     data.append('requireResidentKey', require_resident_key);
-    data.append('token',this.authService.GetToken());
-    data.append('userId',this.authService.GetUserId()!);
+    data.append('token',this.userToken.Token);
+    data.append('userId', this.userToken.UserId!);
 
     // send to server for registering
     let makeCredentialOptions;
@@ -162,7 +166,7 @@ export class ProAccountSettingsSecurityComponent {
 
     const attestationResponse = {
       id: newCredential.id,
-      token:this.token,
+      token:this.userToken.Token,
       rawId: this.helperService.coerceToBase64Url(rawId),
       type: newCredential.type,
       extensions: newCredential.getClientExtensionResults(),
@@ -179,7 +183,7 @@ export class ProAccountSettingsSecurityComponent {
     console.log(newCredential)
 
     let fromData=new FormData();
-    fromData.append('token',this.authService.GetToken());
+    fromData.append('token',this.userToken.Token);
     fromData.append('data',JSON.stringify(attestationResponse));
     fromData.append('KeyName',this.value!);
     console.log("😊registerCredentialWithServer")

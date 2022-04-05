@@ -6,20 +6,27 @@ import {AuthService} from "../auth/auth.service";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {ConfigService} from "../config/config.service";
 import {OrganizationAuthorityEnum} from "../../models/enum/organization-authority-enum";
+import {WebsiteConfig} from "../../models/config/website-config";
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrganizationService {
 
+  userId!: string ;
+  token!: string ;
+  config: WebsiteConfig;
   constructor(public authService: AuthService, public http: HttpClient, public configService: ConfigService) {
-
+    let userToken=this.authService.GetUserToken();
+    this.userId =userToken.UserId;
+    this.token = userToken.Token;
+    this.config = this.configService.GetWebSiteConfig();
   }
 
   public GetOrganizationListByAuthorityEnum(authority: OrganizationAuthorityEnum): Observable<ApiRep> {
-    let token = this.authService.GetToken();
+
     let queryParams = new HttpParams()
-      .append('token', token)
+      .append('token', this.token!)
       .append('AuthorityEnum', authority!);
     let config = this.configService.GetWebSiteConfig();
     let url = config.baseURL + '/api/Organization/GetOrganizationListByAuthorityEnum';

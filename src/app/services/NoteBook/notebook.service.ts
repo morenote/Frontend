@@ -15,8 +15,11 @@ export class NotebookService {
   config: WebsiteConfig;
 
   constructor(public authService: AuthService, public http: HttpClient, public configService: ConfigService) {
-    this.userId = this.authService.GetUserId();
-    this.token = this.authService.GetToken();
+
+
+    let userToken=this.authService.GetUserToken();
+    this.userId =userToken.UserId;
+    this.token = userToken.Token;
     this.config = this.configService.GetWebSiteConfig();
   }
   public GetRootNotebooks(noteRepositoryId: string) : Observable<ApiRep> {
@@ -41,6 +44,15 @@ export class NotebookService {
     formData.set('token', this.token!);
     formData.set('notebookTitle', notebookTitle);
     formData.set('parentNotebookId', parentNotebookId);
+    let result = this.http.post<ApiRep>(url, formData);
+    return result;
+  }
+  public UpdateNoteBookTitle(notebookId:string,notebookTitle: string) : Observable<ApiRep> {
+    let url = this.config.baseURL + '/api/Notebook/UpdateNoteBookTitle';
+    let formData = new FormData();
+    formData.set('token', this.token!);
+    formData.set('notebookId', notebookId);
+    formData.set('notebookTitle', notebookTitle);
     let result = this.http.post<ApiRep>(url, formData);
     return result;
   }

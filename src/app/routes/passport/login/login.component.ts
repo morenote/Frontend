@@ -18,6 +18,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { ConfigService } from '../../../services/config/config.service';
 
 import * as http from 'http';
+import {UserToken} from "../../../models/DTO/user-token";
 
 @Component({
   selector: 'passport-login',
@@ -159,31 +160,28 @@ export class UserLoginComponent implements OnDestroy {
     this.loading = true;
     this.cdr.detectChanges();
     const formData = new FormData();
-    formData.set('type', String(this.type));
+    formData.set('', String(this.type));
     formData.set('email', this.userName.value);
     formData.set('pwd', this.password.value);
 
-    this.http.post(`${this.webSiteConfig.baseURL}/api/Auth/login?_allow_anonymous=true`, formData).subscribe(res => {
-      console.log(res);
-      if (res.Ok != true) {
+
+    this.authService.LoginByPassword(String(this.type),this.userName.value,this.password.value).subscribe((apiRe:ApiRep) => {
+
+      if (apiRe.Ok != true) {
         this.loading = false;
-        this.error = res.Msg;
+        this.error = apiRe.Msg!;
         this.cdr.detectChanges();
         console.log('进入111');
         return;
       }
+      let userToken:UserToken=apiRe.Data;
       // 清空路由复用信息
       this.reuseTabService.clear();
       // 设置用户Token信息
       this.tokenService.set({
-        token: res.Token
+        token: userToken.Token
       });
-
-      this.authService.SetUserName(res.Username);
-      this.authService.SetToken(res.Token);
-      this.authService.SetUserId(res.UserId);
-
-      this.authService.SetUserLoginInfo(res);
+      this.authService.SetUserToken(userToken);
 
       // 直接跳转
       this.router.navigate(['/']);

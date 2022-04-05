@@ -20,6 +20,8 @@ import {NoteContent} from "../../../models/entity/note-content";
 import {TextbusEditorComponent} from "../../../my-components/Editor/TextbusEditor/textbus-editor.component";
 import {NzTreeComponent} from "ng-zorro-antd/tree/tree.component";
 import {EditorInterface} from "../../../my-components/Editor/editor-interface";
+import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
+import {ReNameModalComponent} from "../../../my-components/MyModal/re-name-modal-component/re-name-modal.component";
 
 @Component({
   selector: 'app-myeditor',
@@ -38,6 +40,7 @@ export class EditorComponent implements OnInit {
               public route: ActivatedRoute,
               public message: NzMessageService,
               private notebookService: NotebookService,
+              private modal: NzModalService,
               private noteService: NoteService) {
   }
 
@@ -46,19 +49,22 @@ export class EditorComponent implements OnInit {
   tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
   selectedIndex = 0;
 
-  rightClickNode!:TreeNodeModel;//右键选中
-  clickNode!:TreeNodeModel;//单击选中
+  rightClickNode!: TreeNodeModel;//右键选中
+  clickNode!: TreeNodeModel;//单击选中
 
   @ViewChild('vditor')
-  vditor?:VditorMarkdownEditorComponent;
+  vditor?: VditorMarkdownEditorComponent;
   @ViewChild('textbus')
-  textbusEditor?:TextbusEditorComponent;
+  textbusEditor?: TextbusEditorComponent;
   @ViewChild('nzTree')
-  nzTree?:NzTreeComponent;
+  nzTree?: NzTreeComponent;
+  @ViewChild('reNameModalComponent')
+  reNameModalComponent!: ReNameModalComponent;
+
 
   editor: EditorInterface | undefined;
 
-  isMarkdown:boolean=true;
+  isMarkdown: boolean = true;
 
   closeTab({index}: { index: number }): void {
     this.tabs.splice(index, 1);
@@ -75,7 +81,7 @@ export class EditorComponent implements OnInit {
     // load child async
 
     if (event.eventName === 'expand') {
-      let node:TreeNodeModel =<TreeNodeModel> event.node ;
+      let node: TreeNodeModel = <TreeNodeModel>event.node;
       if (node?.getChildren().length === 0 && node?.isExpanded) {
         this.loadNode(node.key).then(data => {
           node.addChildren(data);
@@ -83,36 +89,36 @@ export class EditorComponent implements OnInit {
       }
     }
     if (event.eventName === 'click') {
-      this.message.info('getChildren='+this.nzTree?.getTreeNodes().length)
-      let node:TreeNodeModel = <TreeNodeModel>event.node ;
+      this.message.info('getChildren=' + this.nzTree?.getTreeNodes().length)
+      let node: TreeNodeModel = <TreeNodeModel>event.node;
       let key: string = node!.key;
       let title: string = node!.title;
-      this.clickNode=node;
-      let type=node?.isLeaf;
-      this.message.success(key+'='+title+type);
-      if (type!=null && type){
-        this.onClieckNote(key,node.isMarkdown);
-        this.noteTitle=title;
+      this.clickNode = node;
+      let type = node?.isLeaf;
+      this.message.success(key + '=' + title + type);
+      if (type != null && type) {
+        this.onClieckNote(key, node.isMarkdown);
+        this.noteTitle = title;
       }
     }
   }
 
-  private  onClieckNote(noteId:string,isMarkdown?:boolean){
-    this.noteService.GetNoteContent(noteId).subscribe((apiRe:ApiRep)=>{
+  private onClieckNote(noteId: string, isMarkdown?: boolean) {
+    this.noteService.GetNoteContent(noteId).subscribe((apiRe: ApiRep) => {
 
       if (apiRe.Ok == true) {
         let noteContent: NoteContent = apiRe.Data
         this.isMarkdown = isMarkdown!;
         this.message.info(this.isMarkdown + '?');
         if (isMarkdown) {
-          this.vditor?.SetContent(noteContent.Content!,true);
+          this.vditor?.SetContent(noteContent.Content!, true);
           this.editor = this.vditor;
         } else {
           console.log('note is textbus')
           console.log('Content is ' + noteContent.Content?.length)
           setTimeout(() => {
             //todo:textbus在ready之后才可以使用
-            this.textbusEditor!.SetContent(noteContent.Content!,true);
+            this.textbusEditor!.SetContent(noteContent.Content!, true);
             this.editor = this.textbusEditor;
           }, 100);
 
@@ -120,7 +126,9 @@ export class EditorComponent implements OnInit {
       }
     })
   }
+
   public nzOverlayClassName: string = '';
+
   //节点展开事件
   loadNode(key: string): Promise<NzTreeNodeOptions[]> {
     return new Promise(resolve => {
@@ -156,10 +164,10 @@ export class EditorComponent implements OnInit {
                       node.title = note.Title;
                       node.key = note.NoteId;
                       node.isLeaf = true;
-                      node.isMarkdown=note.IsMarkdown;
-                      if (node.isMarkdown){
+                      node.isMarkdown = note.IsMarkdown;
+                      if (node.isMarkdown) {
                         node.icon = 'file-markdown';
-                      }else {
+                      } else {
                         //<i nz-icon nzType="html5" nzTheme="outline"></i>
                         node.icon = 'html5';
                       }
@@ -195,7 +203,7 @@ export class EditorComponent implements OnInit {
           }
           //{title: 'leaf', key: '1001', icon: 'folder'},
           console.log(this.nodes)
-        }else {
+        } else {
           this.message.error("访问错误：您可能没有权限访问该仓库");
         }
       }
@@ -214,8 +222,8 @@ export class EditorComponent implements OnInit {
   contextMenu(event: NzFormatEmitEvent, menu: NzDropdownMenuComponent): void {
     //console.log(menu.nzOverlayClassName)
     console.log(event.node);
-    this.message.info('右键='+event!.node!.title);
-    this.rightClickNode=<TreeNodeModel>event!.node;
+    this.message.info('右键=' + event!.node!.title);
+    this.rightClickNode = <TreeNodeModel>event!.node;
     this.nzContextMenuService.create(event.event!, menu);
   }
 
@@ -225,15 +233,15 @@ export class EditorComponent implements OnInit {
   }
 
   onCreateNotebook($event: MouseEvent) {
-    this.notebookService.CreateNoteBook('test',this.rightClickNode!.key).subscribe((apiRe:ApiRep)=>{
-      if (apiRe.Ok==true){
-        let notebook:Notebook=apiRe.Data;
-        let node:TreeNodeModel=new TreeNodeModel(new TreeNodeOptionsModel(notebook.NotebookId, notebook.Title));
+    this.notebookService.CreateNoteBook('test', this.rightClickNode!.key).subscribe((apiRe: ApiRep) => {
+      if (apiRe.Ok == true) {
+        let notebook: Notebook = apiRe.Data;
+        let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.NotebookId, notebook.Title));
         node.title = notebook.Title;
         node.key = notebook.NotebookId;
         node.icon = 'folder';
-        node.parentNode=this.rightClickNode;
-        let array=new Array<TreeNodeModel>();
+        node.parentNode = this.rightClickNode;
+        let array = new Array<TreeNodeModel>();
         array.push(node)
         this.rightClickNode?.addChildren(array);
       }
@@ -241,9 +249,9 @@ export class EditorComponent implements OnInit {
   }
 
   onMenuDelete() {
-    if (this.rightClickNode.isLeaf){
+    if (this.rightClickNode.isLeaf) {
       //是笔记
-    }else {
+    } else {
       //是笔记本
     }
   }
@@ -252,15 +260,15 @@ export class EditorComponent implements OnInit {
    * 新建markdown文档
    */
   onCreateMdDoc() {
-    this.noteService.CreateNote('test',this.rightClickNode!.key,true).subscribe((apiRe:ApiRep)=>{
-      if (apiRe.Ok==true){
-        let note:Note=apiRe.Data;
-        let node:TreeNodeModel=new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
+    this.noteService.CreateNote('test', this.rightClickNode!.key, true).subscribe((apiRe: ApiRep) => {
+      if (apiRe.Ok == true) {
+        let note: Note = apiRe.Data;
+        let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
         node.icon = 'file-markdown';
-        node.isLeaf=true;
-        node.isMarkdown=true;
-        node.parentNode=this.rightClickNode;
-        let array=new Array<TreeNodeModel>();
+        node.isLeaf = true;
+        node.isMarkdown = true;
+        node.parentNode = this.rightClickNode;
+        let array = new Array<TreeNodeModel>();
         array.push(node)
         this.rightClickNode?.addChildren(array);
       }
@@ -271,50 +279,96 @@ export class EditorComponent implements OnInit {
    * 新建富文本文档
    */
   onCreateHtmlDoc() {
-    this.noteService.CreateNote('test',this.rightClickNode!.key,false).subscribe((apiRe:ApiRep)=>{
-      if (apiRe.Ok==true){
-        let note:Note=apiRe.Data;
-        let node:TreeNodeModel=new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
+    this.noteService.CreateNote('test', this.rightClickNode!.key, false).subscribe((apiRe: ApiRep) => {
+      if (apiRe.Ok == true) {
+        let note: Note = apiRe.Data;
+        let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
         node.icon = 'html5';
-        node.isLeaf=true;
-        node.isMarkdown=false;
-        node.parentNode=this.rightClickNode;
-        let array=new Array<TreeNodeModel>();
+        node.isLeaf = true;
+        node.isMarkdown = false;
+        node.parentNode = this.rightClickNode;
+        let array = new Array<TreeNodeModel>();
         array.push(node)
         this.rightClickNode?.addChildren(array);
       }
     });
   }
-   saveMessageId!:string;
-  onKeyDown(event: KeyboardEvent) {
-     if (event.ctrlKey &&event.code=='KeyS'){
-       if (this.clickNode==null){
-         event.preventDefault();
-         this.message.info('未选择笔记，无需保存')
-         return;
-       }
-       this.saveMessageId = this.message.loading('正在保存笔记，请勿进行其他操作', { nzDuration: 0 }).messageId;
-       this.updateNote();
-       event.preventDefault();
-     }
-  }
-  updateNote(){
-    let noteId=this.clickNode.key;
-    let title=this.noteTitle;
-    let content=this.editor?.GetContent();
 
-    this.noteService.UpdateNoteTitleAndContent(noteId,title!,content!).subscribe((apiRe:ApiRep)=>{
-      if(apiRe.Ok){
-        this.clickNode.title=title!;
+  saveMessageId!: string;
+
+  onKeyDown(event: KeyboardEvent) {
+    if (event.ctrlKey && event.code == 'KeyS') {
+      if (this.clickNode == null) {
+        event.preventDefault();
+        this.message.info('未选择笔记，无需保存')
+        return;
       }
-      setTimeout(()=>{
-        if (this.saveMessageId!=null){
+      this.saveMessageId = this.message.loading('正在保存笔记，请勿进行其他操作', {nzDuration: 0}).messageId;
+      this.updateNote();
+      event.preventDefault();
+    }
+  }
+
+  updateNote() {
+    let noteId = this.clickNode.key;
+    let title = this.noteTitle;
+    let content = this.editor?.GetContent();
+
+    this.noteService.UpdateNoteTitleAndContent(noteId, title!, content!).subscribe((apiRe: ApiRep) => {
+      if (apiRe.Ok) {
+        this.clickNode.title = title!;
+      }
+      setTimeout(() => {
+        if (this.saveMessageId != null) {
           this.message.remove(this.saveMessageId);
           this.message.success('保存成功')
         }
-      },1000)
+      }, 1000)
 
 
     })
   }
+
+  confirmModal?: NzModalRef; // For testing by now
+  OnReName() {
+    if (this.rightClickNode == null) {
+      return;
+    }
+    let id = this.rightClickNode.key;
+    let title: string = '';
+    this.reNameModalComponent.showModal((title:string) => {
+      this.message.info('ok');
+      if (this.reNameModalComponent.result) {
+        title = this.reNameModalComponent.value!;
+      }
+      this.reNameModalComponent.clearValue();
+      if (title == '') {
+        return;
+      }
+      if (this.rightClickNode.isLeaf) {
+         this.RenameNote(id,title);
+      } else {
+         this.ReNameNoteBook(id,title);
+      }
+    });
+
+  }
+
+  private RenameNote(noteId: string, title: string) {
+    this.noteService.UpdateNoteTitle(noteId,title).subscribe((apiRe:ApiRep)=>{
+      if (apiRe.Ok){
+        this.rightClickNode.title=title;
+      }
+    });
+
+  }
+
+  private ReNameNoteBook(noteBookId: string, title: string) {
+    this.notebookService.UpdateNoteBookTitle(noteBookId,title).subscribe((apiRe:ApiRep)=>{
+      if (apiRe.Ok){
+        this.rightClickNode.title=title;
+      }
+    });
+  }
+
 }

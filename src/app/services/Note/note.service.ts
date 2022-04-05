@@ -15,8 +15,9 @@ export class NoteService {
   config: WebsiteConfig;
 
   constructor(public authService: AuthService, public http: HttpClient, public configService: ConfigService) {
-    this.userId = this.authService.GetUserId();
-    this.token = this.authService.GetToken();
+    let userToken=this.authService.GetUserToken();
+    this.userId =userToken.UserId;
+    this.token = userToken.Token;
     this.config = this.configService.GetWebSiteConfig();
   }
 
@@ -48,7 +49,15 @@ export class NoteService {
     let result = this.http.post<ApiRep>(url, formData);
     return result;
   }
-
+  public UpdateNoteTitle(noteId:string,noteTitle: string) : Observable<ApiRep> {
+    let url = this.config.baseURL + '/api/Note/UpdateNoteTitle';
+    let formData = new FormData();
+    formData.set('token', this.token!);
+    formData.set('noteId', noteId);
+    formData.set('noteTitle', noteTitle);
+    let result = this.http.post<ApiRep>(url, formData);
+    return result;
+  }
   public UpdateNoteTitleAndContent(noteId:string,noteTitle: string,content:string) : Observable<ApiRep> {
     let url = this.config.baseURL + '/api/Note/UpdateNoteTitleAndContent';
     let formData = new FormData();

@@ -29,7 +29,7 @@
             <ul nz-menu style="min-width:8rem">
               <li nz-menu-item>复制</li>
               <li nz-menu-item>剪切</li>
-              <li nz-menu-item>重命名</li>
+              <li nz-menu-item (click)="OnReName()">重命名</li>
               <li nz-menu-item (click)="onMenuDelete()">删除</li>
               <li nz-submenu nzTitle="分享">
                 <ul>
@@ -83,11 +83,9 @@
                   <li nz-menu-item>图片回收站</li>
                 </ul>
               </li>
-
               <li nz-submenu nzTitle="增加" nzIcon="folder-add">
                 <ul>
-                  <li nz-menu-item>增加文件夹</li>
-
+                  <li nz-menu-item>增加根文件夹</li>
                 </ul>
               </li>
             </ul>
@@ -96,8 +94,7 @@
 
         </nz-tab>
       </nz-tabset>
-
-
+      <app-re-name-modal-component #reNameModalComponent></app-re-name-modal-component>
     </div>
     <div nz-col nzFlex="auto">
       <div nz-row>

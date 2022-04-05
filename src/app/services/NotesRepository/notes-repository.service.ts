@@ -17,8 +17,9 @@ export class NotesRepositoryService {
   config: WebsiteConfig;
 
   constructor(public authService: AuthService, public http: HttpClient, public configService: ConfigService) {
-    this.userId = this.authService.GetUserId();
-    this.token = this.authService.GetToken();
+    let userToken=this.authService.GetUserToken();
+    this.userId =userToken.UserId;
+    this.token = userToken.Token;
     this.config = this.configService.GetWebSiteConfig();
   }
 

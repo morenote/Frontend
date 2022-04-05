@@ -10,6 +10,7 @@ import {NotesRepository} from "../../../../models/entity/notes-repository";
 import {RepositoryType} from "../../../../models/enum/repository-type";
 import {NotesRepositoryService} from "../../../../services/NotesRepository/notes-repository.service";
 import {Router} from "@angular/router";
+import {UserToken} from "../../../../models/DTO/user-token";
 
 @Component({
   selector: 'app-create-repository',
@@ -21,7 +22,7 @@ export class CreateRepositoryFormComponent implements OnInit {
   submitting = false;
   orgs:Array<Organization>=new Array<Organization>();
 
-
+   userToken?:UserToken;
 
   value?: string;
   checked = true;
@@ -39,6 +40,7 @@ export class CreateRepositoryFormComponent implements OnInit {
               private authService:AuthService,
               private notesRepositoryService:NotesRepositoryService
               ) {
+    this.userToken=authService.GetUserToken();
   }
 
   ngOnInit(): void {
@@ -59,8 +61,9 @@ export class CreateRepositoryFormComponent implements OnInit {
       public: [1, [Validators.min(1), Validators.max(3)]],
       publicUsers: [null, []]
     });
-    let userName=this.authService.GetUserName();
-    let userId=this.authService.GetUserId();
+    let userToken=this.authService.GetUserToken();
+    let userName=userToken.Username;
+    let userId=userToken.UserId;
 
     this.ownerOptionArray.push(userName);
     this.ownerMap.set(userName,userId!);
@@ -80,8 +83,10 @@ export class CreateRepositoryFormComponent implements OnInit {
     let repository=new NotesRepository();
     repository.Name=this.form.value.repositoryName;
 
-    if (this.form.value.owner==this.authService.GetUserName()){
-      repository.OwnerId=this.authService.GetUserId()!;
+
+
+    if (this.form.value.owner==this.userToken?.Username){
+      repository.OwnerId=this.userToken?.UserId!;
       repository.RepositoryOwnerType=RepositoryType.Personal;
     }else {
       repository.RepositoryOwnerType=RepositoryType.Organization;

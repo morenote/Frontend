@@ -1,57 +1,51 @@
 import {Inject, Injectable} from '@angular/core';
 import {DA_SERVICE_TOKEN, ITokenService} from "@delon/auth";
 import {LocalStorageDBService} from "../data-storage/local-storage-db.service";
+import {Observable} from "rxjs";
+import {ApiRep} from "../../models/api/api-rep";
+import {HttpClient, HttpParams} from "@angular/common/http";
+import {WebsiteConfig} from "../../models/config/website-config";
+import {ConfigService} from "../config/config.service";
+import {UserToken} from "../../models/DTO/user-token";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-    db:LocalStorageDBService
-  public constructor(@Inject(DA_SERVICE_TOKEN) public tokenService: ITokenService,db:LocalStorageDBService) {
-      this.db=db;
-  }
 
-  public SetUserName(name: string) {
-    localStorage.setItem('userName', name);
-  }
-  public GetUserName(): string {
-    let userName = localStorage.getItem('userName');
-    if (userName == null) {
-      return '';
-    }
-    return userName;
+  db: LocalStorageDBService
+
+  config: WebsiteConfig;
+
+
+  public constructor(db: LocalStorageDBService,
+                     public http: HttpClient,
+                     public configService: ConfigService,
+                     private localStorageDBService: LocalStorageDBService) {
+    this.db = db
+    this.config = this.configService.GetWebSiteConfig();
   }
 
 
-
-  public SetToken(token:string):void{
-    localStorage.setItem('token', token);
-  }
-  public GetToken():string{
-    let token = localStorage.getItem('token');
-    if (token == null) {
-      return '';
-    }
-    return token;
+  public SetUserToken(userToken: UserToken) {
+    this.localStorageDBService.SetValue('AuthService-UserToken', JSON.stringify(userToken));
   }
 
-  public GetUserId():string | null{
-    return  this.db.GetValue("UserId");
-  }
-  public SetUserId(value:string):void{
-      this.db.SetValue("UserId",value);
+  public GetUserToken(): UserToken {
+    let json = this.localStorageDBService.GetValue('AuthService-UserToken');
+    return JSON.parse(json!);
   }
 
-  public  SetUserLoginInfo(res:any){
-      let json=JSON.stringify(res);
-      this.db.SetValue("userLoginInfo",json);
+
+  public LoginByPassword(type: string, email: string, pwd: string): Observable<ApiRep> {
+    let url = this.config.baseURL + '/api/Auth/Login?_allow_anonymous=true';
+    let formData = new FormData();
+    formData.set('type', type!);
+    formData.set('email', email!);
+    formData.set('pwd', pwd);
+    let result = this.http.post<ApiRep>(url, formData);
+    return result;
   }
-  public  GetUserLoginInfo(res:any):any{
-    let json= this.db.GetValue("userLoginInfo");
-    if (json==null||json==''){
-      return null;
-    }
-    return  JSON.parse(json);
-  }
+
 
 }

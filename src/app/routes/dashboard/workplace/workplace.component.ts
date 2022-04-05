@@ -3,6 +3,8 @@ import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { zip } from 'rxjs';
 import {Router} from "@angular/router";
+import {AuthService} from "../../../services/auth/auth.service";
+import {UserToken} from "../../../models/DTO/user-token";
 
 @Component({
   selector: 'app-dashboard-workplace',
@@ -80,8 +82,13 @@ export class DashboardWorkplaceComponent implements OnInit {
   constructor(private http: _HttpClient,
               public msg: NzMessageService,
               private cdr: ChangeDetectorRef,
-              public router:Router) {}
+              public router:Router,
+              private authService:AuthService
+              ) {
+      this.userToken=authService.GetUserToken();
+  }
 
+  userToken:UserToken;
   ngOnInit(): void {
     zip(this.http.get('/chart'), this.http.get('/api/notice'), this.http.get('/api/activities')).subscribe(
       ([chart, notice, activities]: [any, any, any]) => {

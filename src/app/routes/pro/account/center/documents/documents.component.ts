@@ -5,6 +5,7 @@ import {NotesRepositoryService} from "../../../../../services/NotesRepository/no
 import {ApiRep} from "../../../../../models/api/api-rep";
 import {NotesRepository} from "../../../../../models/entity/notes-repository";
 import {Router} from "@angular/router";
+import {NzMessageService} from "ng-zorro-antd/message";
 
 @Component({
   selector: 'app-account-center-documents',
@@ -19,7 +20,8 @@ export class ProAccountCenterDocumentsComponent {
   constructor(private http: _HttpClient,
               private cdr: ChangeDetectorRef,
               public router:Router,
-              public notesRepositoryService: NotesRepositoryService) {
+              public notesRepositoryService: NotesRepositoryService,
+              private message:NzMessageService) {
     notesRepositoryService.GetMyNoteRepository().subscribe(
       (apiRe: ApiRep) => {
         console.log(apiRe.Ok)
@@ -70,6 +72,7 @@ export class ProAccountCenterDocumentsComponent {
       if (apiRe.Ok == true) {
         //alert(apiRe.Ok)
         this.list=this.list.filter(item => item.Id != noteRepositoryId);
+        this.message.success('删除仓库成功，您可以在回收站恢复被删除的仓库');
       }
     });
   }

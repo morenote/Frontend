@@ -77,9 +77,26 @@ export class VditorMarkdownEditorComponent implements OnInit, EditorInterface {
 
   GetContent(): string {
     return this.vditor.getValue();
+
   }
 
   Destroy(): void {
     this.vditor.destroy();
+  }
+
+  Disabled(): void {
+    this.vditor.disabled();
+  }
+
+  Enable(): void {
+    this.vditor.enable();
+  }
+
+  GetYourName(): string {
+    return "vditor";
+  }
+
+  IsReady(): boolean {
+    return this.vditor!=null;
   }
 }

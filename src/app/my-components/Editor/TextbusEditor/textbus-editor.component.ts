@@ -40,4 +40,19 @@ export class TextbusEditorComponent implements OnInit, EditorInterface {
   GetContent(): string {
     return this.editor!.getContents().content;
   }
+
+  Disabled(): void {
+
+  }
+
+  Enable(): void {
+  }
+
+  GetYourName(): string {
+    return "textbus";
+  }
+
+  IsReady(): boolean {
+    return this.editor!.isReady;
+  }
 }

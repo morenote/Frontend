@@ -40,8 +40,8 @@
               </li>
               <li nz-submenu nzTitle="导出">
                 <ul>
-                  <li nz-menu-item>zip压缩包（仅最新记录记录）</li>
-                  <li nz-menu-item>zip压缩包（含历史记录）</li>
+                  <li nz-menu-item>zip压缩包（最新状态）</li>
+                  <li nz-menu-item>zip压缩包（历史记录）</li>
                   <li nz-menu-item>单文档文件（md或html）</li>
                   <li nz-menu-item>PDF文档</li>
                   <li nz-menu-item>PNG图片</li>
@@ -99,19 +99,32 @@
     <div nz-col nzFlex="auto">
       <div nz-row>
         <input nz-input placeholder="Basic usage" [(ngModel)]="noteTitle" (keydown)="onKeyDown($event)" style="width: 500px"/>
+
         <div style="vertical-align: center">
-          <nz-tag [nzColor]="'magenta'">magenta</nz-tag>
-          <nz-tag [nzColor]="'red'">red</nz-tag>
-          <nz-tag [nzColor]="'volcano'">volcano</nz-tag>
-          <nz-tag [nzColor]="'orange'">orange</nz-tag>
-          <nz-tag [nzColor]="'gold'">gold</nz-tag>
-          <nz-tag [nzColor]="'lime'">lime</nz-tag>
-          <nz-tag [nzColor]="'green'">green</nz-tag>
-          <nz-tag [nzColor]="'cyan'">cyan</nz-tag>
-          <nz-tag [nzColor]="'blue'">blue</nz-tag>
-          <nz-tag [nzColor]="'geekblue'">geekblue</nz-tag>
-          <nz-tag [nzColor]="'purple'">purple</nz-tag>
+          <nz-tag
+            *ngFor="let tag of tags; let i = index"
+            [nzMode]="i === 0 ? 'default' : 'closeable'"
+            (nzOnClose)="handleClose(tag)"
+          >
+            {{ sliceTagName(tag) }}
+          </nz-tag>
+          <nz-tag *ngIf="!inputVisible" class="editable-tag" nzNoAnimation (click)="showInput()">
+            <i nz-icon nzType="plus"></i>
+            New Tag
+          </nz-tag>
+          <input
+            #inputElement
+            nz-input
+            nzSize="small"
+            *ngIf="inputVisible"
+            type="text"
+            [(ngModel)]="inputValue"
+            style="width: 78px;"
+            (blur)="handleInputConfirm()"
+            (keydown.enter)="handleInputConfirm()"
+          />
         </div>
+        <nz-switch (ngModelChange)="onChangeEditorEditable($event)" style="margin-left: 1rem" [ngModel]="false" nzCheckedChildren="编辑模式" nzUnCheckedChildren="预览模式"></nz-switch>
       </div>
       <nz-row  >
         <div>

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NzContextMenuService, NzDropdownMenuComponent, NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzFormatBeforeDropEvent, NzFormatEmitEvent, NzTreeNode, NzTreeNodeOptions} from 'ng-zorro-antd/tree';
@@ -46,7 +46,8 @@ export class EditorComponent implements OnInit {
 
   //{title: 'leaf', key: '1001', icon: 'folder'},
   nodes = new Array<TreeNodeModel>();
-  tabs = ['Tab 1', 'Tab 2', 'Tab 3'];
+
+
   selectedIndex = 0;
 
   rightClickNode!: TreeNodeModel;//右键选中
@@ -61,19 +62,12 @@ export class EditorComponent implements OnInit {
   @ViewChild('reNameModalComponent')
   reNameModalComponent!: ReNameModalComponent;
 
-
+  //编辑器
   editor: EditorInterface | undefined;
+
 
   isMarkdown: boolean = true;
 
-  closeTab({index}: { index: number }): void {
-    this.tabs.splice(index, 1);
-  }
-
-  newTab(): void {
-    this.tabs.push('New Tab');
-    this.selectedIndex = this.tabs.length;
-  }
 
 
   nzEvent(event: NzFormatEmitEvent): void {
@@ -111,8 +105,11 @@ export class EditorComponent implements OnInit {
         this.isMarkdown = isMarkdown!;
         this.message.info(this.isMarkdown + '?');
         if (isMarkdown) {
-          this.vditor?.SetContent(noteContent.Content!, true);
-          this.editor = this.vditor;
+          //todo:vditor在ready之后才可以使用
+          setTimeout(()=>{
+            this.vditor!.SetContent(noteContent.Content!, true);
+            this.editor = this.vditor;
+          },200);
         } else {
           console.log('note is textbus')
           console.log('Content is ' + noteContent.Content?.length)
@@ -120,9 +117,13 @@ export class EditorComponent implements OnInit {
             //todo:textbus在ready之后才可以使用
             this.textbusEditor!.SetContent(noteContent.Content!, true);
             this.editor = this.textbusEditor;
-          }, 100);
+          }, 200);
 
         }
+        setTimeout(()=>{
+          this.message.info('切换编辑器到'+this.editor?.GetYourName())
+        },500);
+
       }
     })
   }
@@ -303,7 +304,7 @@ export class EditorComponent implements OnInit {
         this.message.info('未选择笔记，无需保存')
         return;
       }
-      this.saveMessageId = this.message.loading('正在保存笔记，请勿进行其他操作', {nzDuration: 0}).messageId;
+      this.saveMessageId = this.message.loading('正在努力保存笔记，请勿进行其他操作', {nzDuration: 0}).messageId;
       this.updateNote();
       event.preventDefault();
     }
@@ -313,7 +314,11 @@ export class EditorComponent implements OnInit {
     let noteId = this.clickNode.key;
     let title = this.noteTitle;
     let content = this.editor?.GetContent();
-
+    if (content==null || content ==undefined){
+      this.message.remove(this.saveMessageId);
+      this.message.error('保存内容存在错误，无法保存当前笔记内容');
+      return;
+    }
     this.noteService.UpdateNoteTitleAndContent(noteId, title!, content!).subscribe((apiRe: ApiRep) => {
       if (apiRe.Ok) {
         this.clickNode.title = title!;
@@ -370,5 +375,45 @@ export class EditorComponent implements OnInit {
       }
     });
   }
+  //--------------标签功能------------------
+  tags = ['Unremovable', 'Tag 2', 'Tag 3'];//标签
+  inputVisible = false;
+  inputValue = '';
+  @ViewChild('inputElement', { static: false }) inputElement?: ElementRef;
 
+  handleClose(removedTag: {}): void {
+    this.tags = this.tags.filter(tag => tag !== removedTag);
+  }
+
+  sliceTagName(tag: string): string {
+    const isLongTag = tag.length > 20;
+    return isLongTag ? `${tag.slice(0, 20)}...` : tag;
+  }
+
+  showInput(): void {
+    this.inputVisible = true;
+    setTimeout(() => {
+      this.inputElement?.nativeElement.focus();
+    }, 10);
+  }
+
+  handleInputConfirm(): void {
+    if (this.inputValue && this.tags.indexOf(this.inputValue) === -1) {
+      this.tags = [...this.tags, this.inputValue];
+    }
+    this.inputValue = '';
+    this.inputVisible = false;
+  }
+
+  onChangeEditorEditable(value: boolean) {
+    if (value){
+      //编辑模式
+      this.message.info('已经切换到编辑模式');
+      this.editor?.Enable()
+    }else {
+      //只读模式
+      this.message.info('已经切换到只读模式');
+      this.editor?.Disabled();
+    }
+  }
 }

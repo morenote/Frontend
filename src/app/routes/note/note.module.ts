@@ -10,13 +10,18 @@ import {
   TextbusEditorComponent
 } from "../../my-components/Editor/TextbusEditor/textbus-editor.component";
 import {
-  ReNameModalComponent
-} from "../../my-components/MyModal/re-name-modal-component/re-name-modal.component";
+  InputModalComponent
+} from "../../my-components/MyModal/re-name-modal-component/input-modal.component";
+
 
 const COMPONENTS: Array<Type<void>> = [EditorComponent];
 
 @NgModule({
   imports: [SharedModule, NoteRoutingModule, NzTreeModule, NzIconModule],
-  declarations: [COMPONENTS, VditorMarkdownEditorComponent,TextbusEditorComponent,ReNameModalComponent]
+  declarations: [COMPONENTS,
+    VditorMarkdownEditorComponent,
+    TextbusEditorComponent,
+    InputModalComponent
+    ]
 })
 export class NoteModule {}

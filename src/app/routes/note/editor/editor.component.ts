@@ -21,7 +21,7 @@ import {TextbusEditorComponent} from "../../../my-components/Editor/TextbusEdito
 import {NzTreeComponent} from "ng-zorro-antd/tree/tree.component";
 import {EditorInterface} from "../../../my-components/Editor/editor-interface";
 import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
-import {ReNameModalComponent} from "../../../my-components/MyModal/re-name-modal-component/re-name-modal.component";
+import {InputModalComponent} from "../../../my-components/MyModal/re-name-modal-component/input-modal.component";
 
 @Component({
   selector: 'app-myeditor',
@@ -60,14 +60,13 @@ export class EditorComponent implements OnInit {
   @ViewChild('nzTree')
   nzTree?: NzTreeComponent;
   @ViewChild('reNameModalComponent')
-  reNameModalComponent!: ReNameModalComponent;
+  reNameModalComponent!: InputModalComponent;
 
   //编辑器
   editor: EditorInterface | undefined;
 
 
   isMarkdown: boolean = true;
-
 
 
   nzEvent(event: NzFormatEmitEvent): void {
@@ -106,10 +105,10 @@ export class EditorComponent implements OnInit {
         this.message.info(this.isMarkdown + '?');
         if (isMarkdown) {
           //todo:vditor在ready之后才可以使用
-          setTimeout(()=>{
+          setTimeout(() => {
             this.vditor!.SetContent(noteContent.Content!, true);
             this.editor = this.vditor;
-          },200);
+          }, 200);
         } else {
           console.log('note is textbus')
           console.log('Content is ' + noteContent.Content?.length)
@@ -120,9 +119,9 @@ export class EditorComponent implements OnInit {
           }, 200);
 
         }
-        setTimeout(()=>{
-          this.message.info('切换编辑器到'+this.editor?.GetYourName())
-        },500);
+        setTimeout(() => {
+          this.message.info('切换编辑器到' + this.editor?.GetYourName())
+        }, 500);
 
       }
     })
@@ -249,6 +248,9 @@ export class EditorComponent implements OnInit {
     })
   }
 
+  /**
+   * 事件 删除
+   */
   onMenuDelete() {
     if (this.rightClickNode.isLeaf) {
       //是笔记
@@ -261,38 +263,52 @@ export class EditorComponent implements OnInit {
    * 新建markdown文档
    */
   onCreateMdDoc() {
-    this.noteService.CreateNote('test', this.rightClickNode!.key, true).subscribe((apiRe: ApiRep) => {
-      if (apiRe.Ok == true) {
-        let note: Note = apiRe.Data;
-        let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
-        node.icon = 'file-markdown';
-        node.isLeaf = true;
-        node.isMarkdown = true;
-        node.parentNode = this.rightClickNode;
-        let array = new Array<TreeNodeModel>();
-        array.push(node)
-        this.rightClickNode?.addChildren(array);
+
+    this.reNameModalComponent.showModal('新建markdown文档', '请输入文档名称', (result: boolean, value: string) => {
+      if (result && value != null && value != '') {
+        this.noteService.CreateNote(value, this.rightClickNode!.key, true).subscribe((apiRe: ApiRep) => {
+          if (apiRe.Ok == true) {
+            let note: Note = apiRe.Data;
+            let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
+            node.icon = 'file-markdown';
+            node.isLeaf = true;
+            node.isMarkdown = true;
+            node.parentNode = this.rightClickNode;
+            let array = new Array<TreeNodeModel>();
+            array.push(node)
+            this.rightClickNode?.addChildren(array);
+          }
+        });
+
+
       }
     });
+
   }
 
   /**
    * 新建富文本文档
    */
   onCreateHtmlDoc() {
-    this.noteService.CreateNote('test', this.rightClickNode!.key, false).subscribe((apiRe: ApiRep) => {
-      if (apiRe.Ok == true) {
-        let note: Note = apiRe.Data;
-        let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
-        node.icon = 'html5';
-        node.isLeaf = true;
-        node.isMarkdown = false;
-        node.parentNode = this.rightClickNode;
-        let array = new Array<TreeNodeModel>();
-        array.push(node)
-        this.rightClickNode?.addChildren(array);
+    this.reNameModalComponent.showModal('新建富文本文档', '请输入文档名称', (result: boolean, value: string) => {
+      if (result && value != null && value != '') {
+        this.noteService.CreateNote(value, this.rightClickNode!.key, false).subscribe((apiRe: ApiRep) => {
+          if (apiRe.Ok == true) {
+            let note: Note = apiRe.Data;
+            let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
+            node.icon = 'html5';
+            node.isLeaf = true;
+            node.isMarkdown = false;
+            node.parentNode = this.rightClickNode;
+            let array = new Array<TreeNodeModel>();
+            array.push(node)
+            this.rightClickNode?.addChildren(array);
+          }
+        });
       }
-    });
+
+    })
+
   }
 
   saveMessageId!: string;
@@ -314,7 +330,7 @@ export class EditorComponent implements OnInit {
     let noteId = this.clickNode.key;
     let title = this.noteTitle;
     let content = this.editor?.GetContent();
-    if (content==null || content ==undefined){
+    if (content == null || content == undefined) {
       this.message.remove(this.saveMessageId);
       this.message.error('保存内容存在错误，无法保存当前笔记内容');
       return;
@@ -341,9 +357,9 @@ export class EditorComponent implements OnInit {
     }
     let id = this.rightClickNode.key;
     let title: string = '';
-    this.reNameModalComponent.showModal((title:string) => {
+    this.reNameModalComponent.showModal('重命名', '请输入重命名', (result: boolean, title: string) => {
       this.message.info('ok');
-      if (this.reNameModalComponent.result) {
+      if (result && this.reNameModalComponent.result) {
         title = this.reNameModalComponent.value!;
       }
       this.reNameModalComponent.clearValue();
@@ -351,35 +367,36 @@ export class EditorComponent implements OnInit {
         return;
       }
       if (this.rightClickNode.isLeaf) {
-         this.RenameNote(id,title);
+        this.RenameNote(id, title);
       } else {
-         this.ReNameNoteBook(id,title);
+        this.ReNameNoteBook(id, title);
       }
     });
 
   }
 
   private RenameNote(noteId: string, title: string) {
-    this.noteService.UpdateNoteTitle(noteId,title).subscribe((apiRe:ApiRep)=>{
-      if (apiRe.Ok){
-        this.rightClickNode.title=title;
+    this.noteService.UpdateNoteTitle(noteId, title).subscribe((apiRe: ApiRep) => {
+      if (apiRe.Ok) {
+        this.rightClickNode.title = title;
       }
     });
 
   }
 
   private ReNameNoteBook(noteBookId: string, title: string) {
-    this.notebookService.UpdateNoteBookTitle(noteBookId,title).subscribe((apiRe:ApiRep)=>{
-      if (apiRe.Ok){
-        this.rightClickNode.title=title;
+    this.notebookService.UpdateNoteBookTitle(noteBookId, title).subscribe((apiRe: ApiRep) => {
+      if (apiRe.Ok) {
+        this.rightClickNode.title = title;
       }
     });
   }
+
   //--------------标签功能------------------
   tags = ['Unremovable', 'Tag 2', 'Tag 3'];//标签
   inputVisible = false;
   inputValue = '';
-  @ViewChild('inputElement', { static: false }) inputElement?: ElementRef;
+  @ViewChild('inputElement', {static: false}) inputElement?: ElementRef;
 
   handleClose(removedTag: {}): void {
     this.tags = this.tags.filter(tag => tag !== removedTag);
@@ -406,11 +423,11 @@ export class EditorComponent implements OnInit {
   }
 
   onChangeEditorEditable(value: boolean) {
-    if (value){
+    if (value) {
       //编辑模式
       this.message.info('已经切换到编辑模式');
       this.editor?.Enable()
-    }else {
+    } else {
       //只读模式
       this.message.info('已经切换到只读模式');
       this.editor?.Disabled();

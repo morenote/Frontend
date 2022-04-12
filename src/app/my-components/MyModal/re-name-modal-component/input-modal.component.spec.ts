@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReNameModalComponent } from './re-name-modal.component';
+import { InputModalComponent } from './input-modal.component';
 
 describe('ReNameModalComponentComponent', () => {
-  let component: ReNameModalComponent;
-  let fixture: ComponentFixture<ReNameModalComponent>;
+  let component: InputModalComponent;
+  let fixture: ComponentFixture<InputModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReNameModalComponent ]
+      declarations: [ InputModalComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ReNameModalComponent);
+    fixture = TestBed.createComponent(InputModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

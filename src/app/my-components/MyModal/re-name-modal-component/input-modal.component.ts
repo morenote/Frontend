@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./input-modal.component.css']
 })
 export class InputModalComponent implements OnInit {
+
+
   isVisible = false;
   isOkLoading = false;
   public result?:boolean;
@@ -26,6 +28,9 @@ export class InputModalComponent implements OnInit {
   }
   public clearValue(){
     this.value='';
+  }
+  public setValue(value:string){
+    this.value=value;
   }
 
   handleOk(): void {

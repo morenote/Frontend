@@ -50,7 +50,8 @@
 
               <li nz-submenu nzTitle="新建">
                 <ul>
-                  <li nz-menu-item (click)="onCreateNotebook($event)">文件夹</li>
+                  <li nz-menu-item (click)="onCreateNotebook($event,false)">文件夹</li>
+                  <li nz-menu-item (click)="onCreateNotebook($event,true)">根文件夹</li>
                   <li nz-menu-item (click)="onCreateMdDoc()">markdown文档</li>
                   <li nz-menu-item (click)="onCreateHtmlDoc()">富文本文档</li>
                 </ul>
@@ -98,7 +99,7 @@
     </div>
     <div nz-col nzFlex="auto">
       <div nz-row>
-        <input nz-input placeholder="Basic usage" [(ngModel)]="noteTitle" (keydown)="onKeyDown($event)" style="width: 500px"/>
+        <input nz-input placeholder="Basic usage" [(ngModel)]="noteTitle"    (keydown)="onKeyDown($event)" style="width: 500px"/>
 
         <div style="vertical-align: center">
           <nz-tag

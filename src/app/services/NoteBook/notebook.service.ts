@@ -38,11 +38,12 @@ export class NotebookService {
     let result = this.http.get<ApiRep>(url, {params:httpParams});
     return result;
   }
-  public CreateNoteBook(notebookTitle: string,parentNotebookId:string) : Observable<ApiRep> {
+  public CreateNoteBook(noteRepositoryId:string,notebookTitle: string,parentNotebookId:string) : Observable<ApiRep> {
     let url = this.config.baseURL + '/api/Notebook/CreateNoteBook';
     let formData = new FormData();
     formData.set('token', this.token!);
     formData.set('notebookTitle', notebookTitle);
+    formData.set('noteRepositoryId', noteRepositoryId);
     formData.set('parentNotebookId', parentNotebookId);
     let result = this.http.post<ApiRep>(url, formData);
     return result;

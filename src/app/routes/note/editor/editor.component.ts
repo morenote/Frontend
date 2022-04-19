@@ -96,6 +96,8 @@ export class EditorComponent implements OnInit {
     }
   }
 
+
+
   private onClieckNote(noteId: string, isMarkdown?: boolean) {
     this.noteService.GetNoteContent(noteId).subscribe((apiRe: ApiRep) => {
 
@@ -232,21 +234,43 @@ export class EditorComponent implements OnInit {
     this.nzContextMenuService.close();
   }
 
-  onCreateNotebook($event: MouseEvent) {
-    this.notebookService.CreateNoteBook('test', this.rightClickNode!.key).subscribe((apiRe: ApiRep) => {
-      if (apiRe.Ok == true) {
-        let notebook: Notebook = apiRe.Data;
-        let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.NotebookId, notebook.Title));
-        node.title = notebook.Title;
-        node.key = notebook.NotebookId;
-        node.icon = 'folder';
-        node.parentNode = this.rightClickNode;
-        let array = new Array<TreeNodeModel>();
-        array.push(node)
-        this.rightClickNode?.addChildren(array);
+  /**
+   * 创建文件夹
+   * @param $event
+   */
+  onCreateNotebook($event: MouseEvent,isRoot:boolean) {
+    let noteRepositoryId=this.repositoryId;
+    this.reNameModalComponent.clearValue();
+    this.reNameModalComponent.showModal('创建文件夹', '请输入文件夹名称', (result: boolean, value: string) => {
+      if (result&&value){
+        let parentFolder= this.rightClickNode!.key;
+        if (isRoot){
+          parentFolder='';
+        }
+
+        this.notebookService.CreateNoteBook(noteRepositoryId,value, parentFolder).subscribe((apiRe: ApiRep) => {
+          if (apiRe.Ok == true) {
+            let notebook: Notebook = apiRe.Data;
+            let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.NotebookId, notebook.Title));
+            node.title = notebook.Title;
+            node.key = notebook.NotebookId;
+            node.icon = 'folder';
+
+            if (isRoot){
+
+              this.nzTree?.getTreeNodes().push(node);
+
+              this.nzTree?.renderTree();
+            }else {
+              node.parentNode = this.rightClickNode;
+              this.rightClickNode?.addChildren(new Array(node));
+            }
+          }
+        });
       }
-    })
+    });
   }
+
 
   /**
    * 事件 删除
@@ -276,11 +300,9 @@ export class EditorComponent implements OnInit {
             node.parentNode = this.rightClickNode;
             let array = new Array<TreeNodeModel>();
             array.push(node)
-            this.rightClickNode?.addChildren(array);
+            this.rightClickNode?.addChildren(new Array(node))
           }
         });
-
-
       }
     });
 
@@ -324,6 +346,13 @@ export class EditorComponent implements OnInit {
       this.updateNote();
       event.preventDefault();
     }
+
+    if (event.ctrlKey &&event.altKey && event.code == 'KeyN'){
+      event.preventDefault();
+      this.message.info('双击shift')
+      return;
+
+    }
   }
 
   updateNote() {
@@ -357,20 +386,20 @@ export class EditorComponent implements OnInit {
     }
     let id = this.rightClickNode.key;
     let title: string = '';
+    this.reNameModalComponent.setValue(this.rightClickNode.title);
     this.reNameModalComponent.showModal('重命名', '请输入重命名', (result: boolean, title: string) => {
       this.message.info('ok');
-      if (result && this.reNameModalComponent.result) {
+      if (result && this.reNameModalComponent.value ) {
         title = this.reNameModalComponent.value!;
+        if (this.rightClickNode.isLeaf) {
+          this.RenameNote(id, title);
+        } else {
+          this.ReNameNoteBook(id, title);
+        }
       }
       this.reNameModalComponent.clearValue();
-      if (title == '') {
-        return;
-      }
-      if (this.rightClickNode.isLeaf) {
-        this.RenameNote(id, title);
-      } else {
-        this.ReNameNoteBook(id, title);
-      }
+
+
     });
 
   }
@@ -391,6 +420,7 @@ export class EditorComponent implements OnInit {
       }
     });
   }
+
 
   //--------------标签功能------------------
   tags = ['Unremovable', 'Tag 2', 'Tag 3'];//标签

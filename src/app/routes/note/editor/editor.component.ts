@@ -22,6 +22,7 @@ import {NzTreeComponent} from "ng-zorro-antd/tree/tree.component";
 import {EditorInterface} from "../../../my-components/Editor/editor-interface";
 import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {InputModalComponent} from "../../../my-components/MyModal/re-name-modal-component/input-modal.component";
+import {SerchNoteModalComponent} from "../../../my-components/MyModal/serch-note-modal/serch-note-modal.component";
 
 @Component({
   selector: 'app-myeditor',
@@ -62,6 +63,8 @@ export class EditorComponent implements OnInit {
   @ViewChild('reNameModalComponent')
   reNameModalComponent!: InputModalComponent;
 
+  @ViewChild('serchNoteModalComponent')
+  serchNoteModalComponent!:SerchNoteModalComponent;
   //编辑器
   editor: EditorInterface | undefined;
 
@@ -349,7 +352,10 @@ export class EditorComponent implements OnInit {
 
     if (event.ctrlKey &&event.altKey && event.code == 'KeyN'){
       event.preventDefault();
-      this.message.info('双击shift')
+      this.message.info('笔记搜索功能')
+      this.serchNoteModalComponent.showModal('笔记搜索','搜索关键字',(result: boolean, value: string) =>{
+
+      });
       return;
 
     }

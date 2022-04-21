@@ -1,5 +1,6 @@
 <nz-modal
-  nzWidth="1200px"
+  nzWidth="800px"
+
   [(nzVisible)]="isVisible"
   [nzTitle]="title"
   (nzOnCancel)="handleCancel()"
@@ -21,14 +22,28 @@
             <nz-skeleton *ngIf="!item" [nzAvatar]="true" [nzParagraph]="{ rows: 1 }"></nz-skeleton>
             <nz-list-item-meta
               *ngIf="item"
-              nzAvatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+              nzAvatar="./assets/tmp/avatar/avatar01.png"
               [nzDescription]="item.email"
             >
               <nz-list-item-meta-title>
                 <a href="https://ng.ant.design">{{ item.name.last }}</a>
               </nz-list-item-meta-title>
+
             </nz-list-item-meta>
+
+            <ul nz-list-item-actions>
+              <nz-list-item-action>
+                <a (click)="nzMessage.info('引用')">插入文章地址</a>
+              </nz-list-item-action>
+
+              <nz-list-item-action>
+                <a (click)="nzMessage.info('编辑')">打开</a>
+                <a (click)="nzMessage.info('编辑')">打开</a>
+
+              </nz-list-item-action>
+            </ul>
           </nz-list-item>
+
         </nz-list>
       </cdk-virtual-scroll-viewport>
 

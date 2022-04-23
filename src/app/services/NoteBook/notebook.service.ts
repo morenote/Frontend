@@ -58,4 +58,15 @@ export class NotebookService {
     return result;
   }
 
+  public deleteNotebook(noteRepositoryId: string,notebookId: string,recursively:boolean,force:boolean): Observable<ApiRep> {
+    let url = this.config.baseURL + '/api/Notebook/DeleteNotebook';
+    let httpParams = new HttpParams()
+      .append('token', this.token!)
+      .append('noteRepositoryId', noteRepositoryId)
+      .append('notebookId', notebookId)
+      .append('recursively', recursively)
+      .append('force', force);
+    let result = this.http.delete<ApiRep>(url, {params: httpParams});
+    return result;
+  }
 }

@@ -281,8 +281,32 @@ export class EditorComponent implements OnInit {
   onMenuDelete() {
     if (this.rightClickNode.isLeaf) {
       //是笔记
+      this.noteService.deleteNote(this.repositoryId,this.rightClickNode.key).subscribe((apiRe:ApiRep)=>{
+        if (apiRe.Ok){
+          this.message.success('删除笔记成功');
+          this.rightClickNode.remove();
+        }else {
+          this.message.error('系统拒绝了您的删除请求')
+        }
+      })
     } else {
       //是笔记本
+      this.notebookService.deleteNotebook(this.repositoryId,this.rightClickNode.key,true,true).subscribe((apiRe:ApiRep)=>{
+          if (apiRe.Ok){
+            this.message.success('删除文件夹成功,文件夹title='+this.clickNode.title);
+
+            let a= this.rightClickNode.parentNode?.getChildren().filter((x)=>x.key!=this.rightClickNode.key);
+            this.rightClickNode.parentNode?.clearChildren();
+            if (a){
+              this.rightClickNode.parentNode?.getChildren().push(...a);
+            }
+            this.nzTree?.renderTree();
+            this.message.info('删除根文件夹需要刷新网页')
+          }else {
+            this.message.error('系统拒绝了您的删除请求')
+          }
+      })
+
     }
   }
 

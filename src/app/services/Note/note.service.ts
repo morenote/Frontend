@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {WebsiteConfig} from "../../models/config/website-config";
 import {AuthService} from "../auth/auth.service";
 import {HttpClient, HttpParams} from "@angular/common/http";
@@ -15,41 +15,42 @@ export class NoteService {
   config: WebsiteConfig;
 
   constructor(public authService: AuthService, public http: HttpClient, public configService: ConfigService) {
-    let userToken=this.authService.GetUserToken();
-    this.userId =userToken.UserId;
+    let userToken = this.authService.GetUserToken();
+    this.userId = userToken.UserId;
     this.token = userToken.Token;
     this.config = this.configService.GetWebSiteConfig();
   }
 
-  public GetNotebookChildren(notebookId: string): Observable<ApiRep>  {
+  public GetNotebookChildren(notebookId: string): Observable<ApiRep> {
     let url = this.config.baseURL + '/api/Note/GetNotChildrenByNotebookId';
     let httpParams = new HttpParams()
       .append('token', this.token!)
       .append('notebookId', notebookId);
-    let result = this.http.get<ApiRep>(url, {params:httpParams});
+    let result = this.http.get<ApiRep>(url, {params: httpParams});
     return result;
   }
 
-  public GetNoteContent(noteId: string): Observable<ApiRep>  {
+  public GetNoteContent(noteId: string): Observable<ApiRep> {
     let url = this.config.baseURL + '/api/Note/GetNoteContent';
     let httpParams = new HttpParams()
       .append('token', this.token!)
       .append('noteId', noteId);
-    let result = this.http.get<ApiRep>(url, {params:httpParams});
+    let result = this.http.get<ApiRep>(url, {params: httpParams});
     return result;
   }
 
-  public CreateNote(noteTitle: string,notebookId:string,isMarkdown:boolean) : Observable<ApiRep> {
+  public CreateNote(noteTitle: string, notebookId: string, isMarkdown: boolean): Observable<ApiRep> {
     let url = this.config.baseURL + '/api/Note/CreateNote';
     let formData = new FormData();
     formData.set('token', this.token!);
     formData.set('noteTitle', noteTitle);
     formData.set('notebookId', notebookId);
-    formData.set('isMarkdown', isMarkdown+'');
+    formData.set('isMarkdown', isMarkdown + '');
     let result = this.http.post<ApiRep>(url, formData);
     return result;
   }
-  public UpdateNoteTitle(noteId:string,noteTitle: string) : Observable<ApiRep> {
+
+  public UpdateNoteTitle(noteId: string, noteTitle: string): Observable<ApiRep> {
     let url = this.config.baseURL + '/api/Note/UpdateNoteTitle';
     let formData = new FormData();
     formData.set('token', this.token!);
@@ -58,7 +59,8 @@ export class NoteService {
     let result = this.http.post<ApiRep>(url, formData);
     return result;
   }
-  public UpdateNoteTitleAndContent(noteId:string,noteTitle: string,content:string) : Observable<ApiRep> {
+
+  public UpdateNoteTitleAndContent(noteId: string, noteTitle: string, content: string): Observable<ApiRep> {
     let url = this.config.baseURL + '/api/Note/UpdateNoteTitleAndContent';
     let formData = new FormData();
     formData.set('token', this.token!);
@@ -69,6 +71,13 @@ export class NoteService {
     return result;
   }
 
-
-
+  public deleteNote(noteRepositoryId: string,noteId: string): Observable<ApiRep> {
+    let url = this.config.baseURL + '/api/Note/DeleteNote';
+    let httpParams = new HttpParams()
+      .append('token', this.token!)
+      .append('noteRepositoryId', noteRepositoryId)
+      .append('noteId', noteId);
+    let result = this.http.delete<ApiRep>(url, {params: httpParams});
+    return result;
+  }
 }

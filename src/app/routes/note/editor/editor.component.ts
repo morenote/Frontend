@@ -377,7 +377,9 @@ export class EditorComponent implements OnInit {
     if (event.ctrlKey &&event.altKey && event.code == 'KeyN'){
       event.preventDefault();
       this.message.info('笔记搜索功能')
-      this.serchNoteModalComponent.showModal('笔记搜索','搜索关键字',(result: boolean, value: string) =>{
+      this.serchNoteModalComponent.ds.key='头像';
+      this.serchNoteModalComponent.ds.noteRepositoryId=this.repositoryId;
+      this.serchNoteModalComponent.showModal('仓库内搜索','搜索关键字',(result: boolean, value: string) =>{
 
       });
       return;

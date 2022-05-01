@@ -1,6 +1,6 @@
 <nz-modal
   nzWidth="800px"
-
+  style="height: 800px"
   [(nzVisible)]="isVisible"
   [nzTitle]="title"
   (nzOnCancel)="handleCancel()"
@@ -9,7 +9,7 @@
 >
   <div *nzModalContent>
     <nz-input-group [nzSuffix]="suffixIcon" style="margin-bottom: 1rem">
-      <input type="text" nz-input [placeholder]="placeholder" [(ngModel)]="value"/>
+      <input type="text" nz-input [placeholder]="placeholder" (keyup)="onKeyup($event)" [(ngModel)]="value"/>
     </nz-input-group>
 
     <ng-template #suffixIcon>
@@ -22,11 +22,15 @@
           <nz-skeleton *ngIf="!item" [nzAvatar]="true" [nzParagraph]="{ rows: 1 }"></nz-skeleton>
           <nz-list-item-meta
             *ngIf="item"
-            nzAvatar="./assets/tmp/avatar/avatar01.png"
-            [nzDescription]="item.email"
           >
+            <nz-list-item-meta-avatar>
+              <i nz-icon nzType="file-search" nzTheme="outline"></i>
+            </nz-list-item-meta-avatar>
+<!--            <nz-list-item-meta-description>-->
+<!--              <p>{{item.NoteId}}</p>-->
+<!--            </nz-list-item-meta-description>-->
             <nz-list-item-meta-title>
-              <a href="https://ng.ant.design">{{ item.name.last }}</a>
+              <a href="https://ng.ant.design">{{ item.Title }}</a>
             </nz-list-item-meta-title>
 
           </nz-list-item-meta>

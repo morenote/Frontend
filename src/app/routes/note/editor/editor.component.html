@@ -47,7 +47,6 @@
                   <li nz-menu-item>PNG图片</li>
                 </ul>
               </li>
-
               <li nz-submenu nzTitle="新建">
                 <ul>
                   <li nz-menu-item (click)="onCreateNotebook($event,false)">文件夹</li>
@@ -56,6 +55,40 @@
                   <li nz-menu-item (click)="onCreateHtmlDoc()">富文本文档</li>
                 </ul>
               </li>
+              <li nz-submenu nzTitle="历史">
+                <ul>
+                  <li nz-menu-item>查看历史</li>
+                  <li nz-menu-item>放置标签</li>
+                </ul>
+              </li>
+              <li nz-submenu nzTitle="协作">
+                <ul>
+                  <li nz-submenu nzTitle="悲观锁">
+                    <ul>
+                      <li nz-menu-item>锁定文档</li>
+                      <li nz-menu-item>解锁文档</li>
+                      <li nz-menu-item>检查锁定</li>
+                      <li nz-menu-item>强制解锁</li>
+                    </ul>
+                  </li>
+                  <li nz-submenu nzTitle="解决冲突">
+                    <ul>
+                      <li nz-menu-item>用于稍后比较差异</li>
+                      <li nz-menu-item>比较差异</li>
+                      <li nz-menu-item>用于稍后合并冲突</li>
+                      <li nz-menu-item>合并冲突</li>
+                    </ul>
+                  </li>
+                  <li nz-submenu nzTitle="讨论&答复">
+                    <ul>
+                      <li nz-menu-item>发起议题</li>
+                      <li nz-menu-item>查看议题</li>
+                      <li nz-menu-item>我的议题</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+
               <li nz-menu-item>属性</li>
             </ul>
           </nz-dropdown-menu>

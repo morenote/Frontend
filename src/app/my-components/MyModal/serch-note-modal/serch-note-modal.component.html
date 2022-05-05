@@ -1,4 +1,5 @@
 <nz-modal
+  #nzModalComponent
   nzWidth="800px"
   style="height: 800px"
   [(nzVisible)]="isVisible"
@@ -43,10 +44,10 @@
               </a>
               <nz-dropdown-menu #menu="nzDropdownMenu">
                 <ul nz-menu nzSelectable>
-                  <li nz-menu-item>复制引用</li>
-                  <li nz-menu-item>插入引用</li>
-                  <li nz-menu-item>预览文档</li>
-                  <li nz-menu-item>打开文档</li>
+                  <li nz-menu-item (click)="OnOpenDocument(item)">打开文档</li>
+                  <li nz-menu-item (click)="OnPreviewDocument(item)">预览文档</li>
+                  <li nz-menu-item (click)="OnCopyId(item)">复制文档ID</li>
+                  <li nz-menu-item (click)="OnInsertId(item)">插入引用</li>
                 </ul>
               </nz-dropdown-menu>
 

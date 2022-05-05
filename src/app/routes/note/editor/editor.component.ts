@@ -22,14 +22,17 @@ import {NzTreeComponent} from "ng-zorro-antd/tree/tree.component";
 import {EditorInterface} from "../../../my-components/Editor/editor-interface";
 import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {InputModalComponent} from "../../../my-components/MyModal/re-name-modal-component/input-modal.component";
-import {SerchNoteModalComponent} from "../../../my-components/MyModal/serch-note-modal/serch-note-modal.component";
+import {
+  ISearchNoteAction,
+  SerchNoteModalComponent
+} from "../../../my-components/MyModal/serch-note-modal/serch-note-modal.component";
 
 @Component({
   selector: 'app-myeditor',
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.less']
 })
-export class EditorComponent implements OnInit {
+export class EditorComponent implements OnInit, ISearchNoteAction {
   repositoryId!: string;
 
   searchValue = '';
@@ -43,6 +46,11 @@ export class EditorComponent implements OnInit {
               private notebookService: NotebookService,
               private modal: NzModalService,
               private noteService: NoteService) {
+  }
+
+  openNote(note: Note): void {
+        this.message.info(note.Title)
+        this.onClieckNote(note.NoteId,note.IsMarkdown);
   }
 
   //{title: 'leaf', key: '1001', icon: 'folder'},
@@ -64,7 +72,7 @@ export class EditorComponent implements OnInit {
   reNameModalComponent!: InputModalComponent;
 
   @ViewChild('serchNoteModalComponent')
-  serchNoteModalComponent!:SerchNoteModalComponent;
+  serchNoteModalComponent!: SerchNoteModalComponent;
   //编辑器
   editor: EditorInterface | undefined;
 
@@ -100,10 +108,8 @@ export class EditorComponent implements OnInit {
   }
 
 
-
-  private onClieckNote(noteId: string, isMarkdown?: boolean) {
+  protected onClieckNote(noteId: string, isMarkdown?: boolean) {
     this.noteService.GetNoteContent(noteId).subscribe((apiRe: ApiRep) => {
-
       if (apiRe.Ok == true) {
         let noteContent: NoteContent = apiRe.Data
         this.isMarkdown = isMarkdown!;
@@ -127,7 +133,6 @@ export class EditorComponent implements OnInit {
         setTimeout(() => {
           this.message.info('切换编辑器到' + this.editor?.GetYourName())
         }, 500);
-
       }
     })
   }
@@ -210,6 +215,11 @@ export class EditorComponent implements OnInit {
           console.log(this.nodes)
         } else {
           this.message.error("访问错误：您可能没有权限访问该仓库");
+          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel('1', '您可能没有权限访问该仓库'));
+
+          node.icon = 'folder';
+          this.nodes.push(node)
+
         }
       }
     );
@@ -241,17 +251,17 @@ export class EditorComponent implements OnInit {
    * 创建文件夹
    * @param $event
    */
-  onCreateNotebook($event: MouseEvent,isRoot:boolean) {
-    let noteRepositoryId=this.repositoryId;
+  onCreateNotebook($event: MouseEvent, isRoot: boolean) {
+    let noteRepositoryId = this.repositoryId;
     this.reNameModalComponent.clearValue();
     this.reNameModalComponent.showModal('创建文件夹', '请输入文件夹名称', (result: boolean, value: string) => {
-      if (result&&value){
-        let parentFolder= this.rightClickNode!.key;
-        if (isRoot){
-          parentFolder='';
+      if (result && value) {
+        let parentFolder = this.rightClickNode!.key;
+        if (isRoot) {
+          parentFolder = '';
         }
 
-        this.notebookService.CreateNoteBook(noteRepositoryId,value, parentFolder).subscribe((apiRe: ApiRep) => {
+        this.notebookService.CreateNoteBook(noteRepositoryId, value, parentFolder).subscribe((apiRe: ApiRep) => {
           if (apiRe.Ok == true) {
             let notebook: Notebook = apiRe.Data;
             let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.NotebookId, notebook.Title));
@@ -259,12 +269,12 @@ export class EditorComponent implements OnInit {
             node.key = notebook.NotebookId;
             node.icon = 'folder';
 
-            if (isRoot){
+            if (isRoot) {
 
               this.nzTree?.getTreeNodes().push(node);
 
               this.nzTree?.renderTree();
-            }else {
+            } else {
               node.parentNode = this.rightClickNode;
               this.rightClickNode?.addChildren(new Array(node));
             }
@@ -281,30 +291,29 @@ export class EditorComponent implements OnInit {
   onMenuDelete() {
     if (this.rightClickNode.isLeaf) {
       //是笔记
-      this.noteService.deleteNote(this.repositoryId,this.rightClickNode.key).subscribe((apiRe:ApiRep)=>{
-        if (apiRe.Ok){
+      this.noteService.deleteNote(this.repositoryId, this.rightClickNode.key).subscribe((apiRe: ApiRep) => {
+        if (apiRe.Ok) {
           this.message.success('删除笔记成功');
           this.rightClickNode.remove();
-        }else {
+        } else {
           this.message.error('系统拒绝了您的删除请求')
         }
       })
     } else {
       //是笔记本
-      this.notebookService.deleteNotebook(this.repositoryId,this.rightClickNode.key,true,true).subscribe((apiRe:ApiRep)=>{
-          if (apiRe.Ok){
-            this.message.success('删除文件夹成功,文件夹title='+this.clickNode.title);
-
-            let a= this.rightClickNode.parentNode?.getChildren().filter((x)=>x.key!=this.rightClickNode.key);
-            this.rightClickNode.parentNode?.clearChildren();
-            if (a){
-              this.rightClickNode.parentNode?.getChildren().push(...a);
-            }
-            this.nzTree?.renderTree();
-            this.message.info('删除根文件夹需要刷新网页')
-          }else {
-            this.message.error('系统拒绝了您的删除请求')
+      this.notebookService.deleteNotebook(this.repositoryId, this.rightClickNode.key, true, true).subscribe((apiRe: ApiRep) => {
+        if (apiRe.Ok) {
+          this.message.success('删除文件夹成功,文件夹title=' + this.clickNode.title);
+          let a = this.rightClickNode.parentNode?.getChildren().filter((x) => x.key != this.rightClickNode.key);
+          this.rightClickNode.parentNode?.clearChildren();
+          if (a) {
+            this.rightClickNode.parentNode?.getChildren().push(...a);
           }
+          this.nzTree?.renderTree();
+          this.message.info('删除根文件夹需要刷新网页')
+        } else {
+          this.message.error('系统拒绝了您的删除请求')
+        }
       })
 
     }
@@ -374,14 +383,12 @@ export class EditorComponent implements OnInit {
       event.preventDefault();
     }
 
-    if (event.ctrlKey &&event.altKey && event.code == 'KeyN'){
+    if (event.ctrlKey && event.altKey && event.code == 'KeyN') {
       event.preventDefault();
       this.message.info('笔记搜索功能')
-      this.serchNoteModalComponent.ds.key='头像';
-      this.serchNoteModalComponent.ds.noteRepositoryId=this.repositoryId;
-      this.serchNoteModalComponent.showModal('仓库内搜索','搜索关键字',(result: boolean, value: string) =>{
-
-      });
+      this.serchNoteModalComponent.ds.key = '头像';
+      this.serchNoteModalComponent.ds.noteRepositoryId = this.repositoryId;
+      this.serchNoteModalComponent.showModal('全文检索', '搜索关键字', this);
       return;
 
     }
@@ -421,7 +428,7 @@ export class EditorComponent implements OnInit {
     this.reNameModalComponent.setValue(this.rightClickNode.title);
     this.reNameModalComponent.showModal('重命名', '请输入重命名', (result: boolean, title: string) => {
       this.message.info('ok');
-      if (result && this.reNameModalComponent.value ) {
+      if (result && this.reNameModalComponent.value) {
         title = this.reNameModalComponent.value!;
         if (this.rightClickNode.isLeaf) {
           this.RenameNote(id, title);

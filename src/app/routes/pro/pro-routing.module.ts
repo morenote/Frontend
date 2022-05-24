@@ -27,6 +27,7 @@ import { ProResultSuccessComponent } from './result/success/success.component';
 import {ProAccountCenterDocumentsComponent} from "./account/center/documents/documents.component";
 import {ProAccountCenterFilesComponent} from "./account/center/files/files.component";
 import {CreateRepositoryFormComponent} from "./form/create-repository/create-repository-form.component";
+import {LoginAuditProTableListComponent} from "./list/login-audit-table-list/table-list.component";
 
 const routes: Routes = [
   {
@@ -42,6 +43,7 @@ const routes: Routes = [
     path: 'list',
     children: [
       { path: 'table-list', component: ProTableListComponent },
+      { path: 'login-audit', component: LoginAuditProTableListComponent },
       { path: 'basic-list', component: ProBasicListComponent },
       { path: 'card-list', component: ProCardListComponent },
       {

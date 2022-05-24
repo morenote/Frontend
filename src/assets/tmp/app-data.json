@@ -196,6 +196,12 @@
               "shortcut": true
             },
             {
+              "text": "登录日志审计",
+              "link": "/pro/list/login-audit",
+              "i18n": "登录日志审计",
+              "shortcut": true
+            },
+            {
               "text": "Basic List",
               "link": "/pro/list/basic-list",
               "i18n": "menu.list.basiclist"

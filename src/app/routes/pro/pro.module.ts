@@ -39,6 +39,7 @@ import { ProResultSuccessComponent } from './result/success/success.component';
 import {ProAccountCenterDocumentsComponent} from "./account/center/documents/documents.component";
 import {ProAccountCenterFilesComponent} from "./account/center/files/files.component";
 import {CreateRepositoryFormComponent} from "./form/create-repository/create-repository-form.component";
+import {LoginAuditProTableListComponent} from "./list/login-audit-table-list/table-list.component";
 
 const COMPONENTS = [
   BasicFormComponent,
@@ -46,6 +47,7 @@ const COMPONENTS = [
   StepFormComponent,
   AdvancedFormComponent,
   ProTableListComponent,
+  LoginAuditProTableListComponent,
   ProBasicListComponent,
   ProCardListComponent,
   ProListLayoutComponent,

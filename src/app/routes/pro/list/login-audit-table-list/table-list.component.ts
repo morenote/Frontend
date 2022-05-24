@@ -49,9 +49,10 @@ export class LoginAuditProTableListComponent implements OnInit {
       index: 'LoginDateTime',
       type: 'date',
       sort: {
-        compare: (a, b) => a.LoginMethod - b.LoginMethod
+        compare: (a, b) => a.LoginDateTime - b.LoginDateTime
       }
     },
+    { title: '登录方式', index: 'LoginMethod' },
     { title: '登录结果', index: 'IsLoginSuccess' },
     { title: 'hmac', index: 'Hmac' },
     {

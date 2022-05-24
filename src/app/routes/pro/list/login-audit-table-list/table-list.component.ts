@@ -5,6 +5,8 @@ import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { map, tap } from 'rxjs/operators';
+import {LoginAuditService} from "../../../../services/LoginAudit/login-audit.service";
+import {ApiRep} from "../../../../models/api/api-rep";
 
 @Component({
   selector: 'app-login-audit-table-list',
@@ -30,39 +32,36 @@ export class LoginAuditProTableListComponent implements OnInit {
   data: any[] = [];
   loading = false;
   status = [
-    { index: 0, text: '安全', value: false, type: 'default', checked: false },
-    { index: 1, text: '安全', value: false, type: 'processing', checked: false },
-    { index: 2, text: '安全', value: false, type: 'success', checked: false },
-    { index: 3, text: '损坏', value: false, type: 'error', checked: false }
+    { index: true, text: 'Success', value: false, type: 'success', checked: false },
+    { index: false, text: 'Error', value: false, type: 'error', checked: false }
   ];
   @ViewChild('st', { static: true })
   st!: STComponent;
   columns: STColumn[] = [
-    { title: '', index: 'key', type: 'checkbox' },
-    { title: '登录事件编号', index: 'no' },
-
+    { title: '', index: 'Id', type: 'checkbox' },
+    { title: '登录事件编号', index: 'Id' },
     {
       title: '登录账户',
-      index: 'callNo',
-      type: 'number',
-      format: item => `${item.callNo} 万`,
-      sort: {
-        compare: (a, b) => a.callNo - b.callNo
-      }
+      index: 'UserId',
     },
     {
       title: '登录时间',
-      index: 'updatedAt',
+      index: 'LoginDateTime',
       type: 'date',
       sort: {
-        compare: (a, b) => a.updatedAt - b.updatedAt
+        compare: (a, b) => a.LoginMethod - b.LoginMethod
       }
     },
-    { title: '登录结果', index: 'description' },
+    { title: '登录结果', index: 'IsLoginSuccess' },
+    { title: 'hmac', index: 'Hmac' },
     {
-      title: '日志状态',
-      index: 'status',
-      render: 'status',
+      title: '校验',
+      index: 'Verify',
+      type: 'badge',
+      badge: {
+        true: { text: 'Success', color: 'success' },
+        false: { text: 'Error', color: 'error' }
+      },
       filter: {
         menus: this.status,
         fn: (filter, record) => record.status === filter['index']
@@ -87,7 +86,7 @@ export class LoginAuditProTableListComponent implements OnInit {
   totalCallNo = 0;
   expandForm = false;
 
-  constructor(private http: _HttpClient, public msg: NzMessageService, private modalSrv: NzModalService, private cdr: ChangeDetectorRef) {}
+  constructor(private http: _HttpClient, public msg: NzMessageService, private modalSrv: NzModalService, private cdr: ChangeDetectorRef,public loginAuditService:LoginAuditService) {}
 
   ngOnInit(): void {
     this.getData();
@@ -99,23 +98,13 @@ export class LoginAuditProTableListComponent implements OnInit {
     if (this.q.status !== null && this.q.status > -1) {
       this.q.statusList.push(this.q.status);
     }
-    this.http
-      .get('/rule', this.q)
-      .pipe(
-        map((list: Array<{ status: number; statusText: string; statusType: string }>) =>
-          list.map(i => {
-            const statusItem = this.status[i.status];
-            i.statusText = statusItem.text;
-            i.statusType = statusItem.type;
-            return i;
-          })
-        ),
-        tap(() => (this.loading = false))
-      )
-      .subscribe(res => {
-        this.data = res;
+    this.loginAuditService.GetUserLoginLogging().subscribe((apiRe:ApiRep)=>{
+      if (apiRe.Ok){
+        this.data = apiRe.Data;
         this.cdr.detectChanges();
-      });
+        this.loading=false;
+      }
+    });
   }
 
   stChange(e: STChange): void {
@@ -132,10 +121,11 @@ export class LoginAuditProTableListComponent implements OnInit {
   }
 
   remove(): void {
-    this.http.delete('/rule', { nos: this.selectedRows.map(i => i['no']).join(',') }).subscribe(() => {
-      this.getData();
-      this.st.clearCheck();
-    });
+    // this.http.delete('/rule', { nos: this.selectedRows.map(i => i['no']).join(',') }).subscribe(() => {
+    //   this.getData();
+    //   this.st.clearCheck();
+    // });
+    this.msg.success(`订阅警报 ${this.selectedRows.length} 笔`);
   }
 
   approval(): void {

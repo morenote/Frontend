@@ -1,24 +1,25 @@
-import { HttpParams } from '@angular/common/http';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, Optional } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { StartupService } from '@core';
-import { ReuseTabService } from '@delon/abc/reuse-tab';
-import { DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService } from '@delon/auth';
-import { SettingsService, _HttpClient } from '@delon/theme';
-import { environment } from '@env/environment';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { NzTabChangeEvent } from 'ng-zorro-antd/tabs';
-import { concatWith, Observable, Subscription } from 'rxjs';
+import {HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, Optional} from '@angular/core';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {StartupService} from '@core';
+import {ReuseTabService} from '@delon/abc/reuse-tab';
+import {DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService} from '@delon/auth';
+import {SettingsService, _HttpClient} from '@delon/theme';
+import {environment} from '@env/environment';
+import {NzModalService} from 'ng-zorro-antd/modal';
+import {NzTabChangeEvent} from 'ng-zorro-antd/tabs';
+import {concatWith, Observable, Subscription, throwError} from 'rxjs';
 
-import { ApiRep } from '../../../models/api/api-rep';
-import { UserLoginSecurityStrategy } from '../../../models/auth/user-login-security-strategy';
-import { WebsiteConfig } from '../../../models/config/website-config';
-import { AuthService } from '../../../services/auth/auth.service';
-import { ConfigService } from '../../../services/config/config.service';
+import {ApiRep} from '../../../models/api/api-rep';
+import {UserLoginSecurityStrategy} from '../../../models/auth/user-login-security-strategy';
+import {WebsiteConfig} from '../../../models/config/website-config';
+import {AuthService} from '../../../services/auth/auth.service';
+import {ConfigService} from '../../../services/config/config.service';
 
 import * as http from 'http';
 import {UserToken} from "../../../models/DTO/user-token";
+import {catchError} from "rxjs/operators";
 
 @Component({
   selector: 'passport-login',
@@ -61,15 +62,19 @@ export class UserLoginComponent implements OnDestroy {
   get userName(): AbstractControl {
     return this.form.get('userName')!;
   }
+
   get password(): AbstractControl {
     return this.form.get('password')!;
   }
+
   get mobile(): AbstractControl {
     return this.form.get('mobile')!;
   }
+
   get captcha(): AbstractControl {
     return this.form.get('captcha')!;
   }
+
   form: FormGroup;
   error = '';
   type = 0;
@@ -83,16 +88,17 @@ export class UserLoginComponent implements OnDestroy {
   configService: ConfigService;
   //获取网站配置信息
   webSiteConfig: WebsiteConfig;
+
   // #endregion
 
-  switch({ index }: NzTabChangeEvent): void {
+  switch({index}: NzTabChangeEvent): void {
     this.type = index!;
   }
 
   getCaptcha(): void {
     if (this.mobile.invalid) {
-      this.mobile.markAsDirty({ onlySelf: true });
-      this.mobile.updateValueAndValidity({ onlySelf: true });
+      this.mobile.markAsDirty({onlySelf: true});
+      this.mobile.updateValueAndValidity({onlySelf: true});
       return;
     }
     this.count = 59;
@@ -157,7 +163,10 @@ export class UserLoginComponent implements OnDestroy {
 
     // 默认配置中对所有HTTP请求都会强制 [校验](https://ng-alain.com/auth/getting-started) 用户 Token
     // 然一般来说登录请求不需要校验，因此可以在请求URL加上：`/login?_allow_anonymous=true` 表示不触发用户 Token 校验
-    this.loading = true;
+    this.loading=true;
+    setTimeout(()=>{
+      this.loading=false;
+    },2000)
     this.cdr.detectChanges();
     const formData = new FormData();
     formData.set('', String(this.type));
@@ -165,29 +174,32 @@ export class UserLoginComponent implements OnDestroy {
     formData.set('pwd', this.password.value);
 
 
-    this.authService.LoginByPassword(String(this.type),this.userName.value,this.password.value).subscribe((apiRe:ApiRep) => {
-
-      if (apiRe.Ok != true) {
-        this.loading = false;
-        this.error = apiRe.Msg!;
-        this.cdr.detectChanges();
-        console.log('进入111');
-        return;
-      }
-      let userToken:UserToken=apiRe.Data;
-      // 清空路由复用信息
-      this.reuseTabService.clear();
-      // 设置用户Token信息
-      this.tokenService.set({
-        token: userToken.Token
+    this.authService.LoginByPassword(String(this.type), this.userName.value, this.password.value)
+      .subscribe((apiRe: ApiRep) => {
+        if (this.error) {
+          this.loading = false;
+          alert("无法正常登录");
+          return;
+        }
+        if (apiRe.Ok != true) {
+          this.loading = false;
+          this.error = apiRe.Msg!;
+          this.cdr.detectChanges();
+          console.log('进入111');
+          return;
+        }
+        let userToken: UserToken = apiRe.Data;
+        // 清空路由复用信息
+        this.reuseTabService.clear();
+        // 设置用户Token信息
+        this.tokenService.set({
+          token: userToken.Token
+        });
+        this.authService.SetUserToken(userToken);
+        // 直接跳转
+        this.router.navigate(['/']);
       });
-      this.authService.SetUserToken(userToken);
-
-      // 直接跳转
-      this.router.navigate(['/']);
-    });
   }
-
   // #region social
 
   open(type: string, openType: SocialOpenType = 'href'): void {
@@ -303,7 +315,7 @@ export class UserLoginComponent implements OnDestroy {
     // ask browser for credentials (browser will ask connected authenticators)
     let credential;
     try {
-      credential = await navigator.credentials.get({ publicKey: makeAssertionOptions });
+      credential = await navigator.credentials.get({publicKey: makeAssertionOptions});
     } catch (err) {
       this.ShowErrorMessage('error');
     }
@@ -314,6 +326,7 @@ export class UserLoginComponent implements OnDestroy {
       this.ShowErrorMessage('Could not verify assertion');
     }
   }
+
   async verifyAssertionWithServer(assertedCredential: any) {
     // Move data into Arrays incase it is super long
     let authData = new Uint8Array(assertedCredential.response.authenticatorData);
@@ -393,6 +406,7 @@ export class UserLoginComponent implements OnDestroy {
       nzContent: message
     });
   }
+
   //==========================================================
   coerceToBase64Url(thing: any): any {
     // Array or ArrayBuffer to Uint8Array

@@ -1,4 +1,4 @@
-import {Note} from "../entity/note";
+import {Note} from "../../entity/note";
 
 export class ApiNote {
   public NoteId?:string;
@@ -37,6 +37,6 @@ export class ApiNote {
     apiNote.CreatedTime=note.CreatedTime;
     apiNote.UpdatedTime=note.UpdatedTime;
     apiNote.PublicTime=note.PublicTime;
-    
+
   }
 }

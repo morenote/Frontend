@@ -5530,6 +5530,11 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.npm.taobao.org/functional-red-black-tree/download/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
+futoin-hkdf@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.npmmirror.com/futoin-hkdf/-/futoin-hkdf-1.5.0.tgz#f10cc4d32f1e26568ded58d5a6535a97aa3a064c"
+  integrity sha512-4CerDhtTgx4i5PKccQIpEp4T9wqmosPIP9Kep35SdCpYkQeriD3zddUVhrO1Fc4QvGhsAnd2rXyoOr5047mJEg==
+
 gauge@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmmirror.com/gauge/download/gauge-4.0.0.tgz#afba07aa0374a93c6219603b1fb83eaa2264d8f8"
@@ -6816,6 +6821,11 @@ js-yaml@^4.0.0, js-yaml@^4.1.0:
   integrity sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==
   dependencies:
     argparse "^2.0.1"
+
+jsbn@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/jsbn/-/jsbn-1.1.0.tgz#b01307cb29b618a1ed26ec79e911f803c4da0040"
+  integrity sha512-4bYVV3aAMtDTTu4+xsDYa6sy9GyJ69/amsu9sYF2zqjiEoZA5xJi3BrfX3uY+/IekIu7MwdObdbDWpoZdBv3/A==
 
 jsbn@~0.1.0:
   version "0.1.1"
@@ -9974,6 +9984,13 @@ slice-ansi@^5.0.0:
   dependencies:
     ansi-styles "^6.0.0"
     is-fullwidth-code-point "^4.0.0"
+
+sm-crypto@^0.3.8:
+  version "0.3.8"
+  resolved "https://registry.npmmirror.com/sm-crypto/-/sm-crypto-0.3.8.tgz#418005db13ea4e50351770ef9208bb04bcda4a51"
+  integrity sha512-BEF+VQMD5EH96ouBBVNoJ6URDkLp8zIvQY7wLh1ZPFlbt/vpXxlb35hKFb2+UDiHGGdV/rxNVqvGjhxuhLd9mA==
+  dependencies:
+    jsbn "^1.1.0"
 
 smart-buffer@^4.1.0:
   version "4.2.0"

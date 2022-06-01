@@ -20,6 +20,10 @@ import {ConfigService} from '../../../services/config/config.service';
 import * as http from 'http';
 import {UserToken} from "../../../models/DTO/user-token";
 import {catchError} from "rxjs/operators";
+import {EPass2001Service} from "../../../services/Usbkey/EnterSafe/ePass2001/e-pass2001.service";
+import {ServerChallenge} from "../../../models/DTO/USBKey/server-challenge";
+import {NzMessageModule, NzMessageService} from "ng-zorro-antd/message";
+import {ClientResponse} from "../../../models/DTO/USBKey/client-response";
 
 @Component({
   selector: 'passport-login',
@@ -43,6 +47,8 @@ export class UserLoginComponent implements OnDestroy {
     private cdr: ChangeDetectorRef,
     private modal: NzModalService,
     public authService: AuthService,
+    public epass: EPass2001Service,
+    public nzMessage: NzMessageService,
     configService: ConfigService
   ) {
     this.form = fb.group({
@@ -163,10 +169,10 @@ export class UserLoginComponent implements OnDestroy {
 
     // 默认配置中对所有HTTP请求都会强制 [校验](https://ng-alain.com/auth/getting-started) 用户 Token
     // 然一般来说登录请求不需要校验，因此可以在请求URL加上：`/login?_allow_anonymous=true` 表示不触发用户 Token 校验
-    this.loading=true;
-    setTimeout(()=>{
-      this.loading=false;
-    },2000)
+    this.loading = true;
+    setTimeout(() => {
+      this.loading = false;
+    }, 2000)
     this.cdr.detectChanges();
     const formData = new FormData();
     formData.set('', String(this.type));
@@ -200,16 +206,16 @@ export class UserLoginComponent implements OnDestroy {
         this.router.navigate(['/']);
       });
   }
+
   // #region social
 
-  open(type: string, openType: SocialOpenType = 'href'): void {
+  async open(type: string, openType: SocialOpenType = 'href') {
     if (type == 'fido2') {
       this.handleSignInSubmit().then(r => {
         console.log('fido2 function');
       });
       return;
     }
-
     let url = ``;
     let callback = ``;
     if (environment.production) {
@@ -229,6 +235,65 @@ export class UserLoginComponent implements OnDestroy {
       case 'weibo':
         url = `https://api.weibo.com/oauth2/authorize?client_id=1239507802&response_type=code&redirect_uri=${decodeURIComponent(callback)}`;
         break;
+      case  'usbkey':
+        if (this.userName.value == null || this.userName.value == "") {
+          this.nzMessage.error("请先填写登录邮箱");
+          return;
+        }
+        //获得服务器挑战随机数
+        let challenge!: ServerChallenge;
+        this.nzMessage.info("正在请求服务器挑战");
+        await this.sleep(2000);
+        let apiRep = await this.epass.GetLoginChallenge(this.userName.value);
+        if (apiRep.Ok) {
+          challenge = apiRep.Data;
+          this.nzMessage.info("获得服务器挑战" + challenge.Id);
+        } else {
+          this.nzMessage.error("获得服务器挑战失败");
+          return;
+        }
+        //发送到智能密码钥匙
+        await this.sleep(2000);
+        this.nzMessage.info("正在检测智能密码钥匙，请勿操作");
+        await this.sleep(2000);
+        if (challenge != null) {
+          this.nzMessage.info("正在挑战智能密码钥匙" + challenge.Id);
+        }
+        await this.sleep(2000);
+        apiRep = await this.epass.SendChallengeToePass2001(challenge!);
+        let res:ClientResponse;
+        if (apiRep.Ok) {
+          this.nzMessage.success("智能密码钥匙签名成功");
+          res = apiRep.Data as ClientResponse;
+        } else {
+          this.nzMessage.error("智能密钥钥匙签名失败");
+          return;
+        }
+        //发送到服务器验签
+        await this.sleep(2000);
+        this.nzMessage.info("将签名结果发送到服务器");
+        await this.sleep(2000);
+        apiRep=await this.epass.LoginByResponse(res);
+        if (!apiRep.Ok){
+          this.nzMessage.error("应用系统身份鉴别失败");
+        }else {
+          this.nzMessage.success("应用系统身份鉴别成功")
+          await this.sleep(2000);
+          this.nzMessage.success("正在登录到系统，请稍候....")
+          await this.sleep(2000);
+          //登录步骤
+          let userToken: UserToken = apiRep.Data;
+          // 清空路由复用信息
+          this.reuseTabService.clear();
+          // 设置用户Token信息
+          this.tokenService.set({
+            token: userToken.Token
+          });
+          this.authService.SetUserToken(userToken);
+          // 直接跳转
+          await this.router.navigate(['/']);
+        }
+        return;
     }
     if (openType === 'window') {
       this.socialService
@@ -246,6 +311,13 @@ export class UserLoginComponent implements OnDestroy {
         type: 'href'
       });
     }
+  }
+   sleep(millisecond:any):Promise<void> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve()
+      }, millisecond)
+    })
   }
 
   // #endregion

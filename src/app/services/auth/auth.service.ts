@@ -9,6 +9,9 @@ import {ConfigService} from "../config/config.service";
 import {UserToken} from "../../models/DTO/user-token";
 import {pbkdf2, pbkdf2Sync} from "crypto";
 import * as hkdf from "futoin-hkdf";
+import {AuthOk} from "../../models/api/auth-ok";
+import {LoginSecurityPolicyLevel} from "../../models/enum/LoginSecurityPolicyLevel/login-security-policy-level";
+
 
 
 @Injectable({
@@ -48,7 +51,16 @@ export class AuthService {
     formData.set('pwd', pwd);
     let result = this.http.post<ApiRep>(url, formData);
     return result;
-
+  }
+  public GetUserLoginSecurityPolicyLevel(email:string):Promise<ApiRep>{
+    return  new Promise<ApiRep>((resolve)=>{
+      let url = this.config.baseURL + '/api/Auth/GetUserLoginSecurityPolicyLevel?_allow_anonymous=true';
+      let httpParams = new HttpParams()
+        .append('email', email);
+      let result = this.http.get<ApiRep>(url, {params: httpParams}).subscribe(apiRe=>{
+        return resolve(apiRe);
+      });
+    });
   }
 
   // //派生密钥
@@ -75,4 +87,19 @@ export class AuthService {
   // }
 
 
+  SetUserLoginSecurityPolicyLevel(level: LoginSecurityPolicyLevel) :Promise<ApiRep>{
+    return  new Promise<ApiRep>((resolve)=>{
+      let url = this.config.baseURL + '/api/Auth/SetUserLoginSecurityPolicyLevel';
+      let formData = new FormData();
+      formData.set('token', this.GetUserToken().Token);
+      formData.set('level', level.toString());
+
+      this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
+         resolve(apiRe);
+      });
+
+
+    })
+
+  }
 }

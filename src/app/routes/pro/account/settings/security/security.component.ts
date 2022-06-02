@@ -1,43 +1,64 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalService } from 'ng-zorro-antd/modal';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {NzMessageService} from 'ng-zorro-antd/message';
 
-import { AuthService } from '../../../../../services/auth/auth.service';
-import { HelperServiceService } from '../../../../../services/helper/helper-service.service';
+import {AuthService} from '../../../../../services/auth/auth.service';
+import {HelperServiceService} from '../../../../../services/helper/helper-service.service';
 import {ConfigService} from "../../../../../services/config/config.service";
 import {WebsiteConfig} from "../../../../../models/config/website-config";
 import {_HttpClient} from "@delon/theme";
 import {UserToken} from "../../../../../models/DTO/user-token";
+import {
+  LoginSecurityPolicyLevel
+} from "../../../../../models/enum/LoginSecurityPolicyLevel/login-security-policy-level";
+import {SelectMoalComponent} from "../../../../../my-components/MyModal/select-moal/select-moal.component";
+import {
+  LoginSecurityPolicyLevelConvert
+} from "../../../../../models/enum/LoginSecurityPolicyLevel/login-security-policy-level-convert";
 
 @Component({
   selector: 'app-account-settings-security',
   templateUrl: './security.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class ProAccountSettingsSecurityComponent {
 
   public config: WebsiteConfig ;
   userToken!:UserToken;
 
+
+  @ViewChild("app_select_moal")
+  app_select_moal!:SelectMoalComponent;
+
   constructor(public authService: AuthService,
+              private cdr: ChangeDetectorRef,
               public helperService: HelperServiceService,
               public configService:ConfigService,
+                public  nzMessage:NzMessageService,
               public http: _HttpClient,) {
     this.config=configService.GetWebSiteConfig();
     this.userToken=this.authService.GetUserToken();
   }
+  loginSecurityPolicyLevel?:string;
   fido2list:Map<string,string> =new Map<string, string>();
   OnBindUsbKey() {
     alert('已经绑定');
   }
-  ngOnInit(): void {
-  this.fido2list.set("key1","key1 — 已于 2021 年 01 月 01 日注册");
-  this.fido2list.set("key2","key2 — 已于 2021 年 01 月 01 日注册");
-  this.fido2list.set("key3","key3 — 已于 2021 年 01 月 01 日注册");
-  this.fido2list.set("key4","key4 — 已于 2021 年 01 月 01 日注册");
-  this.fido2list.set("key5","key5 — 已于 2021 年 01 月 01 日注册");
 
+  levelText?:string="加载中";
+  levelDes?:string;
 
+  async ngOnInit() {
+    this.fido2list.set("key1", "key1 — 已于 2021 年 01 月 01 日注册");
+    this.fido2list.set("key2", "key2 — 已于 2021 年 01 月 01 日注册");
+    this.fido2list.set("key3", "key3 — 已于 2021 年 01 月 01 日注册");
+    this.fido2list.set("key4", "key4 — 已于 2021 年 01 月 01 日注册");
+    this.fido2list.set("key5", "key5 — 已于 2021 年 01 月 01 日注册");
+    //获得安全策略
+    let apiRe = await this.authService.GetUserLoginSecurityPolicyLevel(this.userToken!.Email!);
+    let level=apiRe.Data as LoginSecurityPolicyLevel
+    this.levelText=LoginSecurityPolicyLevel[level];
+    this.levelDes=LoginSecurityPolicyLevelConvert.toString(level);
+    this.cdr.detectChanges();
   }
   unBindFIDO2(keyid:string){
     if (this.fido2list.has(keyid)){
@@ -259,7 +280,43 @@ export class ProAccountSettingsSecurityComponent {
   OnBindFIDO2() {
     this.isVisible=true;
 
+  }
 
+  OnChangeLoginSecurityPolicyLevel() {
+     let optionList=["unlimited","loose","strict","compliant"];
+      this.app_select_moal.showModal("设置登录安全策略",optionList,async (ok: boolean, value: string) => {
+        if (ok && value!=null) {
 
+          let level: LoginSecurityPolicyLevel;
+          switch (value) {
+            case LoginSecurityPolicyLevel[LoginSecurityPolicyLevel.unlimited]:
+              level = LoginSecurityPolicyLevel.unlimited;
+              break;
+            case LoginSecurityPolicyLevel[LoginSecurityPolicyLevel.loose]:
+              level = LoginSecurityPolicyLevel.loose;
+              break;
+            case LoginSecurityPolicyLevel[LoginSecurityPolicyLevel.strict]:
+              level = LoginSecurityPolicyLevel.strict;
+              break;
+            case LoginSecurityPolicyLevel[LoginSecurityPolicyLevel.compliant]:
+              level = LoginSecurityPolicyLevel.compliant;
+              break;
+            default:
+              this.nzMessage.error("选择的安全策略无效");
+              return;
+          }
+          let apiRe = await this.authService.SetUserLoginSecurityPolicyLevel(level!);
+           if (apiRe.Ok){
+             this.nzMessage.success("设置"+value+"登录安全策略成功")
+             this.levelText=value;
+             this.levelDes=LoginSecurityPolicyLevelConvert.toString(level);
+             this.cdr.detectChanges();
+           }else {
+             this.nzMessage.error("设置"+value+"登录安全策略失败")
+           }
+        }else {
+          this.nzMessage.success("未修改登录安全策略");
+        }
+      })
   }
 }

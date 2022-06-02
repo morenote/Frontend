@@ -6,13 +6,15 @@ import { MyComponentsRoutingModule } from './my-components-routing.module';
 import {TextbusEditorComponent} from "./Editor/TextbusEditor/textbus-editor.component";
 import {SerchNoteModalComponent} from "./MyModal/serch-note-modal/serch-note-modal.component";
 import {ScrollingModule} from "@angular/cdk/scrolling";
+import {SelectMoalComponent} from "./MyModal/select-moal/select-moal.component";
 
-const COMPONENTS: Array<Type<void>> = [SerchNoteModalComponent];
+const COMPONENTS: Array<Type<void>> = [SerchNoteModalComponent,SelectMoalComponent];
 
 @NgModule({
-  imports: [SharedModule, MyComponentsRoutingModule, ScrollingModule,],
+  imports: [SharedModule, MyComponentsRoutingModule, ScrollingModule],
   exports: [
-    SerchNoteModalComponent
+    SerchNoteModalComponent,
+    SelectMoalComponent
   ],
   declarations: COMPONENTS
 })

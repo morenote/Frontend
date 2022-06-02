@@ -1,7 +1,7 @@
-import { LoginAuthOk } from './login-auth-ok';
+import { AuthOk } from './auth-ok';
 
 describe('LoginAuthOk', () => {
   it('should create an instance', () => {
-    expect(new LoginAuthOk()).toBeTruthy();
+    expect(new AuthOk()).toBeTruthy();
   });
 });

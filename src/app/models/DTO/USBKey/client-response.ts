@@ -3,4 +3,6 @@ export class ClientResponse {
   public Certificate?:string;//客户端证书
   public Sign?:string;//客户端签名(客户端对挑战信息签名)
 
+
+
 }

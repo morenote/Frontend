@@ -1,29 +1,27 @@
-import {HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, Optional} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {StartupService} from '@core';
 import {ReuseTabService} from '@delon/abc/reuse-tab';
 import {DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService} from '@delon/auth';
-import {SettingsService, _HttpClient} from '@delon/theme';
+import {_HttpClient, SettingsService} from '@delon/theme';
 import {environment} from '@env/environment';
 import {NzModalService} from 'ng-zorro-antd/modal';
 import {NzTabChangeEvent} from 'ng-zorro-antd/tabs';
-import {concatWith, Observable, Subscription, throwError} from 'rxjs';
+import {Subscription} from 'rxjs';
 
 import {ApiRep} from '../../../models/api/api-rep';
 import {UserLoginSecurityStrategy} from '../../../models/auth/user-login-security-strategy';
 import {WebsiteConfig} from '../../../models/config/website-config';
 import {AuthService} from '../../../services/auth/auth.service';
 import {ConfigService} from '../../../services/config/config.service';
-
-import * as http from 'http';
 import {UserToken} from "../../../models/DTO/user-token";
-import {catchError} from "rxjs/operators";
 import {EPass2001Service} from "../../../services/Usbkey/EnterSafe/ePass2001/e-pass2001.service";
 import {ServerChallenge} from "../../../models/DTO/USBKey/server-challenge";
-import {NzMessageModule, NzMessageService} from "ng-zorro-antd/message";
+import {NzMessageService} from "ng-zorro-antd/message";
 import {ClientResponse} from "../../../models/DTO/USBKey/client-response";
+import {LoginSecurityPolicyLevel} from "../../../models/enum/LoginSecurityPolicyLevel/login-security-policy-level";
+import {AuthOk} from "../../../models/api/auth-ok";
 
 @Component({
   selector: 'passport-login',
@@ -236,10 +234,31 @@ export class UserLoginComponent implements OnDestroy {
         url = `https://api.weibo.com/oauth2/authorize?client_id=1239507802&response_type=code&redirect_uri=${decodeURIComponent(callback)}`;
         break;
       case  'usbkey':
+
+
         if (this.userName.value == null || this.userName.value == "") {
           this.nzMessage.error("请先填写登录邮箱");
           return;
         }
+        var apiRe=await this.authService.GetUserLoginSecurityPolicyLevel(this.userName.value);
+        if (apiRe.Ok){
+          let level= apiRe.Data as LoginSecurityPolicyLevel;
+          this.nzMessage.info("已经获得用户安全策略："+LoginSecurityPolicyLevel[level])
+          await this.sleep(2000);
+          if (level > 1 && this.password.value==null){
+            this.nzMessage.error("已启用双因素认证，必须填写口令");
+            return;
+          }else {
+            this.nzMessage.info("安全策略检查成功："+level)
+            await this.sleep(2000);
+          }
+        }else {
+          this.nzMessage.error("获取服务器安全策略失败");
+          return;
+        }
+
+
+
         //获得服务器挑战随机数
         let challenge!: ServerChallenge;
         this.nzMessage.info("正在请求服务器挑战");

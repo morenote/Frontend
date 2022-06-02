@@ -1,0 +1,14 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="title"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkLoading]="isOkLoading"
+>
+  <div *nzModalContent>
+    <nz-select  [(ngModel)]="value"  >
+      <nz-option *ngFor="let option of optionList" [nzValue]="option" [nzLabel]="option"></nz-option>
+    </nz-select>
+  </div>
+</nz-modal>
+

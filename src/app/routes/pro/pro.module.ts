@@ -40,6 +40,7 @@ import {ProAccountCenterDocumentsComponent} from "./account/center/documents/doc
 import {ProAccountCenterFilesComponent} from "./account/center/files/files.component";
 import {CreateRepositoryFormComponent} from "./form/create-repository/create-repository-form.component";
 import {LoginAuditProTableListComponent} from "./list/login-audit-table-list/table-list.component";
+import {MyComponentsModule} from "../../my-components/my-components.module";
 
 const COMPONENTS = [
   BasicFormComponent,
@@ -77,18 +78,19 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-  imports: [
-    SharedModule,
-    ProRoutingModule,
-    EllipsisModule,
-    TagSelectModule,
-    AvatarListModule,
-    FooterToolbarModule,
-    NzPaginationModule,
-    NzStepsModule,
+    imports: [
+        SharedModule,
+        ProRoutingModule,
+        EllipsisModule,
+        TagSelectModule,
+        AvatarListModule,
+        FooterToolbarModule,
+        NzPaginationModule,
+        NzStepsModule,
 
-    CurrencyPipeModule
-  ],
+        CurrencyPipeModule,
+        MyComponentsModule
+    ],
   declarations: COMPONENTS
 })
 export class ProModule {}

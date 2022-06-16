@@ -14,6 +14,10 @@ import {SelectMoalComponent} from "../../../../../my-components/MyModal/select-m
 import {
   LoginSecurityPolicyLevelConvert
 } from "../../../../../models/enum/LoginSecurityPolicyLevel/login-security-policy-level-convert";
+import {
+  ChangePassWordModalComponentComponent
+} from "../../../../../my-components/MyModal/change-pass-word-modal-component/change-pass-word-modal-component.component";
+import {UserService} from "../../../../../services/User/user.service";
 
 @Component({
   selector: 'app-account-settings-security',
@@ -28,12 +32,15 @@ export class ProAccountSettingsSecurityComponent {
 
   @ViewChild("app_select_moal")
   app_select_moal!:SelectMoalComponent;
+  @ViewChild("app_change_user_passwd")
+  app_change_user_passwd!:ChangePassWordModalComponentComponent;
 
   constructor(public authService: AuthService,
+              public userService:UserService,
               private cdr: ChangeDetectorRef,
               public helperService: HelperServiceService,
               public configService:ConfigService,
-                public  nzMessage:NzMessageService,
+              public  nzMessage:NzMessageService,
               public http: _HttpClient,) {
     this.config=configService.GetWebSiteConfig();
     this.userToken=this.authService.GetUserToken();
@@ -283,7 +290,7 @@ export class ProAccountSettingsSecurityComponent {
   }
 
   OnChangeLoginSecurityPolicyLevel() {
-     let optionList=["unlimited","loose","strict","compliant"];
+      let optionList=["unlimited","loose","strict","compliant"];
       this.app_select_moal.showModal("设置登录安全策略",optionList,async (ok: boolean, value: string) => {
         if (ok && value!=null) {
 
@@ -318,5 +325,28 @@ export class ProAccountSettingsSecurityComponent {
           this.nzMessage.success("未修改登录安全策略");
         }
       })
+  }
+  //修改用户密码
+  OnChangeUserPassWord() {
+    this.app_change_user_passwd.showModal("修改密码",async (ok: boolean,passOld:string, pass1: string,pass2:string)=>{
+      if (ok){
+        if (passOld==null||passOld==""||pass1==null || pass2==null || pass1=="" || pass2 == ""){
+            this.nzMessage.error("无效的账户密码");
+            return;
+        }
+        if (pass1!=pass2){
+          this.nzMessage.error("用户输入的两个密码不相同");
+            return;
+        }
+        //修改密码
+        let apiRe=  await  this.userService.UpdatePwd(passOld,pass1);
+        if (apiRe.Ok){
+          this.nzMessage.success("修改密码成功");
+        }else {
+          this.nzMessage.error("修改密码失败");
+        }
+      }
+    });
+
   }
 }

@@ -39,6 +39,10 @@ export class User {
   public MarkdownEditorOption?:string;
   public RichTextEditorOption?:string;
 
+  //安全相关
+  public  PasswordHashAlgorithm?:string;//用户使用的哈希算法
+
+
 
 
 

@@ -11,7 +11,7 @@
 
   <nz-list-item [nzActions]="[passwordOp]">
     <ng-template #passwordOp>
-      <a>修改</a>
+      <a (click)="OnChangeUserPassWord()">修改</a>
     </ng-template>
     <nz-list-item-meta nzTitle="账户密码" [nzDescription]="passwordDesc">
       <ng-template #passwordDesc> 当前密码强度：<span class="text-green">强</span></ng-template>
@@ -108,4 +108,5 @@
   [nzOkLoading]="isOkLoading"
 >
   <app-select-moal  #app_select_moal></app-select-moal>
+  <app-change-pass-word-modal-component #app_change_user_passwd></app-change-pass-word-modal-component>
   <input *nzModalContent nz-input placeholder="{{placeholder}}" [(ngModel)]="value"/>

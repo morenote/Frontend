@@ -1,0 +1,48 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="title"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkLoading]="isOkLoading"
+>
+  <div *nzModalContent>
+
+    <nz-input-group [nzSuffix]="suffixTemplate0">
+      <input
+        [type]="password0Visible ? 'text' : 'password'"
+        nz-input
+        placeholder="input old password"
+        [(ngModel)]="passwordOld"
+      />
+    </nz-input-group>
+    <br><br>
+    <nz-input-group [nzSuffix]="suffixTemplate1">
+      <input
+        [type]="password1Visible ? 'text' : 'password'"
+        nz-input
+        placeholder="input new password"
+        [(ngModel)]="password1"
+      />
+    </nz-input-group>
+    <br><br>
+    <nz-input-group [nzSuffix]="suffixTemplate2">
+      <input
+        [type]="password2Visible ? 'text' : 'password'"
+        nz-input
+        placeholder="input new password"
+        [(ngModel)]="password2"
+      />
+    </nz-input-group>
+
+    <ng-template #suffixTemplate0>
+      <i nz-icon [nzType]="password0Visible ? 'eye-invisible' : 'eye'" (click)="password0Visible = !password0Visible"></i>
+    </ng-template>
+    <ng-template #suffixTemplate1>
+      <i nz-icon [nzType]="password1Visible ? 'eye-invisible' : 'eye'" (click)="password1Visible = !password1Visible"></i>
+    </ng-template>
+    <ng-template #suffixTemplate2>
+      <i nz-icon [nzType]="password2Visible ? 'eye-invisible' : 'eye'" (click)="password2Visible = !password2Visible"></i>
+    </ng-template>
+
+  </div>
+</nz-modal>

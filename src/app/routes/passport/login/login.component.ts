@@ -22,6 +22,7 @@ import {NzMessageService} from "ng-zorro-antd/message";
 import {ClientResponse} from "../../../models/DTO/USBKey/client-response";
 import {LoginSecurityPolicyLevel} from "../../../models/enum/LoginSecurityPolicyLevel/login-security-policy-level";
 import {AuthOk} from "../../../models/api/auth-ok";
+import {SecurityConfigDTO} from "../../../models/DTO/Config/SecurityConfig/security-config-dto";
 
 @Component({
   selector: 'passport-login',
@@ -435,6 +436,7 @@ export class UserLoginComponent implements OnDestroy {
         signature: this.coerceToBase64Url(sig)
       }
     };
+
 
     let response;
     try {

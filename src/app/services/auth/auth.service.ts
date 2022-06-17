@@ -11,6 +11,11 @@ import {pbkdf2, pbkdf2Sync} from "crypto";
 import * as hkdf from "futoin-hkdf";
 import {AuthOk} from "../../models/api/auth-ok";
 import {LoginSecurityPolicyLevel} from "../../models/enum/LoginSecurityPolicyLevel/login-security-policy-level";
+import {UserService} from "../User/user.service";
+import {SJJ1962Service} from "../Cryptography/sj1962/s-j-j1962.service";
+import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security-config-dto";
+import {User} from "../../models/entity/user";
+import {LogUtil} from "../../shared/utils/log-util";
 
 
 
@@ -26,32 +31,56 @@ export class AuthService {
 
   public constructor(db: LocalStorageDBService,
                      public http: HttpClient,
+                     public userService:UserService,
+                     public sjj1962:SJJ1962Service,
                      public configService: ConfigService,
-                     private localStorageDBService: LocalStorageDBService) {
+                     ) {
     this.db = db
     this.config = this.configService.GetWebSiteConfig();
   }
 
 
-  public SetUserToken(userToken: UserToken) {
-    this.localStorageDBService.SetValue('AuthService-UserToken', JSON.stringify(userToken));
-  }
-
-  public GetUserToken(): UserToken {
-    let json = this.localStorageDBService.GetValue('AuthService-UserToken');
-    return JSON.parse(json!);
-  }
 
 
-  public LoginByPassword(type: string, email: string, pwd: string): Observable<ApiRep> {
-    let url = this.config.baseURL + '/api/Auth/Login?_allow_anonymous=true';
-    let formData = new FormData();
-    formData.set('type', type!);
-    formData.set('email', email!);
-    formData.set('pwd', pwd);
-    let result = this.http.post<ApiRep>(url, formData);
-    return result;
+
+  public LoginByPassword(type: string, email: string, pwd: string): Promise<ApiRep> {
+    return  new Promise<ApiRep>(async resolve => {
+      let scDTO: SecurityConfigDTO;
+      //获得服务器密码安全策略
+      let apiRe = await this.configService.GetSecurityConfigDTO();
+      if (apiRe != null && apiRe.Ok) {
+        scDTO = apiRe.Data as SecurityConfigDTO;
+      } else {
+        //返回失败
+        resolve(apiRe);
+        return;
+      }
+
+      //获得用户密码算法
+      apiRe = await this.userService.GetUserInfoByEmail(email);
+      if (apiRe == null || !apiRe.Ok) {
+        resolve(apiRe);
+        LogUtil.log("GetUserInfoByEmail is error");
+        return ;
+      }
+      let userInfo = apiRe.Data as User;
+      pwd=this.sjj1962.TransferEncryptionIfUser(pwd,userInfo,scDTO);
+
+      let url = this.config.baseURL + '/api/Auth/Login?_allow_anonymous=true';
+      let formData = new FormData();
+      formData.set('type', type!);
+      formData.set('email', email!);
+      formData.set('pwd', pwd);
+      let result = this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
+          resolve(apiRe);
+      })
+    })
+
   }
+
+
+
+
   public GetUserLoginSecurityPolicyLevel(email:string):Promise<ApiRep>{
     return  new Promise<ApiRep>((resolve)=>{
       let url = this.config.baseURL + '/api/Auth/GetUserLoginSecurityPolicyLevel?_allow_anonymous=true';
@@ -91,7 +120,7 @@ export class AuthService {
     return  new Promise<ApiRep>((resolve)=>{
       let url = this.config.baseURL + '/api/Auth/SetUserLoginSecurityPolicyLevel';
       let formData = new FormData();
-      formData.set('token', this.GetUserToken().Token);
+      formData.set('token', this.configService.GetUserToken().Token);
       formData.set('level', level.toString());
 
       this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{

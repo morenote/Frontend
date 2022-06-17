@@ -5,6 +5,7 @@ import { zip } from 'rxjs';
 import {Router} from "@angular/router";
 import {AuthService} from "../../../services/auth/auth.service";
 import {UserToken} from "../../../models/DTO/user-token";
+import {ConfigService} from "../../../services/config/config.service";
 
 @Component({
   selector: 'app-dashboard-workplace',
@@ -83,9 +84,10 @@ export class DashboardWorkplaceComponent implements OnInit {
               public msg: NzMessageService,
               private cdr: ChangeDetectorRef,
               public router:Router,
+              private  configService:ConfigService,
               private authService:AuthService
               ) {
-      this.userToken=authService.GetUserToken();
+      this.userToken=this.configService.GetUserToken();
   }
 
   userToken:UserToken;

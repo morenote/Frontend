@@ -139,7 +139,10 @@ export class UserLoginComponent implements OnDestroy {
     return obs;
   }
 
-  submit(): void {
+  /**
+   * 通过提交密码登录
+   */
+  async submit() {
     this.error = '';
 
     if (this.password == null) {
@@ -177,33 +180,36 @@ export class UserLoginComponent implements OnDestroy {
     formData.set('', String(this.type));
     formData.set('email', this.userName.value);
     formData.set('pwd', this.password.value);
+    //登录
+    let apiRe = await this.authService.LoginByPassword(String(this.type), this.userName.value, this.password.value);
 
+    if (this.error) {
+      this.loading = false;
+      alert("无法正常登录");
+      return;
+    }
+    if (apiRe.Ok != true) {
+      this.loading = false;
+      this.error = apiRe.Msg!;
+      this.cdr.detectChanges();
+      console.log('进入111');
+      return;
+    }
+    let userToken: UserToken = apiRe.Data;
+    // 清空路由复用信息
+    this.reuseTabService.clear();
+    // 设置用户Token信息
+    this.tokenService.set({
+      token: userToken.Token
+    });
+    this.configService.SetUserToken(userToken);
+    this.nzMessage.success("应用系统身份鉴别成功")
+    await this.sleep(2000);
+    this.nzMessage.success("正在登录到系统，请稍候....")
+    await this.sleep(2000);
+    // 跳转到工作台
+    await this.router.navigate(['/']);
 
-    this.authService.LoginByPassword(String(this.type), this.userName.value, this.password.value)
-      .subscribe((apiRe: ApiRep) => {
-        if (this.error) {
-          this.loading = false;
-          alert("无法正常登录");
-          return;
-        }
-        if (apiRe.Ok != true) {
-          this.loading = false;
-          this.error = apiRe.Msg!;
-          this.cdr.detectChanges();
-          console.log('进入111');
-          return;
-        }
-        let userToken: UserToken = apiRe.Data;
-        // 清空路由复用信息
-        this.reuseTabService.clear();
-        // 设置用户Token信息
-        this.tokenService.set({
-          token: userToken.Token
-        });
-        this.authService.SetUserToken(userToken);
-        // 直接跳转
-        this.router.navigate(['/']);
-      });
   }
 
   // #region social
@@ -309,7 +315,7 @@ export class UserLoginComponent implements OnDestroy {
           this.tokenService.set({
             token: userToken.Token
           });
-          this.authService.SetUserToken(userToken);
+          this.configService.SetUserToken(userToken);
           // 直接跳转
           await this.router.navigate(['/']);
         }

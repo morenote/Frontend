@@ -22,7 +22,7 @@ export class EPass2001Service {
   constructor(public authService: AuthService, public http: HttpClient, public configService: ConfigService) {
 
 
-    let userToken = this.authService.GetUserToken();
+    let userToken = this.configService.GetUserToken();
     this.userId = userToken.UserId;
     this.token = userToken.Token;
     this.config = this.configService.GetWebSiteConfig();

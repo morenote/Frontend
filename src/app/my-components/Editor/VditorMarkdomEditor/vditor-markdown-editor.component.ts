@@ -16,7 +16,7 @@ export class VditorMarkdownEditorComponent implements OnInit, EditorInterface {
   userToken:UserToken;
   constructor(configService: ConfigService, public authService: AuthService) {
     this.config = configService.GetWebSiteConfig();
-    this.userToken=authService.GetUserToken();
+    this.userToken=configService.GetUserToken();
   }
 
   public vditor!: Vditor;

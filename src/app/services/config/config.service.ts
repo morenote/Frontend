@@ -5,6 +5,8 @@ import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security
 import {AuthService} from "../auth/auth.service";
 import {HttpClient} from "@angular/common/http";
 import {ApiRep} from "../../models/api/api-rep";
+import {UserToken} from "../../models/DTO/user-token";
+import {LocalStorageDBService} from "../data-storage/local-storage-db.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +15,15 @@ export class ConfigService {
 
   localhostUrl: string = "/localhost";
 
-  constructor( public http: HttpClient) {
+  constructor( public http: HttpClient,private localStorageDBService: LocalStorageDBService) {
 
-
-
-
+  }
+  public GetUserToken(): UserToken {
+    let json = this.localStorageDBService.GetValue('AuthService-UserToken');
+    return JSON.parse(json!);
+  }
+  public SetUserToken(userToken: UserToken) {
+    this.localStorageDBService.SetValue('AuthService-UserToken', JSON.stringify(userToken));
   }
 
 

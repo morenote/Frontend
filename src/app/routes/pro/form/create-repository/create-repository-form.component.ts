@@ -11,6 +11,7 @@ import {RepositoryType} from "../../../../models/enum/repository-type";
 import {NotesRepositoryService} from "../../../../services/NotesRepository/notes-repository.service";
 import {Router} from "@angular/router";
 import {UserToken} from "../../../../models/DTO/user-token";
+import {ConfigService} from "../../../../services/config/config.service";
 
 @Component({
   selector: 'app-create-repository',
@@ -38,9 +39,10 @@ export class CreateRepositoryFormComponent implements OnInit {
               private cdr: ChangeDetectorRef,
               private orgService:OrganizationService,
               private authService:AuthService,
+              private configService:ConfigService,
               private notesRepositoryService:NotesRepositoryService
               ) {
-    this.userToken=authService.GetUserToken();
+    this.userToken=this.configService.GetUserToken();
   }
 
   ngOnInit(): void {
@@ -61,7 +63,7 @@ export class CreateRepositoryFormComponent implements OnInit {
       public: [1, [Validators.min(1), Validators.max(3)]],
       publicUsers: [null, []]
     });
-    let userToken=this.authService.GetUserToken();
+    let userToken=this.configService.GetUserToken();
     let userName=userToken.Username;
     let userId=userToken.UserId;
 

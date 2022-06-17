@@ -43,7 +43,7 @@ export class ProAccountSettingsSecurityComponent {
               public  nzMessage:NzMessageService,
               public http: _HttpClient,) {
     this.config=configService.GetWebSiteConfig();
-    this.userToken=this.authService.GetUserToken();
+    this.userToken=this.configService.GetUserToken();
   }
   loginSecurityPolicyLevel?:string;
   fido2list:Map<string,string> =new Map<string, string>();
@@ -343,7 +343,7 @@ export class ProAccountSettingsSecurityComponent {
         if (apiRe.Ok){
           this.nzMessage.success("修改密码成功");
         }else {
-          this.nzMessage.error("修改密码失败");
+          this.nzMessage.error("修改密码失败："+apiRe.Msg);
         }
       }
     });

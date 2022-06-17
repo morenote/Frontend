@@ -39,7 +39,7 @@ export class MyDataSource extends DataSource<ItemData> {
 
   constructor(public authService: AuthService, public http: HttpClient, public configService: ConfigService) {
     super();
-    let userToken = this.authService.GetUserToken();
+    let userToken = this.configService.GetUserToken();
     this.userId = userToken.UserId;
     this.token = userToken.Token;
     this.config = this.configService.GetWebSiteConfig();

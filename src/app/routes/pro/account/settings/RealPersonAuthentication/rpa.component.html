@@ -1,0 +1,15 @@
+<nz-spin [nzSpinning]="userLoading">
+  <div class="main" *ngIf="user">
+    <div class="left">
+      <form nz-form nzLayout="vertical" #f="ngForm" (submit)="save()" se-container="1">
+        <se label="身份证号" error="请输入您的昵称!">
+          <input nz-input [(ngModel)]="sfz" name="sfz" required />
+        </se>
+        <se>
+          <button nz-button nzType="primary" [disabled]="f.invalid">更新实名认证</button>
+        </se>
+      </form>
+    </div>
+
+  </div>
+</nz-spin>

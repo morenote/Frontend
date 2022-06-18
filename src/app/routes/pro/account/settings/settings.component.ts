@@ -21,6 +21,10 @@ export class ProAccountSettingsComponent implements AfterViewInit, OnDestroy {
       title: '基本设置'
     },
     {
+      key: 'rpa',
+      title: '实名认证'
+    },
+    {
       key: 'security',
       title: '安全设置'
     },

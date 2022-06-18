@@ -41,6 +41,7 @@ import {ProAccountCenterFilesComponent} from "./account/center/files/files.compo
 import {CreateRepositoryFormComponent} from "./form/create-repository/create-repository-form.component";
 import {LoginAuditProTableListComponent} from "./list/login-audit-table-list/table-list.component";
 import {MyComponentsModule} from "../../my-components/my-components.module";
+import {ProRealPersonAuthenticationComponent} from "./account/settings/RealPersonAuthentication/rpa.component";
 
 const COMPONENTS = [
   BasicFormComponent,
@@ -68,6 +69,9 @@ const COMPONENTS = [
   ProAccountCenterFilesComponent,
   ProAccountSettingsComponent,
   ProAccountSettingsBaseComponent,
+  ProRealPersonAuthenticationComponent,
+
+
   ProAccountSettingsSecurityComponent,
   ProAccountSettingsBindingComponent,
   ProAccountSettingsNotificationComponent,

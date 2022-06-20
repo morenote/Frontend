@@ -16,6 +16,7 @@ import {SJJ1962Service} from "../Cryptography/sj1962/s-j-j1962.service";
 import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security-config-dto";
 import {User} from "../../models/entity/user";
 import {LogUtil} from "../../shared/utils/log-util";
+import {Base64Util} from "../../shared/utils/base64-util";
 
 
 
@@ -78,6 +79,13 @@ export class AuthService {
 
   }
 
+
+  public TackNumber():string{
+    let arr=new Uint8Array(16);
+    window.crypto.getRandomValues(arr);
+    let base64= Base64Util.Uint8ArrayToBase64(arr);
+    return  base64;
+  }
 
 
 

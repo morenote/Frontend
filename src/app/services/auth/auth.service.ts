@@ -40,11 +40,7 @@ export class AuthService {
     this.config = this.configService.GetWebSiteConfig();
   }
 
-
-
-
-
-  public LoginByPassword(type: string, email: string, pwd: string): Promise<ApiRep> {
+  public LoginByPassword(type: string, email: string, pwd: string,requestNumber:string): Promise<ApiRep> {
     return  new Promise<ApiRep>(async resolve => {
       let scDTO: SecurityConfigDTO;
       //获得服务器密码安全策略
@@ -72,32 +68,58 @@ export class AuthService {
       formData.set('type', type!);
       formData.set('email', email!);
       formData.set('pwd', pwd);
+      formData.set('requestNumber', requestNumber);
       let result = this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
           resolve(apiRe);
       })
     })
+  }
 
+  public TackNumber():Promise<string>{
+    return  new Promise<string>(resolve => {
+      let url = this.config.baseURL + '/api/Auth/TakeNumber?_allow_anonymous=true';
+      let result = this.http.get<ApiRep>(url).subscribe(apiRe=>{
+        if (apiRe!=null && apiRe.Ok){
+          resolve(apiRe.Data);
+        }else {
+          throw Error("");
+        }
+      });
+    })
   }
 
 
-  public TackNumber():string{
-    let arr=new Uint8Array(16);
-    window.crypto.getRandomValues(arr);
-    let base64= Base64Util.Uint8ArrayToBase64(arr);
-    return  base64;
-  }
 
-
-
-  public GetUserLoginSecurityPolicyLevel(email:string):Promise<ApiRep>{
-    return  new Promise<ApiRep>((resolve)=>{
+  public GetUserLoginSecurityPolicyLevel(email:string):Promise<LoginSecurityPolicyLevel>{
+    return  new Promise<LoginSecurityPolicyLevel>((resolve)=>{
       let url = this.config.baseURL + '/api/Auth/GetUserLoginSecurityPolicyLevel?_allow_anonymous=true';
       let httpParams = new HttpParams()
         .append('email', email);
       let result = this.http.get<ApiRep>(url, {params: httpParams}).subscribe(apiRe=>{
-        return resolve(apiRe);
+        if (apiRe!=null && apiRe.Ok){
+          return resolve(apiRe.Data);
+        }else {
+          throw Error("GetUserLoginSecurityPolicyLevel is Error");
+        }
       });
     });
+  }
+
+  public  TakeToken(email:string,requestNumber:string):Promise<UserToken>{
+    return  new Promise<UserToken>(resolve => {
+      let url = this.config.baseURL + '/api/Auth/TakeToken';
+      let formData = new FormData();
+      formData.set('email', email);
+      formData.set('requestNumber', requestNumber);
+      this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
+        if (apiRe!=null){
+        return   resolve(apiRe.Data);
+        }
+      });
+
+
+
+    })
   }
 
   // //派生密钥

@@ -61,8 +61,8 @@ export class ProAccountSettingsSecurityComponent {
     this.fido2list.set("key4", "key4 — 已于 2021 年 01 月 01 日注册");
     this.fido2list.set("key5", "key5 — 已于 2021 年 01 月 01 日注册");
     //获得安全策略
-    let apiRe = await this.authService.GetUserLoginSecurityPolicyLevel(this.userToken!.Email!);
-    let level=apiRe.Data as LoginSecurityPolicyLevel
+    let level = await this.authService.GetUserLoginSecurityPolicyLevel(this.userToken!.Email!);
+
     this.levelText=LoginSecurityPolicyLevel[level];
     this.levelDes=LoginSecurityPolicyLevelConvert.toString(level);
     this.cdr.detectChanges();

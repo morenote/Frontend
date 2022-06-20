@@ -9,6 +9,7 @@ import {ServerChallenge} from "../../../../models/DTO/USBKey/server-challenge";
 import {ClientMessage} from "../../../../models/DTO/USBKey/client-message";
 import {ClientMessageType} from "../../../../models/DTO/USBKey/message-type";
 import {ClientResponse} from "../../../../models/DTO/USBKey/client-response";
+import {NzMessageService} from "ng-zorro-antd/message";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,10 @@ export class EPass2001Service {
   config: WebsiteConfig;
   localhostUrl: string = "/localhost";
 
-  constructor(public authService: AuthService, public http: HttpClient, public configService: ConfigService) {
+  constructor(public authService: AuthService,
+              public http: HttpClient,
+              public nzMessage: NzMessageService,
+              public configService: ConfigService) {
 
 
     let userToken = this.configService.GetUserToken();
@@ -56,16 +60,68 @@ export class EPass2001Service {
     })
   }
 
-  public GetLoginChallenge(email: string): Promise<ApiRep> {
+  public GetLoginChallenge(email: string,requestNumber:string): Promise<ApiRep> {
     return new Promise<ApiRep>(resolve => {
       let url = this.config.baseURL + '/api/USBKey/GetLoginChallenge';
       let httpParams = new HttpParams()
-        .append('email', email);
+        .append('email', email)
+        .append('requestNumber', requestNumber);
       let result = this.http.get<ApiRep>(url, {params: httpParams});
       result.subscribe(apiRe => {
         resolve(apiRe);
       });
     })
+  }
+
+  sleep(millisecond:any):Promise<void> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve()
+      }, millisecond)
+    })
+  }
+
+  public async login(email:string,requestNumber: string):Promise<ApiRep> {
+    return new Promise<ApiRep>(async resolve => {
+      //获得服务器挑战随机数
+      let challenge!: ServerChallenge;
+      this.nzMessage.info("正在请求服务器挑战");
+      await this.sleep(2000);
+      let apiRep = await this.GetLoginChallenge(email, requestNumber);
+      if (apiRep.Ok) {
+        challenge = apiRep.Data;
+        this.nzMessage.info("获得服务器挑战" + challenge.Id);
+      } else {
+        this.nzMessage.error("获得服务器挑战失败");
+        return;
+      }
+      //发送到智能密码钥匙
+      await this.sleep(2000);
+      this.nzMessage.info("正在检测智能密码钥匙，请勿操作");
+      await this.sleep(2000);
+      if (challenge != null) {
+        this.nzMessage.info("正在挑战智能密码钥匙" + challenge.Id);
+      }
+      await this.sleep(2000);
+      apiRep = await this.SendChallengeToePass2001(challenge!);
+      let res: ClientResponse;
+      if (apiRep.Ok) {
+        this.nzMessage.success("智能密码钥匙签名成功");
+        res = apiRep.Data as ClientResponse;
+      } else {
+        this.nzMessage.error("智能密钥钥匙签名失败");
+        return;
+      }
+      //发送到服务器验签
+      await this.sleep(2000);
+      this.nzMessage.info("将签名结果发送到服务器");
+      await this.sleep(2000);
+      apiRep = await this.LoginByResponse(res);
+      if (apiRep!=null){
+        resolve(apiRep)
+      }
+      throw  new Error("epass2001 login is error")
+    });
   }
 
 

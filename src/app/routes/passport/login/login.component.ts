@@ -21,8 +21,6 @@ import {ServerChallenge} from "../../../models/DTO/USBKey/server-challenge";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {ClientResponse} from "../../../models/DTO/USBKey/client-response";
 import {LoginSecurityPolicyLevel} from "../../../models/enum/LoginSecurityPolicyLevel/login-security-policy-level";
-import {AuthOk} from "../../../models/api/auth-ok";
-import {SecurityConfigDTO} from "../../../models/DTO/Config/SecurityConfig/security-config-dto";
 
 @Component({
   selector: 'passport-login',
@@ -176,40 +174,48 @@ export class UserLoginComponent implements OnDestroy {
       this.loading = false;
     }, 2000)
     this.cdr.detectChanges();
-    const formData = new FormData();
-    formData.set('', String(this.type));
-    formData.set('email', this.userName.value);
-    formData.set('pwd', this.password.value);
-    //登录
-    let apiRe = await this.authService.LoginByPassword(String(this.type), this.userName.value, this.password.value);
-
-    if (this.error) {
-      this.loading = false;
-      alert("无法正常登录");
-      return;
+    try {
+      let requestNumber=await  this.authService.TackNumber();
+      //登录
+      let  apiRe = await this.authService.LoginByPassword(String(this.type), this.userName.value, this.password.value,requestNumber);
+      if (this.error) {
+        this.loading = false;
+        alert("无法正常登录");
+        return;
+      }
+      if (apiRe.Ok != true) {
+        this.loading = false;
+        this.error = apiRe.Msg!;
+        this.cdr.detectChanges();
+        console.log('进入111');
+        return;
+      }
+      //获得登录方式
+      let level=await  this.authService.GetUserLoginSecurityPolicyLevel(this.userName.value);
+      if (level==LoginSecurityPolicyLevel.compliant){
+         let apoRe=  await  this.epass.login(this.userName.value,requestNumber);
+         if (apiRe==null || !apiRe.Ok){
+           this.nzMessage.error("USBKey身份鉴别失败")
+           return;
+         }
+      }
+      let userToken=await  this.authService.TakeToken(this.userName.value,requestNumber);
+      // 清空路由复用信息
+      this.reuseTabService.clear();
+      // 设置用户Token信息
+      this.tokenService.set({
+        token: userToken.Token
+      });
+      this.configService.SetUserToken(userToken);
+      this.nzMessage.success("应用系统身份鉴别成功")
+      await this.sleep(2000);
+      this.nzMessage.success("正在登录到系统，请稍候....")
+      await this.sleep(2000);
+      // 跳转到工作台
+      await this.router.navigate(['/']);
+    }catch (error:any) {
+      this.nzMessage.error(error.message);
     }
-    if (apiRe.Ok != true) {
-      this.loading = false;
-      this.error = apiRe.Msg!;
-      this.cdr.detectChanges();
-      console.log('进入111');
-      return;
-    }
-    let userToken: UserToken = apiRe.Data;
-    // 清空路由复用信息
-    this.reuseTabService.clear();
-    // 设置用户Token信息
-    this.tokenService.set({
-      token: userToken.Token
-    });
-    this.configService.SetUserToken(userToken);
-    this.nzMessage.success("应用系统身份鉴别成功")
-    await this.sleep(2000);
-    this.nzMessage.success("正在登录到系统，请稍候....")
-    await this.sleep(2000);
-    // 跳转到工作台
-    await this.router.navigate(['/']);
-
   }
 
   // #region social
@@ -247,59 +253,18 @@ export class UserLoginComponent implements OnDestroy {
           this.nzMessage.error("请先填写登录邮箱");
           return;
         }
-        var apiRe=await this.authService.GetUserLoginSecurityPolicyLevel(this.userName.value);
-        if (apiRe.Ok){
-          let level= apiRe.Data as LoginSecurityPolicyLevel;
-          this.nzMessage.info("已经获得用户安全策略："+LoginSecurityPolicyLevel[level])
-          await this.sleep(2000);
-          if (level > 1 && this.password.value==null){
-            this.nzMessage.error("已启用双因素认证，必须填写口令");
-            return;
-          }else {
-            this.nzMessage.info("安全策略检查成功："+level)
-            await this.sleep(2000);
-          }
+        let  level=await this.authService.GetUserLoginSecurityPolicyLevel(this.userName.value);
+        this.nzMessage.info("已经获得用户安全策略："+LoginSecurityPolicyLevel[level])
+        await this.sleep(2000);
+        if (level > 1 && this.password.value==null){
+          this.nzMessage.error("已启用双因素认证，必须填写口令");
+          return;
         }else {
-          this.nzMessage.error("获取服务器安全策略失败");
-          return;
+          this.nzMessage.info("安全策略检查成功："+level)
+          await this.sleep(2000);
         }
 
-
-
-        //获得服务器挑战随机数
-        let challenge!: ServerChallenge;
-        this.nzMessage.info("正在请求服务器挑战");
-        await this.sleep(2000);
-        let apiRep = await this.epass.GetLoginChallenge(this.userName.value);
-        if (apiRep.Ok) {
-          challenge = apiRep.Data;
-          this.nzMessage.info("获得服务器挑战" + challenge.Id);
-        } else {
-          this.nzMessage.error("获得服务器挑战失败");
-          return;
-        }
-        //发送到智能密码钥匙
-        await this.sleep(2000);
-        this.nzMessage.info("正在检测智能密码钥匙，请勿操作");
-        await this.sleep(2000);
-        if (challenge != null) {
-          this.nzMessage.info("正在挑战智能密码钥匙" + challenge.Id);
-        }
-        await this.sleep(2000);
-        apiRep = await this.epass.SendChallengeToePass2001(challenge!);
-        let res:ClientResponse;
-        if (apiRep.Ok) {
-          this.nzMessage.success("智能密码钥匙签名成功");
-          res = apiRep.Data as ClientResponse;
-        } else {
-          this.nzMessage.error("智能密钥钥匙签名失败");
-          return;
-        }
-        //发送到服务器验签
-        await this.sleep(2000);
-        this.nzMessage.info("将签名结果发送到服务器");
-        await this.sleep(2000);
-        apiRep=await this.epass.LoginByResponse(res);
+        let apiRep=await  this.epass.login(this.userName.value,"");
         if (!apiRep.Ok){
           this.nzMessage.error("应用系统身份鉴别失败");
         }else {

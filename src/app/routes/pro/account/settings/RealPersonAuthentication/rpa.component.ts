@@ -2,6 +2,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { zip } from 'rxjs';
+import {addWarning} from "@angular-devkit/build-angular/src/utils/webpack-diagnostics";
+import {EPass2001Service} from "../../../../../services/Usbkey/EnterSafe/ePass2001/e-pass2001.service";
+import {SignData} from "../../../../../models/DTO/USBKey/sign-data";
+import {UserService} from "../../../../../services/User/user.service";
+import {RealNameInformation} from "../../../../../models/entity/User/real-name-information";
 
 interface ProAccountSettingsUser {
   email: string;
@@ -33,7 +38,12 @@ interface ProAccountSettingsCity {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProRealPersonAuthenticationComponent implements OnInit {
-  constructor(private http: _HttpClient, private cdr: ChangeDetectorRef, private msg: NzMessageService) {}
+  constructor(private http: _HttpClient,
+              public nzMessage: NzMessageService,
+              private cdr: ChangeDetectorRef,
+              private  userService:UserService,
+              private epass:EPass2001Service,
+              private msg: NzMessageService) {}
   avatar = '';
   userLoading = true;
   user!: ProAccountSettingsUser;
@@ -43,7 +53,7 @@ export class ProRealPersonAuthenticationComponent implements OnInit {
   provinces: ProAccountSettingsCity[] = [];
   cities: ProAccountSettingsCity[] = [];
 
-  ngOnInit(): void {
+  async ngOnInit() {
     zip(this.http.get('/user/current'), this.http.get('/geo/province')).subscribe(
       ([user, province]: [ProAccountSettingsUser, ProAccountSettingsCity[]]) => {
         this.userLoading = false;
@@ -53,6 +63,23 @@ export class ProRealPersonAuthenticationComponent implements OnInit {
         this.cdr.detectChanges();
       }
     );
+    let apiRe = await this.userService.GetRealNameInformation();
+    if (apiRe!=null&& apiRe.Ok){
+      let realName=apiRe.Data as RealNameInformation;
+      if (realName==null){
+        this.sfz="未实名";
+        return;
+      }
+      this.sfz=realName.IdCardNo;
+      this.cdr.detectChanges();
+      if (!realName.Verify){
+         setTimeout(()=>{
+           this.nzMessage.error("检测到数据库中的用户身份证信息遭到非法篡改",{nzDuration:5000});
+         },1000)
+      }else {
+
+      }
+    }
   }
 
   choProvince(pid: string, cleanCity: boolean = true): void {
@@ -66,10 +93,21 @@ export class ProRealPersonAuthenticationComponent implements OnInit {
   }
 
   // #endregion
-  sfz: any="XXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+  sfz: any="加载中";
 
-  save(): boolean {
-    this.msg.success("更新成功");
-    return false;
+  async save() {
+    //数据签名
+    let signData=new SignData();
+    signData.Data=this.sfz;
+    let dataSign = await this.epass.SendSignToePass2001(signData);
+    this.msg.success("签名成功");
+    let apiRe= await this.userService.SetRealNameInformation(dataSign);
+    if (apiRe!=null && apiRe.Ok){
+      this.nzMessage.success("更新实名信息成功");
+    }else {
+      this.nzMessage.error("更新实名信息失败");
+    }
+
+    return apiRe!=null && apiRe.Ok;
   }
 }

@@ -11,6 +11,7 @@ import {User} from "../../models/entity/user";
 import {HexUtil} from "../../shared/utils/hex-util";
 import {Base64} from "js-base64";
 import {SJJ1962Service} from "../Cryptography/sj1962/s-j-j1962.service";
+import {DataSign} from "../../models/DTO/USBKey/data-sign";
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,31 @@ export class UserService {
         resolve(apiRe);
       })
     })
+  }
+
+  public GetRealNameInformation(): Promise<ApiRep> {
+    return new Promise<ApiRep>(resolve => {
+      let url = this.config.baseURL + '/api/User/GetRealNameInformation';
+      let httpParams = new HttpParams()
+        .append('token', this.token!);
+      let result = this.http.get<ApiRep>(url, {params: httpParams}).subscribe(apiRe => {
+        resolve(apiRe);
+      })
+    })
+  }
+  public SetRealNameInformation(realName:DataSign): Promise<ApiRep>{
+    return  new Promise<ApiRep>(resolve => {
+      let url = this.config.baseURL + '/api/User/SetRealNameInformation';
+      let formData = new FormData();
+      formData.set('token', this.token!);
+      formData.set('json', JSON.stringify(realName));
+
+      let result = this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
+        resolve(apiRe);
+      })
+
+    })
+
   }
 
   /**

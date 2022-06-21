@@ -17,8 +17,8 @@ import {SJJ1962Service} from "../Cryptography/sj1962/s-j-j1962.service";
 })
 export class UserService {
 
-  userId: string | null;
-  token: string | null;
+  userId?: string | null;
+  token?: string | null;
   config: WebsiteConfig;
 
   constructor(
@@ -27,8 +27,10 @@ export class UserService {
               public sjj1962: SJJ1962Service,
               ) {
     let userToken = this.configService.GetUserToken();
-    this.userId = userToken.UserId;
-    this.token = userToken.Token;
+    if (userToken!=null){
+      this.userId = userToken.UserId;
+      this.token = userToken.Token;
+    }
     this.config = this.configService.GetWebSiteConfig();
   }
 

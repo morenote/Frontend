@@ -15,8 +15,8 @@ import {NzMessageService} from "ng-zorro-antd/message";
   providedIn: 'root'
 })
 export class EPass2001Service {
-  userId: string | null;
-  token: string | null;
+  userId?: string | null;
+  token?: string | null;
   config: WebsiteConfig;
   localhostUrl: string = "/localhost";
 
@@ -27,8 +27,10 @@ export class EPass2001Service {
 
 
     let userToken = this.configService.GetUserToken();
-    this.userId = userToken.UserId;
-    this.token = userToken.Token;
+    if (userToken!=null){
+      this.userId = userToken.UserId;
+      this.token = userToken.Token;
+    }
     this.config = this.configService.GetWebSiteConfig();
   }
 

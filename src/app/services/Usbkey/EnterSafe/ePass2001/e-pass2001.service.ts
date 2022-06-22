@@ -10,13 +10,15 @@ import {ClientMessage} from "../../../../models/DTO/USBKey/client-message";
 import {ClientMessageType} from "../../../../models/DTO/USBKey/message-type";
 import {ClientResponse} from "../../../../models/DTO/USBKey/client-response";
 import {NzMessageService} from "ng-zorro-antd/message";
+import {SignData} from "../../../../models/DTO/USBKey/sign-data";
+import {DataSign} from "../../../../models/DTO/USBKey/data-sign";
 
 @Injectable({
   providedIn: 'root'
 })
 export class EPass2001Service {
-  userId: string | null;
-  token: string | null;
+  userId?: string | null;
+  token?: string | null;
   config: WebsiteConfig;
   localhostUrl: string = "/localhost";
 
@@ -27,8 +29,10 @@ export class EPass2001Service {
 
 
     let userToken = this.configService.GetUserToken();
-    this.userId = userToken.UserId;
-    this.token = userToken.Token;
+    if (userToken!=null){
+      this.userId = userToken.UserId;
+      this.token = userToken.Token;
+    }
     this.config = this.configService.GetWebSiteConfig();
   }
 
@@ -48,6 +52,31 @@ export class EPass2001Service {
       });
     })
   }
+  public SendSignToePass2001(signData: SignData): Promise<DataSign> {
+    return  new Promise<DataSign>(resolve => {
+      let message = new ClientMessage();
+      message.MessageType = ClientMessageType.Sign;
+      message.Data = signData;
+      let json = JSON.stringify(message)
+
+      let url = this.localhostUrl;
+      let postCfg = {
+        headers: {'Content-Type': 'application/json;charset=UTF-8'}
+      };
+      let result = this.http.post<ApiRep>(url, json, postCfg).subscribe(apiRe=>{
+        if (apiRe!=null && apiRe.Ok){
+          resolve(apiRe.Data);
+        }else {
+          throw new Error("SendSignToePass2001 is Error");
+        }
+      });
+    })
+  }
+
+
+
+
+
   public LoginByResponse(clinetResponse:ClientResponse):Promise<ApiRep>{
     return  new Promise<ApiRep>(resolve => {
       let data=JSON.stringify(clinetResponse);

@@ -41,7 +41,8 @@ export class User {
 
   //安全相关
   public  PasswordHashAlgorithm?:string;//用户使用的哈希算法
-
+  public Verify?:boolean;//业务系统防止篡改
+  public  Hmac?:string;//业务系统防止篡改
 
 
 

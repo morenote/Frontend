@@ -101,24 +101,21 @@ export class CreateRepositoryFormComponent implements OnInit {
 
   }
 
-  submit(): void {
+  async submit() {
     this.submitting = true;
-    let notesRepository=this.getNotesRepository();
-    this.notesRepositoryService.CreateNoteRepository(notesRepository).subscribe((apiRe:ApiRep)=>{
-      this.submitting = false;
-      this.cdr.detectChanges();
-      if (apiRe.Ok==true){
-        let result:NotesRepository=apiRe.Data;
-        this.msg.success(`创建成功:`+result.Id);
-        setTimeout(()=>{
-            this.router.navigateByUrl("/pro/account/center/documents");
-        },500);
-      }else {
-        this.msg.error(`创建失败:`+apiRe.Msg);
-      }
-
-    })
-
+    let notesRepository = this.getNotesRepository();
+    let apiRe = await this.notesRepositoryService.CreateNoteRepository(notesRepository);
+    this.submitting = false;
+    this.cdr.detectChanges();
+    if (apiRe.Ok == true) {
+      let result: NotesRepository = apiRe.Data;
+      this.msg.success(`创建成功:` + result.Id);
+      setTimeout(() => {
+        this.router.navigateByUrl("/pro/account/center/documents");
+      }, 500);
+    } else {
+      this.msg.error(`创建失败:` + apiRe.Msg);
+    }
 
   }
 

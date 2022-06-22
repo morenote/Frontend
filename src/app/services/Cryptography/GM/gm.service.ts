@@ -31,5 +31,10 @@ export class GMService {
     let encryptData = sm2.doEncrypt(msgString, publicKey, cipherMode) // 加密结果
     return  encryptData;
   }
+
+  public  SM3(data:string ):string{
+    let sm3 = require('sm-crypto').sm3
+    return sm3(data);
+  }
   constructor() { }
 }

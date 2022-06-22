@@ -6,17 +6,22 @@ import {ConfigService} from "../config/config.service";
 import {ApiRep} from "../../models/api/api-rep";
 import {Observable} from "rxjs";
 import {WebsiteConfig} from "../../models/config/website-config";
+import {SignData} from "../../models/DTO/USBKey/sign-data";
+import {EPass2001Service} from "../Usbkey/EnterSafe/ePass2001/e-pass2001.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotesRepositoryService {
 
-  userId: string | null;
-  token: string | null;
+  userId: string ;
+  token: string ;
   config: WebsiteConfig;
 
-  constructor(public authService: AuthService, public http: HttpClient, public configService: ConfigService) {
+  constructor(public authService: AuthService,
+              public http: HttpClient,
+              public  epass:EPass2001Service,
+              public configService: ConfigService) {
     let userToken=this.configService.GetUserToken();
     this.userId =userToken.UserId;
     this.token = userToken.Token;
@@ -37,22 +42,58 @@ export class NotesRepositoryService {
     return result;
   }
 
-  public CreateNoteRepository(notesRepository: NotesRepository): Observable<ApiRep> {
-    let url = this.config.baseURL + '/api/NotesRepository/CreateNoteRepository';
-    let fromData = new FormData()
-    fromData.set('token', this.token!)
-    fromData.set('data', JSON.stringify(notesRepository));
-    let result = this.http.post<ApiRep>(url, fromData);
-    return result;
+  public CreateNoteRepository(notesRepository: NotesRepository): Promise<ApiRep> {
+    return  new Promise<ApiRep>(async resolve => {
+
+
+      let signData = new SignData();
+      signData.Id = "";
+      signData.Data = JSON.stringify(notesRepository);
+      signData.UserId = this.userId;
+      signData.UinxTime = Math.round(new Date().getTime() / 1000);
+      signData.Operate = "/api/NotesRepository/CreateNoteRepository";
+
+      let dataSign = await this.epass.SendSignToePass2001(signData);
+
+
+      let url = this.config.baseURL + '/api/NotesRepository/CreateNoteRepository';
+      let fromData = new FormData()
+      fromData.set('token', this.token!)
+      fromData.set('data', JSON.stringify(notesRepository));
+      fromData.set('dataSignJson', JSON.stringify(dataSign));
+      let result = this.http.post<ApiRep>(url, fromData).subscribe(apiRe => {
+        resolve(apiRe);
+      })
+
+
+    });
+
   }
 
-  public DeleteNoteRepository(noteRepositoryId: string) : Observable<ApiRep> {
-    let url = this.config.baseURL + '/api/NotesRepository/DeleteNoteRepository';
-    let httpParams = new HttpParams()
-      .append('token', this.token!)
-      .append('noteRepositoryId', noteRepositoryId);
-    let result = this.http.delete<ApiRep>(url, {params:httpParams});
-    return result;
+  public DeleteNoteRepository(noteRepositoryId: string) : Promise<ApiRep> {
+    return  new Promise<ApiRep>(async resolve => {
+      let signData = new SignData();
+      signData.Id = "";
+      signData.Data = noteRepositoryId;
+      signData.UserId = this.userId;
+      signData.UinxTime = Math.round(new Date().getTime() / 1000);
+      signData.Operate = "/api/NotesRepository/DeleteNoteRepository";
+
+      let dataSign = await this.epass.SendSignToePass2001(signData);
+
+
+      let url = this.config.baseURL + '/api/NotesRepository/DeleteNoteRepository';
+      let fromData = new FormData();
+      fromData.set('token', this.token!)
+      fromData.set('noteRepositoryId', noteRepositoryId);
+      fromData.set('dataSignJson', JSON.stringify(dataSign));
+      let result = this.http.post<ApiRep>(url, fromData).subscribe(apiRe => {
+        resolve(apiRe);
+      });
+
+
+    })
+
   }
 
 

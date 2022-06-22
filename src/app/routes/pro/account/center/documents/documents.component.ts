@@ -67,13 +67,12 @@ export class ProAccountCenterDocumentsComponent {
     this.router.navigate(['/note/editor'],{queryParams:{repository:repository.Id}})
   }
 
-  OnDelete(noteRepositoryId: string) {
-    this.notesRepositoryService.DeleteNoteRepository(noteRepositoryId).subscribe((apiRe: ApiRep) => {
-      if (apiRe.Ok == true) {
-        //alert(apiRe.Ok)
-        this.list=this.list.filter(item => item.Id != noteRepositoryId);
-        this.message.success('删除仓库成功，您可以在回收站恢复被删除的仓库');
-      }
-    });
+  async OnDelete(noteRepositoryId: string) {
+    let apiRe = await this.notesRepositoryService.DeleteNoteRepository(noteRepositoryId);
+    if (apiRe.Ok == true) {
+      //alert(apiRe.Ok)
+      this.list=this.list.filter(item => item.Id != noteRepositoryId);
+      this.message.success('删除仓库成功，您可以在回收站恢复被删除的仓库');
+    }
   }
 }

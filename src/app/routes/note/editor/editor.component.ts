@@ -254,32 +254,31 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   onCreateNotebook($event: MouseEvent, isRoot: boolean) {
     let noteRepositoryId = this.repositoryId;
     this.reNameModalComponent.clearValue();
-    this.reNameModalComponent.showModal('创建文件夹', '请输入文件夹名称', (result: boolean, value: string) => {
+    this.reNameModalComponent.showModal('创建文件夹', '请输入文件夹名称', async (result: boolean, value: string) => {
       if (result && value) {
         let parentFolder = this.rightClickNode!.key;
         if (isRoot) {
           parentFolder = '';
         }
 
-        this.notebookService.CreateNoteBook(noteRepositoryId, value, parentFolder).subscribe((apiRe: ApiRep) => {
-          if (apiRe.Ok == true) {
-            let notebook: Notebook = apiRe.Data;
-            let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.NotebookId, notebook.Title));
-            node.title = notebook.Title;
-            node.key = notebook.NotebookId;
-            node.icon = 'folder';
+        let apiRe = await this.notebookService.CreateNoteBook(noteRepositoryId, value, parentFolder);
+        if (apiRe.Ok == true) {
+          let notebook: Notebook = apiRe.Data;
+          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.NotebookId, notebook.Title));
+          node.title = notebook.Title;
+          node.key = notebook.NotebookId;
+          node.icon = 'folder';
 
-            if (isRoot) {
+          if (isRoot) {
 
-              this.nzTree?.getTreeNodes().push(node);
+            this.nzTree?.getTreeNodes().push(node);
 
-              this.nzTree?.renderTree();
-            } else {
-              node.parentNode = this.rightClickNode;
-              this.rightClickNode?.addChildren(new Array(node));
-            }
+            this.nzTree?.renderTree();
+          } else {
+            node.parentNode = this.rightClickNode;
+            this.rightClickNode?.addChildren(new Array(node));
           }
-        });
+        }
       }
     });
   }
@@ -288,34 +287,31 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   /**
    * 事件 删除
    */
-  onMenuDelete() {
+  async onMenuDelete() {
     if (this.rightClickNode.isLeaf) {
       //是笔记
-      this.noteService.deleteNote(this.repositoryId, this.rightClickNode.key).subscribe((apiRe: ApiRep) => {
-        if (apiRe.Ok) {
-          this.message.success('删除笔记成功');
-          this.rightClickNode.remove();
-        } else {
-          this.message.error('系统拒绝了您的删除请求')
-        }
-      })
+      let apiRe = await this.noteService.deleteNote(this.repositoryId, this.rightClickNode.key);
+      if (apiRe.Ok) {
+        this.message.success('删除笔记成功');
+        this.rightClickNode.remove();
+      } else {
+        this.message.error('系统拒绝了您的删除请求')
+      }
     } else {
       //是笔记本
-      this.notebookService.deleteNotebook(this.repositoryId, this.rightClickNode.key, true, true).subscribe((apiRe: ApiRep) => {
-        if (apiRe.Ok) {
-          this.message.success('删除文件夹成功,文件夹title=' + this.clickNode.title);
-          let a = this.rightClickNode.parentNode?.getChildren().filter((x) => x.key != this.rightClickNode.key);
-          this.rightClickNode.parentNode?.clearChildren();
-          if (a) {
-            this.rightClickNode.parentNode?.getChildren().push(...a);
-          }
-          this.nzTree?.renderTree();
-          this.message.info('删除根文件夹需要刷新网页')
-        } else {
-          this.message.error('系统拒绝了您的删除请求')
+      let apiRe= await this.notebookService.deleteNotebook(this.repositoryId, this.rightClickNode.key, true, true);
+      if (apiRe.Ok) {
+        this.message.success('删除文件夹成功,文件夹title=' + this.clickNode.title);
+        let a = this.rightClickNode.parentNode?.getChildren().filter((x) => x.key != this.rightClickNode.key);
+        this.rightClickNode.parentNode?.clearChildren();
+        if (a) {
+          this.rightClickNode.parentNode?.getChildren().push(...a);
         }
-      })
-
+        this.nzTree?.renderTree();
+        this.message.info('删除根文件夹需要刷新网页')
+      } else {
+        this.message.error('系统拒绝了您的删除请求')
+      }
     }
   }
 
@@ -324,21 +320,21 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
    */
   onCreateMdDoc() {
 
-    this.reNameModalComponent.showModal('新建markdown文档', '请输入文档名称', (result: boolean, value: string) => {
+    this.reNameModalComponent.showModal('新建markdown文档', '请输入文档名称', async (result: boolean, value: string) => {
       if (result && value != null && value != '') {
-        this.noteService.CreateNote(value, this.rightClickNode!.key, true).subscribe((apiRe: ApiRep) => {
-          if (apiRe.Ok == true) {
-            let note: Note = apiRe.Data;
-            let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
-            node.icon = 'file-markdown';
-            node.isLeaf = true;
-            node.isMarkdown = true;
-            node.parentNode = this.rightClickNode;
-            let array = new Array<TreeNodeModel>();
-            array.push(node)
-            this.rightClickNode?.addChildren(new Array(node))
-          }
-        });
+        let apiRe = await this.noteService.CreateNote(value, this.rightClickNode!.key, true);
+        if (apiRe.Ok == true) {
+          let note: Note = apiRe.Data;
+          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
+          node.icon = 'file-markdown';
+          node.isLeaf = true;
+          node.isMarkdown = true;
+          node.parentNode = this.rightClickNode;
+          let array = new Array<TreeNodeModel>();
+          array.push(node)
+          this.rightClickNode?.addChildren(new Array(node))
+        }
+
       }
     });
 
@@ -348,21 +344,21 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
    * 新建富文本文档
    */
   onCreateHtmlDoc() {
-    this.reNameModalComponent.showModal('新建富文本文档', '请输入文档名称', (result: boolean, value: string) => {
+    this.reNameModalComponent.showModal('新建富文本文档', '请输入文档名称', async (result: boolean, value: string) => {
       if (result && value != null && value != '') {
-        this.noteService.CreateNote(value, this.rightClickNode!.key, false).subscribe((apiRe: ApiRep) => {
-          if (apiRe.Ok == true) {
-            let note: Note = apiRe.Data;
-            let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
-            node.icon = 'html5';
-            node.isLeaf = true;
-            node.isMarkdown = false;
-            node.parentNode = this.rightClickNode;
-            let array = new Array<TreeNodeModel>();
-            array.push(node)
-            this.rightClickNode?.addChildren(array);
-          }
-        });
+        let apiRe = await this.noteService.CreateNote(value, this.rightClickNode!.key, false);
+        if (apiRe.Ok == true) {
+          let note: Note = apiRe.Data;
+          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
+          node.icon = 'html5';
+          node.isLeaf = true;
+          node.isMarkdown = false;
+          node.parentNode = this.rightClickNode;
+          let array = new Array<TreeNodeModel>();
+          array.push(node)
+          this.rightClickNode?.addChildren(array);
+        }
+
       }
 
     })
@@ -394,7 +390,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
     }
   }
 
-  updateNote() {
+  async updateNote() {
     let noteId = this.clickNode.key;
     let title = this.noteTitle;
     let content = this.editor?.GetContent();
@@ -403,19 +399,17 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
       this.message.error('保存内容存在错误，无法保存当前笔记内容');
       return;
     }
-    this.noteService.UpdateNoteTitleAndContent(noteId, title!, content!).subscribe((apiRe: ApiRep) => {
-      if (apiRe.Ok) {
-        this.clickNode.title = title!;
+    let apiRe = await this.noteService.UpdateNoteTitleAndContent(noteId, title!, content!);
+    if (apiRe.Ok) {
+      this.clickNode.title = title!;
+    }
+    setTimeout(() => {
+      if (this.saveMessageId != null) {
+        this.message.remove(this.saveMessageId);
+        this.message.success('保存成功')
       }
-      setTimeout(() => {
-        if (this.saveMessageId != null) {
-          this.message.remove(this.saveMessageId);
-          this.message.success('保存成功')
-        }
-      }, 1000)
+    }, 1000)
 
-
-    })
   }
 
   confirmModal?: NzModalRef; // For testing by now
@@ -452,12 +446,11 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
 
   }
 
-  private ReNameNoteBook(noteBookId: string, title: string) {
-    this.notebookService.UpdateNoteBookTitle(noteBookId, title).subscribe((apiRe: ApiRep) => {
-      if (apiRe.Ok) {
-        this.rightClickNode.title = title;
-      }
-    });
+  private async ReNameNoteBook(noteBookId: string, title: string) {
+    let apiRe = await this.notebookService.UpdateNoteBookTitle(noteBookId, title);
+    if (apiRe.Ok) {
+      this.rightClickNode.title = title;
+    }
   }
 
 

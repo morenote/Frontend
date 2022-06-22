@@ -1,3 +1,5 @@
+import {SignData} from "../DTO/USBKey/sign-data";
+
 export class Note {
   public  NoteId!:string;
   public  UserId?:string;
@@ -29,4 +31,5 @@ export class Note {
   public  IsPublicShare?:boolean;
   public  ContentId?:string;
   public  AccessPassword?:string;
+
 }

@@ -1,5 +1,12 @@
 export class HexUtil {
 
+
+  public static Uinit8ArrayToHex(uint8Array:any){
+    return Array.prototype.map
+      .call(uint8Array, (x) => ('00' + x.toString(16)).slice(-2))
+      .join('');
+  }
+
   public static  ByteArrayToHex(bytes:any):string{
     let hex="",len=bytes.length;
     for(let i=0;i<len;i++){

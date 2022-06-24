@@ -1,4 +1,6 @@
 import { NeedVerificationCode } from "../need-verification-code";
+import { DigitalEnvelopeProtocol } from "./digital-envelope-protocol";
+import {DigitalSignatureProtocol} from "./digital-signature-protocol";
 
 export class SecurityConfigDTO {
   public PublicKey?:string;
@@ -7,7 +9,11 @@ export class SecurityConfigDTO {
   public ShareYourData?:boolean;
   public PasswordHashAlgorithm?:string;
   public ForceDigitalEnvelope?:boolean;
-  public DigitalEnvelopeProtocol?:string;
+  public ForceDigitalEnvelopeProtocol?:DigitalEnvelopeProtocol;
+
+  public  ForceDigitalSignature?:boolean;
+  public  ForceDigitalSignatureProtocol?:DigitalSignatureProtocol;
+
   public NeedVerificationCode?:NeedVerificationCode;
 
 }

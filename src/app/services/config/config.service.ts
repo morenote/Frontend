@@ -26,6 +26,21 @@ export class ConfigService {
     this.localStorageDBService.SetValue('AuthService-UserToken', JSON.stringify(userToken));
   }
 
+  public  GetSecurityConfigDTOFromDB():SecurityConfigDTO{
+    let json= this.localStorageDBService.GetValue("SecurityConfigDTO");
+    if (json!=null){
+      let sc=JSON.parse(json) as SecurityConfigDTO;
+      return  sc;
+    }
+    throw  new Error("数据库获得SecurityConfigDTO失败");
+  }
+  public  SetSecurityConfigDTOFromDB(sc:SecurityConfigDTO){
+    let json=JSON.stringify(sc);
+    this.localStorageDBService.SetValue("SecurityConfigDTO",json);
+
+  }
+
+
 
   public GetWebSiteConfig(): WebsiteConfig {
     let config = new WebsiteConfig();

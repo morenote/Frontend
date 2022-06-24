@@ -9,4 +9,5 @@ export class ApiRep {
   public Msg: string | undefined;
   public ErrorCode?: number;
   public Data: any;
+  public Encryption?:boolean;//被加密
 }

@@ -47,6 +47,7 @@ export class AuthService {
       let apiRe = await this.configService.GetSecurityConfigDTO();
       if (apiRe != null && apiRe.Ok) {
         scDTO = apiRe.Data as SecurityConfigDTO;
+        this.configService.SetSecurityConfigDTOFromDB(scDTO);
       } else {
         //返回失败
         resolve(apiRe);

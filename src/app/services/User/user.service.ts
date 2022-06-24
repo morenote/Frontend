@@ -97,6 +97,7 @@ export class UserService {
       let apiRe = await this.configService.GetSecurityConfigDTO();
       if (apiRe != null && apiRe.Ok) {
         scDTO = apiRe.Data as SecurityConfigDTO;
+        this.configService.SetSecurityConfigDTOFromDB(scDTO);
         //判断前端是否需要转加密
         pwd = this.sjj1962.TransferEncryptionIf(pwd, scDTO);
       } else {

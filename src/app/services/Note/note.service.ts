@@ -105,8 +105,9 @@ export class NoteService {
       //数字信封
       let gm=new GMService();
       let sm4Key=gm.GetSM4Key();
+      let iv=gm.GetIV();
       let digitalEnvelope =new DigitalEnvelope();
-      digitalEnvelope.SetPayLodValue(content,sm4Key,this.sc.PublicKey!);
+      digitalEnvelope.SetPayLodValue(content,sm4Key,this.sc.PublicKey!,iv);
       let deJson= JSON.stringify(digitalEnvelope);
       LogUtil.log(deJson);
       //更新笔记
@@ -122,7 +123,10 @@ export class NoteService {
          LogUtil.log("数字信封："+JSON.stringify(apiRe));
 
          if (apiRe.Encryption){
-           let payLodJson=gm.SM4Dec(apiRe.Data,sm4Key);
+           LogUtil.log("payLod.加密数据="+apiRe.Data)
+           LogUtil.log("payLod.解密.sm4Key="+sm4Key)
+           LogUtil.log("payLod.解密.iv="+iv)
+           let payLodJson=gm.SM4Dec(apiRe.Data,sm4Key,iv);
            LogUtil.log("payLodJson："+JSON.stringify(payLodJson));
            let temp=JSON.parse(payLodJson)  as PayLoadDTO;
            let payLod=new PayLoadDTO();
@@ -130,6 +134,8 @@ export class NoteService {
            payLod.Hash=temp.Hash;
            apiRe.Data=payLod.Data;
            apiRe.Ok=payLod.VerifyPayLodHash();
+           LogUtil.log("payLod.Data="+temp.Data)
+           LogUtil.log("Hash.Hash="+temp.Hash)
          }
          LogUtil.log("解密结果："+JSON.stringify(apiRe));
 

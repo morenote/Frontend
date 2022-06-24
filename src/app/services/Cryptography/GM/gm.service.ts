@@ -55,26 +55,34 @@ export class GMService {
     let decryptData = sm2.doDecrypt(encryptData, privateKey, cipherMode) // 解密结果
     return decryptData;
   }
-  public SM4Enc(msg:string,key:string):string{
+  public SM4Enc(msg:string,key:string,iv:string):string{
     let sm4 = require('sm-crypto').sm4
-    let encryptData = sm4.encrypt(msg, key,{mode:'cbc',iv:'00000000000000000000000000000000'})
+    let encryptData = sm4.encrypt(msg, key,{mode:'cbc',iv:iv})
     return encryptData;
   }
-  public SM4Dec(msg:string,key:string):string{
+  public SM4Dec(msg:string,key:string,iv:string):string{
     let sm4 = require('sm-crypto').sm4
-    let decryptData  = sm4.decrypt(msg, key,{mode:'cbc',iv:'00000000000000000000000000000000'})
+    let decryptData  = sm4.decrypt(msg, key,{mode:'cbc',iv:iv})
     return decryptData ;
   }
 
   public  GetSM4Key():string{
-    // let arryBuffer=new Uint8Array(16);
-    // window.crypto.getRandomValues(arryBuffer);
-    // let hex= HexUtil.Uinit8ArrayToHex(arryBuffer);
-    // return hex;
-    return  "00000000000000000000000000000000";
+    if ( localStorage.getItem("debug")=="1"){
+      return  "00000000000000000000000000000000";
+    }
+    let arryBuffer=new Uint8Array(16);
+    window.crypto.getRandomValues(arryBuffer);
+    let hex= HexUtil.Uinit8ArrayToHex(arryBuffer);
+    return hex;
   }
-  public  GetIV(len:string){
-    return "00000000000000000000000000000000";
+  public  GetIV(){
+    if ( localStorage.getItem("debug")=="1"){
+      return "00000000000000000000000000000000";
+    }
+    let arryBuffer=new Uint8Array(16);
+    window.crypto.getRandomValues(arryBuffer);
+    let hex= HexUtil.Uinit8ArrayToHex(arryBuffer);
+    return hex;
   }
 
 

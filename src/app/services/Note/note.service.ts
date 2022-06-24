@@ -115,7 +115,7 @@ export class NoteService {
       formData.set('token', this.token!);
       formData.set('noteId', noteId);
       formData.set('noteTitle', noteTitle);
-      formData.set('content', content);
+      formData.set('content', "");
       formData.set('dataSignJson', JSON.stringify(dataSign));
       formData.set('digitalEnvelopeJson', deJson);
        this.http.post<ApiRep>(url, formData).subscribe(apiRe => {

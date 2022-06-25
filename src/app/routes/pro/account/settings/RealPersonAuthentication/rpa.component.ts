@@ -93,15 +93,12 @@ export class ProRealPersonAuthenticationComponent implements OnInit {
   }
 
   // #endregion
-  sfz: any="加载中";
+  sfz: any="加载中";//身份证号
 
   async save() {
     //数据签名
-    let signData=new SignData();
-    signData.Data=this.sfz;
-    let dataSign = await this.epass.SendSignToePass2001(signData);
-    this.msg.success("签名成功");
-    let apiRe= await this.userService.SetRealNameInformation(dataSign);
+
+    let apiRe= await this.userService.SetRealNameInformation(this.sfz);
     if (apiRe!=null && apiRe.Ok){
       this.nzMessage.success("更新实名信息成功");
     }else {

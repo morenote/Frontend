@@ -23,7 +23,7 @@ export class EPass2001Service {
   config: WebsiteConfig;
   localhostUrl: string = "http://localhost:3100";
 
-  constructor(public authService: AuthService,
+  constructor(
               public http: HttpClient,
               public nzMessage: NzMessageService,
               public configService: ConfigService) {

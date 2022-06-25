@@ -87,7 +87,11 @@ export class LoginAuditProTableListComponent implements OnInit {
   totalCallNo = 0;
   expandForm = false;
 
-  constructor(private http: _HttpClient, public msg: NzMessageService, private modalSrv: NzModalService, private cdr: ChangeDetectorRef,public loginAuditService:LoginAuditService) {}
+  constructor(private http: _HttpClient,
+              public msg: NzMessageService,
+              private modalSrv: NzModalService,
+              private cdr: ChangeDetectorRef,
+              public loginAuditService:LoginAuditService) {}
 
   ngOnInit(): void {
     this.getData();
@@ -104,6 +108,9 @@ export class LoginAuditProTableListComponent implements OnInit {
         this.data = apiRe.Data;
         this.cdr.detectChanges();
         this.loading=false;
+      }else {
+        if (apiRe!=null)
+          this.msg.error("查阅日志失败："+apiRe.Msg!);
       }
     });
   }

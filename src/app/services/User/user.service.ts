@@ -132,5 +132,30 @@ export class UserService {
     })
   }
 
+  public Register(email: string, pwd: string): Promise<ApiRep> {
+    return new Promise<ApiRep>(async resolve => {
+      let scDTO: SecurityConfigDTO;
+      //获得服务器密码安全策略
+      let apiRe = await this.configService.GetSecurityConfigDTO();
+      if (apiRe != null && apiRe.Ok) {
+        scDTO = apiRe.Data as SecurityConfigDTO;
+        this.configService.SetSecurityConfigDTOFromDB(scDTO);
+        //判断前端是否需要转加密
+        pwd = this.sjj1962.TransferEncryptionIf(pwd, scDTO);
+      } else {
+        //返回失败
+        resolve(apiRe);
+        return;
+      }
 
+
+      let url = this.config.baseURL + '/api/Auth/Register';
+      let formData = new FormData();
+      formData.set('email', email);
+      formData.set('pwd', pwd);
+      this.http.post<ApiRep>(url, formData).subscribe(apiRe => {
+        resolve(apiRe);
+      })
+    })
+  }
 }

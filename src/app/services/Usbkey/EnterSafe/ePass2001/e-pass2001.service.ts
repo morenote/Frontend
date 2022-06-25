@@ -12,6 +12,7 @@ import {ClientResponse} from "../../../../models/DTO/USBKey/client-response";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {SignData} from "../../../../models/DTO/USBKey/sign-data";
 import {DataSign} from "../../../../models/DTO/USBKey/data-sign";
+import {LogUtil} from "../../../../shared/utils/log-util";
 
 @Injectable({
   providedIn: 'root'
@@ -114,37 +115,37 @@ export class EPass2001Service {
     return new Promise<ApiRep>(async resolve => {
       //获得服务器挑战随机数
       let challenge!: ServerChallenge;
-      this.nzMessage.info("正在请求服务器挑战");
-      await this.sleep(2000);
+      LogUtil.debug("正在请求服务器挑战");
+
       let apiRep = await this.GetLoginChallenge(email, requestNumber);
       if (apiRep.Ok) {
         challenge = apiRep.Data;
-        this.nzMessage.info("获得服务器挑战" + challenge.Id);
+        LogUtil.debug("获得服务器挑战" + challenge.Id);
       } else {
         this.nzMessage.error("获得服务器挑战失败");
         return;
       }
       //发送到智能密码钥匙
-      await this.sleep(2000);
-      this.nzMessage.info("正在检测智能密码钥匙，请勿操作");
-      await this.sleep(2000);
+
+      this.nzMessage.info("正在检测智能密码钥匙，请勿操作", {nzDuration:1000});
+
       if (challenge != null) {
-        this.nzMessage.info("正在挑战智能密码钥匙" + challenge.Id);
+        LogUtil.debug("正在挑战智能密码钥匙" + challenge.Id);
       }
-      await this.sleep(2000);
+
       apiRep = await this.SendChallengeToePass2001(challenge!);
       let res: ClientResponse;
       if (apiRep.Ok) {
-        this.nzMessage.success("智能密码钥匙签名成功");
+        LogUtil.debug("智能密码钥匙签名成功");
         res = apiRep.Data as ClientResponse;
       } else {
         this.nzMessage.error("智能密钥钥匙签名失败");
         return;
       }
       //发送到服务器验签
-      await this.sleep(2000);
-      this.nzMessage.info("将签名结果发送到服务器");
-      await this.sleep(2000);
+
+      LogUtil.debug("将签名结果发送到服务器");
+
       apiRep = await this.LoginByResponse(res);
       if (apiRep!=null){
         resolve(apiRep)

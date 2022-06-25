@@ -207,10 +207,8 @@ export class UserLoginComponent implements OnDestroy {
         token: userToken.Token
       });
       this.configService.SetUserToken(userToken);
-      this.nzMessage.success("应用系统身份鉴别成功")
-      await this.sleep(2000);
-      this.nzMessage.success("正在登录到系统，请稍候....")
-      await this.sleep(2000);
+      this.nzMessage.success("业务系统身份鉴别成功")
+
       // 跳转到工作台
       await this.router.navigate(['/']);
     }catch (error:any) {

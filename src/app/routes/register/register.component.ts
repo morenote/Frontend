@@ -5,6 +5,7 @@ import { _HttpClient } from '@delon/theme';
 import { MatchControl } from '@delon/util/form';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { finalize } from 'rxjs/operators';
+import {UserService} from "../../services/User/user.service";
 
 @Component({
   selector: 'passport-register',
@@ -13,7 +14,11 @@ import { finalize } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserRegisterComponent implements OnDestroy {
-  constructor(fb: FormBuilder, private router: Router, private http: _HttpClient, private cdr: ChangeDetectorRef) {
+  constructor(fb: FormBuilder,
+              private router: Router,
+              private http: _HttpClient,
+              private userService:UserService,
+              private cdr: ChangeDetectorRef) {
     this.form = fb.group(
       {
         mail: [null, [Validators.required, Validators.email]],
@@ -105,7 +110,7 @@ export class UserRegisterComponent implements OnDestroy {
 
   // #endregion
 
-  submit(): void {
+  async submit() {
     this.error = '';
     Object.keys(this.form.controls).forEach(key => {
       this.form.controls[key].markAsDirty();
@@ -118,17 +123,7 @@ export class UserRegisterComponent implements OnDestroy {
     const data = this.form.value;
     this.loading = true;
     this.cdr.detectChanges();
-    this.http
-      .post('/register?_allow_anonymous=true', data)
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-          this.cdr.detectChanges();
-        })
-      )
-      .subscribe(() => {
-        this.router.navigate(['passport', 'register-result'], { queryParams: { email: data.mail } });
-      });
+    await this.userService.Register(this.mail.value, this.password.value);
   }
 
   ngOnDestroy(): void {

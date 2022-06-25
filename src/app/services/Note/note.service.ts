@@ -99,7 +99,7 @@ export class NoteService {
       signData.UserId = this.userId;
       signData.UinxTime = Math.round(new Date().getTime() / 1000);
       signData.Operate = "/api/Note/UpdateNoteTitleAndContent";
-      signData.SM3Data(content);
+      signData.SM3Data(noteId+noteTitle+content);
       let dataSign = await this.epass.SendSignToePass2001(signData);
 
       //数字信封

@@ -75,7 +75,7 @@ export class ProRealPersonAuthenticationComponent implements OnInit {
       if (!realName.Verify){
          setTimeout(()=>{
            this.nzMessage.error("检测到数据库中的用户身份证信息遭到非法篡改",{nzDuration:5000});
-         },10000)
+         },1000)
       }else {
 
       }

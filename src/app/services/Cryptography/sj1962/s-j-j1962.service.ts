@@ -24,6 +24,7 @@ export class SJJ1962Service {
 
   public  TransferEncryptionIfUser(pwd:string,user:User,scDto:SecurityConfigDTO):string{
     if (user.PasswordHashAlgorithm=="sjj1962"){
+      pwd=pwd.padEnd(64,"0");
       let enc=this.gm.TransferEncryption(pwd,scDto.PublicKey!);
       enc=HexUtil.hexToBase64(enc);
       return  enc;

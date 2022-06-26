@@ -96,7 +96,8 @@ export class LayoutBasicComponent {
   public isHideAside = false;
   searchToggleStatus = false;
   //是否显示主题设置按钮
-  showSettingDrawer = !environment.production;
+  // showSettingDrawer = !environment.production;
+  showSettingDrawer = true;
 
   options: LayoutDefaultOptions = {
     logoExpanded: `./assets/logo-full.svg`,

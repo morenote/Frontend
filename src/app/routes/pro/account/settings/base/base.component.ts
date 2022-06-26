@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { zip } from 'rxjs';
+import {ConfigService} from "../../../../../services/config/config.service";
+import {WebsiteConfig} from "../../../../../models/config/website-config";
 
 interface ProAccountSettingsUser {
   email: string;
@@ -33,7 +35,14 @@ interface ProAccountSettingsCity {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProAccountSettingsBaseComponent implements OnInit {
-  constructor(private http: _HttpClient, private cdr: ChangeDetectorRef, private msg: NzMessageService) {}
+  config?:WebsiteConfig;
+  constructor(private http: _HttpClient,
+              private cdr: ChangeDetectorRef,
+
+              private  configService:ConfigService,
+              private msg: NzMessageService) {
+    this.config=configService.GetWebSiteConfig();
+  }
   avatar = '';
   userLoading = true;
   user!: ProAccountSettingsUser;
@@ -44,7 +53,8 @@ export class ProAccountSettingsBaseComponent implements OnInit {
   cities: ProAccountSettingsCity[] = [];
 
   ngOnInit(): void {
-    zip(this.http.get('/user/current'), this.http.get('/geo/province')).subscribe(
+    zip(this.http.get(this.config?.baseURL+'/user/current'),
+      this.http.get(this.config?.baseURL+'/geo/province')).subscribe(
       ([user, province]: [ProAccountSettingsUser, ProAccountSettingsCity[]]) => {
         this.userLoading = false;
         this.user = user;

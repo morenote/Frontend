@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { _HttpClient } from '@delon/theme';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { zip } from 'rxjs';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {_HttpClient} from '@delon/theme';
+import {NzMessageService} from 'ng-zorro-antd/message';
+import {zip} from 'rxjs';
 import {Router} from "@angular/router";
 import {AuthService} from "../../../services/auth/auth.service";
 import {UserToken} from "../../../models/DTO/user-token";
 import {ConfigService} from "../../../services/config/config.service";
+import {WebsiteConfig} from "../../../models/config/website-config";
 
 @Component({
   selector: 'app-dashboard-workplace',
@@ -78,21 +79,27 @@ export class DashboardWorkplaceComponent implements OnInit {
       link: ''
     }
   ];
+
   // endregion
 
   constructor(private http: _HttpClient,
               public msg: NzMessageService,
               private cdr: ChangeDetectorRef,
-              public router:Router,
-              private  configService:ConfigService,
-              private authService:AuthService
-              ) {
-      this.userToken=this.configService.GetUserToken();
+              public router: Router,
+              private configService: ConfigService,
+              private authService: AuthService,
+  ) {
+    this.userToken = this.configService.GetUserToken();
+    this.config = this.configService.GetWebSiteConfig();
   }
 
-  userToken:UserToken;
+  userToken: UserToken;
+  config?: WebsiteConfig;
+
   ngOnInit(): void {
-    zip(this.http.get('/chart'), this.http.get('/api/notice'), this.http.get('/api/activities')).subscribe(
+    zip(this.http.get(this.config?.baseURL + '/chart'),
+      this.http.get(this.config?.baseURL + '/api/notice'),
+      this.http.get(this.config?.baseURL + '/api/activities')).subscribe(
       ([chart, notice, activities]: [any, any, any]) => {
         this.radarData = chart.radarData;
         this.notice = notice;

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
+import {ConfigService} from "../../../../../services/config/config.service";
 
 @Component({
   selector: 'app-account-center-documents',
@@ -11,8 +12,11 @@ import { NzSafeAny } from 'ng-zorro-antd/core/types';
 export class ProAccountCenterFilesComponent {
   listLoading = true;
   list: any[] = [];
-  constructor(private http: _HttpClient, private cdr: ChangeDetectorRef) {
-    this.http.get('/api/list', { count: 8 }).subscribe((res: NzSafeAny[]) => {
+  constructor(private http: _HttpClient,
+              private configService:ConfigService,
+              private cdr: ChangeDetectorRef) {
+    var config=configService.GetWebSiteConfig();
+    this.http.get(config.baseURL+'/api/list', { count: 8 }).subscribe((res: NzSafeAny[]) => {
       this.list = res.map(item => {
         item.activeUser = this.formatWan(item.activeUser);
         return item;

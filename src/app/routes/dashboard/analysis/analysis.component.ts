@@ -7,6 +7,7 @@ import { deepCopy } from '@delon/util/other';
 import { yuan } from '@shared';
 import type { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import {ConfigService} from "../../../services/config/config.service";
 
 @Component({
   selector: 'app-dashboard-analysis',
@@ -18,6 +19,7 @@ export class DashboardAnalysisComponent implements OnInit {
   constructor(
     private http: _HttpClient,
     public msg: NzMessageService,
+    private configService:ConfigService,
     @Inject(ALAIN_I18N_TOKEN) private i18n: I18NService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -73,7 +75,7 @@ export class DashboardAnalysisComponent implements OnInit {
   offlineIdx = 0;
 
   ngOnInit(): void {
-    this.http.get('/chart').subscribe(res => {
+    this.http.get(this.configService.GetWebSiteConfig().baseURL+'/chart').subscribe(res => {
       res.offlineData.forEach((item: any, idx: number) => {
         item.show = idx === 0;
         item.chart = deepCopy(res.offlineChartData);

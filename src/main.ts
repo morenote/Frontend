@@ -8,9 +8,9 @@ import { AppModule } from './app/app.module';
 
 preloaderFinished();
 
-if (environment.production) {
-  enableProdMode();
-}
+// if (environment.production) {
+//   enableProdMode();
+// }
 
 platformBrowserDynamic()
   .bootstrapModule(AppModule, {

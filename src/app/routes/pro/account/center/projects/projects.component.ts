@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import {ConfigService} from "../../../../../services/config/config.service";
 
 @Component({
   selector: 'app-account-center-projects',
@@ -12,8 +13,12 @@ export class ProAccountCenterProjectsComponent {
   listLoading = true;
   list: any[] = [];
 
-  constructor(private http: _HttpClient, private msg: NzMessageService, private cdr: ChangeDetectorRef) {
-    this.http.get('/api/list', { count: 8 }).subscribe(res => {
+  constructor(private http: _HttpClient,
+              private configService:ConfigService,
+              private msg: NzMessageService,
+              private cdr: ChangeDetectorRef) {
+    var config=this.configService.GetWebSiteConfig();
+    this.http.get(config.baseURL+'/api/list', { count: 8 }).subscribe(res => {
       this.list = res;
       this.listLoading = false;
       this.cdr.detectChanges();

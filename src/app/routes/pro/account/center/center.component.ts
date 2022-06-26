@@ -3,6 +3,8 @@ import { ActivationEnd, Router } from '@angular/router';
 import { _HttpClient } from '@delon/theme';
 import { Subscription, zip } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import {ConfigService} from "../../../../services/config/config.service";
+import {WebsiteConfig} from "../../../../models/config/website-config";
 
 @Component({
   selector: 'app-account-center',
@@ -11,7 +13,12 @@ import { filter } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProAccountCenterComponent implements OnInit, OnDestroy {
-  constructor(private router: Router, private http: _HttpClient, private cdr: ChangeDetectorRef) {}
+  config?:WebsiteConfig;
+  constructor(private router: Router,
+              private  configService:ConfigService,
+              private http: _HttpClient, private cdr: ChangeDetectorRef) {
+    this.config=configService.GetWebSiteConfig();
+  }
   private router$!: Subscription;
   @ViewChild('tagInput', { static: false }) private tagInput!: ElementRef<HTMLInputElement>;
   user: any;
@@ -48,7 +55,7 @@ export class ProAccountCenterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    zip(this.http.get('/user/current'), this.http.get('/api/notice')).subscribe(([user, notice]) => {
+    zip(this.http.get(this.config?.baseURL+'/user/current'), this.http.get(this.config?.baseURL+'/api/notice')).subscribe(([user, notice]) => {
       this.user = user;
       this.notice = notice;
       this.cdr.detectChanges();

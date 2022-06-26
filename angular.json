@@ -61,6 +61,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "less",
+
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -130,7 +131,8 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "proxyConfig": "proxy.conf.js"
+            "proxyConfig": "proxy.conf.js",
+            "disableHostCheck": true
           }
         },
         "extract-i18n": {

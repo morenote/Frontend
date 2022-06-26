@@ -35,6 +35,9 @@ export class EPass2001Service {
       this.token = userToken.Token;
     }
     this.config = this.configService.GetWebSiteConfig();
+    if (localStorage.getItem("localhostUrl")!=null){
+      this.localhostUrl=localStorage.getItem("localhostUrl")!;
+    }
   }
 
   public SendChallengeToePass2001(serverChallenge: ServerChallenge): Promise<ApiRep> {

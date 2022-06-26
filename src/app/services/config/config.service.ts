@@ -44,7 +44,11 @@ export class ConfigService {
 
   public GetWebSiteConfig(): WebsiteConfig {
     let config = new WebsiteConfig();
+
     config.baseURL = 'https://api.morenote.top';
+    if (localStorage.getItem("baseURL")!=null){
+      config.baseURL = 'https://api.morenote.top';
+    }
     return config;
   }
   public GetSecurityConfigDTO():Promise<ApiRep>{

@@ -32,7 +32,7 @@ export class ConfigService {
       let sc=JSON.parse(json) as SecurityConfigDTO;
       return  sc;
     }
-    throw  new Error("数据库获得SecurityConfigDTO失败");
+    return  new SecurityConfigDTO();
   }
   public  SetSecurityConfigDTOFromDB(sc:SecurityConfigDTO){
     let json=JSON.stringify(sc);
@@ -44,7 +44,7 @@ export class ConfigService {
 
   public GetWebSiteConfig(): WebsiteConfig {
     let config = new WebsiteConfig();
-    config.baseURL = 'https://localhost:5001';
+    config.baseURL = 'https://api.morenote.top';
     return config;
   }
   public GetSecurityConfigDTO():Promise<ApiRep>{

@@ -21,7 +21,7 @@ export class EPass2001Service {
   userId?: string | null;
   token?: string | null;
   config: WebsiteConfig;
-  localhostUrl: string = "http://localhost:3100";
+  localhostUrl: string = "http://localhost:8070";
 
   constructor(
               public http: HttpClient,

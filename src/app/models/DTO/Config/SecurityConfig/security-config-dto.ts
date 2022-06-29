@@ -4,6 +4,7 @@ import {DigitalSignatureProtocol} from "./digital-signature-protocol";
 
 export class SecurityConfigDTO {
   public PublicKey?:string;
+  public TransEncryptedPublicKey?:string;
   public OpenRegister?:boolean;
   public OpenDemo?:boolean;
   public ShareYourData?:boolean;

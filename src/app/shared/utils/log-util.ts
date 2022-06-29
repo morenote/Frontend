@@ -1,6 +1,6 @@
 export class LogUtil {
 
-  private  static  GetIsOk(){
+  private  static  GetIsOk():boolean{
     return true;
   }
   public static  log(str:string){

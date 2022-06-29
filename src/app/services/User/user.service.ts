@@ -214,8 +214,6 @@ export class UserService {
         resolve(apiRe);
         return;
       }
-
-
       let url = this.config.baseURL + '/api/Auth/Register';
       let formData = new FormData();
       formData.set('email', email);

@@ -44,6 +44,7 @@ export class UserLoginComponent implements OnDestroy {
     private cdr: ChangeDetectorRef,
     private modal: NzModalService,
     public authService: AuthService,
+    private settingService: SettingsService,
     public epass: EPass2001Service,
     public nzMessage: NzMessageService,
     configService: ConfigService
@@ -206,6 +207,13 @@ export class UserLoginComponent implements OnDestroy {
       this.tokenService.set({
         token: userToken.Token
       });
+
+      this.settingService.setUser({
+        name:userToken.Username,
+        avatar:"https://gw.alipayobjects.com/zos/rmsportal/lctvVCLfRpYCkYxAsiVQ.png",
+        email:userToken.Email
+      });
+
       this.configService.SetUserToken(userToken);
       this.nzMessage.success("业务系统身份鉴别成功")
 

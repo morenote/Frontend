@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { SettingsService, User } from '@delon/theme';
+import {ConfigService} from "../../../services/config/config.service";
 
 @Component({
   selector: 'header-user',
@@ -35,14 +36,19 @@ import { SettingsService, User } from '@delon/theme';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderUserComponent {
+
   get user(): User {
     return this.settings.user;
   }
 
-  constructor(private settings: SettingsService, private router: Router, @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService) {}
+  constructor(private settings: SettingsService,
+              private router: Router,
+              private configService:ConfigService,
+              @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService) {}
 
   logout(): void {
     this.tokenService.clear();
     this.router.navigateByUrl(this.tokenService.login_url!);
+    this.configService.ClearCache();
   }
 }

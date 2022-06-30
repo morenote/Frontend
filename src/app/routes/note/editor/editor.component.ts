@@ -133,6 +133,14 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
         setTimeout(() => {
           this.message.info('切换编辑器到' + this.editor?.GetYourName())
         }, 500);
+      }else {
+        if (apiRe.Msg!=null){
+          this.message.error(apiRe.Msg!);
+        }else {
+          this.message.error("GetNoteContent is error");
+        }
+
+        return;
       }
     })
   }

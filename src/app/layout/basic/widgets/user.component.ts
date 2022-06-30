@@ -46,9 +46,11 @@ export class HeaderUserComponent {
               private configService:ConfigService,
               @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService) {}
 
-  logout(): void {
+  async logout() {
     this.tokenService.clear();
-    this.router.navigateByUrl(this.tokenService.login_url!);
+    await this.router.navigateByUrl(this.tokenService.login_url!);
     this.configService.ClearCache();
+    //重载页面 清缓存
+    location.reload();
   }
 }

@@ -47,7 +47,7 @@ export class ConfigService {
 
     config.baseURL = 'https://api.morenote.top';
     if (localStorage.getItem("baseURL")!=null){
-      config.baseURL = 'https://api.morenote.top';
+      config.baseURL = localStorage.getItem("baseURL") as string;
     }
     return config;
   }

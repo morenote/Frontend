@@ -55,7 +55,7 @@ export class ProAccountCenterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    zip(this.http.get(this.config?.baseURL+'/user/current'), this.http.get(this.config?.baseURL+'/api/notice')).subscribe(([user, notice]) => {
+    zip(this.http.get(this.config?.baseURL+'/api/user/current'), this.http.get(this.config?.baseURL+'/api/notice')).subscribe(([user, notice]) => {
       this.user = user;
       this.notice = notice;
       this.cdr.detectChanges();

@@ -97,7 +97,7 @@ export class DashboardWorkplaceComponent implements OnInit {
   config?: WebsiteConfig;
 
   ngOnInit(): void {
-    zip(this.http.get(this.config?.baseURL + '/chart'),
+    zip(this.http.get(this.config?.baseURL + '/api/chart'),
       this.http.get(this.config?.baseURL + '/api/notice'),
       this.http.get(this.config?.baseURL + '/api/activities')).subscribe(
       ([chart, notice, activities]: [any, any, any]) => {

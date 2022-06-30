@@ -53,8 +53,8 @@ export class ProAccountSettingsBaseComponent implements OnInit {
   cities: ProAccountSettingsCity[] = [];
 
   ngOnInit(): void {
-    zip(this.http.get(this.config?.baseURL+'/user/current'),
-      this.http.get(this.config?.baseURL+'/geo/province')).subscribe(
+    zip(this.http.get(this.config?.baseURL+'/api/user/current'),
+      this.http.get(this.config?.baseURL+'/api/geo/province')).subscribe(
       ([user, province]: [ProAccountSettingsUser, ProAccountSettingsCity[]]) => {
         this.userLoading = false;
         this.user = user;
@@ -66,7 +66,7 @@ export class ProAccountSettingsBaseComponent implements OnInit {
   }
 
   choProvince(pid: string, cleanCity: boolean = true): void {
-    this.http.get(`/geo/${pid}`).subscribe(res => {
+    this.http.get(`/api/geo/${pid}`).subscribe(res => {
       this.cities = res;
       if (cleanCity) {
         this.user.geographic.city.key = '';

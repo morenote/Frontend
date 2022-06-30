@@ -26,6 +26,17 @@ export class ConfigService {
     this.localStorageDBService.SetValue('AuthService-UserToken', JSON.stringify(userToken));
   }
 
+  /**
+   * 清除缓存
+   * @constructor
+   */
+  public ClearCache(){
+    this.localStorageDBService.Remove("AuthService-UserToken");
+    this.localStorageDBService.Remove("user");
+    this.localStorageDBService.Remove("_token");
+    this.localStorageDBService.Remove("SecurityConfigDTO");
+  }
+
   public  GetSecurityConfigDTOFromDB():SecurityConfigDTO{
     let json= this.localStorageDBService.GetValue("SecurityConfigDTO");
     if (json!=null){

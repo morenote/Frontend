@@ -1,0 +1,10 @@
+export enum HTTPMethod {
+  Get = 0x01,
+  HEAD = 0x02,
+  POST = 0x03,
+  PUT = 0x04,
+  DELETE = 0x05,
+  OPTIONS = 0x06,
+  TRACE = 0x07,
+  PATCH = 0x08
+}

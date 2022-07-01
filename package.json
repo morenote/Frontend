@@ -74,7 +74,7 @@
     "sm-crypto": "^0.3.8",
     "tslib": "^2.3.0",
     "uuid-int": "^3.1.0",
-    "vditor": "^3.8.11",
+    "vditor": "^3.8.13",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

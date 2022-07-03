@@ -8,24 +8,28 @@ import {Observable} from "rxjs";
 import {WebsiteConfig} from "../../models/config/website-config";
 import {SignData} from "../../models/DTO/USBKey/sign-data";
 import {EPass2001Service} from "../Usbkey/EnterSafe/ePass2001/e-pass2001.service";
+import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security-config-dto";
+import {DataSign} from "../../models/DTO/USBKey/data-sign";
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotesRepositoryService {
 
-  userId: string ;
-  token: string ;
+  userId: string;
+  token: string;
   config: WebsiteConfig;
+  sc: SecurityConfigDTO;
 
   constructor(public authService: AuthService,
               public http: HttpClient,
-              public  epass:EPass2001Service,
+              public epass: EPass2001Service,
               public configService: ConfigService) {
-    let userToken=this.configService.GetUserToken();
-    this.userId =userToken.UserId;
+    let userToken = this.configService.GetUserToken();
+    this.userId = userToken.UserId;
     this.token = userToken.Token;
     this.config = this.configService.GetWebSiteConfig();
+    this.sc = configService.GetSecurityConfigDTOFromDB();
   }
 
 
@@ -43,18 +47,19 @@ export class NotesRepositoryService {
   }
 
   public CreateNoteRepository(notesRepository: NotesRepository): Promise<ApiRep> {
-    return  new Promise<ApiRep>(async resolve => {
+    return new Promise<ApiRep>(async resolve => {
 
 
       let signData = new SignData();
-      signData.Id = "";
-      signData.Data = JSON.stringify(notesRepository);
-      signData.UserId = this.userId;
-      signData.UinxTime = Math.round(new Date().getTime() / 1000);
-      signData.Operate = "/api/NotesRepository/CreateNoteRepository";
-
-      let dataSign = await this.epass.SendSignToePass2001(signData);
-
+      let dataSign=new DataSign();
+      if (this.sc.ForceDigitalSignature){
+        signData.Id = "";
+        signData.Data = JSON.stringify(notesRepository);
+        signData.UserId = this.userId;
+        signData.UinxTime = Math.round(new Date().getTime() / 1000);
+        signData.Operate = "/api/NotesRepository/CreateNoteRepository";
+        dataSign = await this.epass.SendSignToePass2001(signData);
+      }
 
       let url = this.config.baseURL + '/api/NotesRepository/CreateNoteRepository';
       let fromData = new FormData()
@@ -70,16 +75,20 @@ export class NotesRepositoryService {
 
   }
 
-  public DeleteNoteRepository(noteRepositoryId: string) : Promise<ApiRep> {
-    return  new Promise<ApiRep>(async resolve => {
+  public DeleteNoteRepository(noteRepositoryId: string): Promise<ApiRep> {
+    return new Promise<ApiRep>(async resolve => {
       let signData = new SignData();
-      signData.Id = "";
-      signData.Data = noteRepositoryId;
-      signData.UserId = this.userId;
-      signData.UinxTime = Math.round(new Date().getTime() / 1000);
-      signData.Operate = "/api/NotesRepository/DeleteNoteRepository";
+      let dataSign = new DataSign();
 
-      let dataSign = await this.epass.SendSignToePass2001(signData);
+      if (this.sc.ForceDigitalSignature) {
+        signData.Id = "";
+        signData.Data = noteRepositoryId;
+        signData.UserId = this.userId;
+        signData.UinxTime = Math.round(new Date().getTime() / 1000);
+        signData.Operate = "/api/NotesRepository/DeleteNoteRepository";
+
+        dataSign = await this.epass.SendSignToePass2001(signData);
+      }
 
 
       let url = this.config.baseURL + '/api/NotesRepository/DeleteNoteRepository';
@@ -95,7 +104,6 @@ export class NotesRepositoryService {
     })
 
   }
-
 
 
 }

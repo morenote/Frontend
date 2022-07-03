@@ -40,6 +40,14 @@ export class AuthService {
     this.config = this.configService.GetWebSiteConfig();
   }
 
+  /**
+   * 通过用户口令登录
+   * @param type
+   * @param email
+   * @param pwd
+   * @param requestNumber
+   * @constructor
+   */
   public LoginByPassword(type: string, email: string, pwd: string,requestNumber:string): Promise<ApiRep> {
     return  new Promise<ApiRep>(async resolve => {
       let scDTO: SecurityConfigDTO;
@@ -47,6 +55,7 @@ export class AuthService {
       let apiRe = await this.configService.GetSecurityConfigDTO();
       if (apiRe != null && apiRe.Ok) {
         scDTO = apiRe.Data as SecurityConfigDTO;
+        //存储到数据库
         this.configService.SetSecurityConfigDTOFromDB(scDTO);
       } else {
         //返回失败

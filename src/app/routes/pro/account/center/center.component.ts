@@ -1,10 +1,19 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivationEnd, Router } from '@angular/router';
-import { _HttpClient } from '@delon/theme';
-import { Subscription, zip } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {ActivationEnd, Router} from '@angular/router';
+import {_HttpClient} from '@delon/theme';
+import {Subscription, zip} from 'rxjs';
+import {filter} from 'rxjs/operators';
 import {ConfigService} from "../../../../services/config/config.service";
 import {WebsiteConfig} from "../../../../models/config/website-config";
+import {UserService} from "../../../../services/User/user.service";
 
 @Component({
   selector: 'app-account-center',
@@ -13,14 +22,17 @@ import {WebsiteConfig} from "../../../../models/config/website-config";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProAccountCenterComponent implements OnInit, OnDestroy {
-  config?:WebsiteConfig;
+  config?: WebsiteConfig;
+
   constructor(private router: Router,
-              private  configService:ConfigService,
+              private configService: ConfigService,
+              private userService: UserService,
               private http: _HttpClient, private cdr: ChangeDetectorRef) {
-    this.config=configService.GetWebSiteConfig();
+    this.config = configService.GetWebSiteConfig();
   }
+
   private router$!: Subscription;
-  @ViewChild('tagInput', { static: false }) private tagInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('tagInput', {static: false}) private tagInput!: ElementRef<HTMLInputElement>;
   user: any;
   notice: any;
   tabs = [
@@ -54,12 +66,18 @@ export class ProAccountCenterComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit(): void {
-    zip(this.http.get(this.config?.baseURL+'/api/user/current'), this.http.get(this.config?.baseURL+'/api/notice')).subscribe(([user, notice]) => {
+  async ngOnInit() {
+    //获得用户信息
+    let userInfo = await this.userService.GetUserInfo();
+
+    zip(this.http.get(this.config?.baseURL + '/api/user/current'), this.http.get(this.config?.baseURL + '/api/notice')).subscribe(([user, notice]) => {
       this.user = user;
+      this.user.name = userInfo.Username;
       this.notice = notice;
       this.cdr.detectChanges();
     });
+
+
     this.router$ = this.router.events.pipe(filter(e => e instanceof ActivationEnd)).subscribe(() => this.setActive());
     this.setActive();
   }
@@ -67,6 +85,7 @@ export class ProAccountCenterComponent implements OnInit, OnDestroy {
   to(item: { key: string }): void {
     this.router.navigateByUrl(`/pro/account/center/${item.key}`);
   }
+
   tagShowIpt(): void {
     this.taging = true;
     this.cdr.detectChanges();
@@ -74,9 +93,9 @@ export class ProAccountCenterComponent implements OnInit, OnDestroy {
   }
 
   tagBlur(): void {
-    const { user, cdr, tagValue } = this;
+    const {user, cdr, tagValue} = this;
     if (tagValue && user.tags.filter((tag: { label: string }) => tag.label === tagValue).length === 0) {
-      user.tags.push({ label: tagValue });
+      user.tags.push({label: tagValue});
     }
     this.tagValue = '';
     this.taging = false;

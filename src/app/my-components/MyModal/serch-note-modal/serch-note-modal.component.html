@@ -31,7 +31,7 @@
 <!--              <p>{{item.NoteId}}</p>-->
 <!--            </nz-list-item-meta-description>-->
             <nz-list-item-meta-title>
-              <a href="https://ng.ant.design">{{ item.Title }}</a>
+              <a (click)="OnOpenDocument(item)">{{ item.Title }}</a>
             </nz-list-item-meta-title>
 
           </nz-list-item-meta>

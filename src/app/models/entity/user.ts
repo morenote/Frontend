@@ -43,11 +43,18 @@ export class User {
   public  PasswordHashAlgorithm?:string;//用户使用的哈希算法
   public Verify?:boolean;//业务系统防止篡改
   public  Hmac?:string;//业务系统防止篡改
-
-
-
-
-
+  //******************************联系信息*******************************************//
+  public Profile?:string; //个人简介
+  public Country?:string; //国家
+  public Address?:string; //地址
+  public Phone?:string; //地址
+  public Avatar?:string; //头像
+  public GeographicProvince?:string; //地理位置
+  public GeographicCity?:string; //地理位置
+  public Signature?:string; //个人名片签名
+  public Title?:string; //个人名片标题
+  public Group?:string; //个人名片归属团体
+  public Tags?:string; //个人名片标签
 
 
 }

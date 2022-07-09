@@ -79,7 +79,7 @@ const routes: Routes = [
         path: 'center',
         component: ProAccountCenterComponent,
         children: [
-          { path: '', redirectTo: 'articles', pathMatch: 'full' },
+          { path: '', redirectTo: 'projects', pathMatch: 'full' },
           {
             path: 'articles',
             component: ProAccountCenterArticlesComponent,

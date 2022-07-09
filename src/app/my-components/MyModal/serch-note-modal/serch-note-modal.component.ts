@@ -114,6 +114,7 @@ export class SerchNoteModalComponent implements OnInit {
   }
 
   OnOpenDocument(item: Note) {
+
     this.func.openNote(item);
     this.nzModalComponent.close(false);
   }

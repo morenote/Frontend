@@ -56,8 +56,13 @@ export class ConfigService {
   public GetWebSiteConfig(): WebsiteConfig {
     let config = new WebsiteConfig();
     config.baseURL = '';
+    //调试baseURL
     if (localStorage.getItem("baseURL")!=null){
       config.baseURL = localStorage.getItem("baseURL") as string;
+    }
+    //调试模式
+    if (localStorage.getItem("debug")!=null){
+      config.baseURL="https://localhost:5001";
     }
     return config;
   }

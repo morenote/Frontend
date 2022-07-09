@@ -49,18 +49,20 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   }
 
   openNote(note: Note): void {
+        this.clickNoteId=note.NoteId;
         this.message.info(note.Title)
+        let title: string = note.Title;
+        this.noteTitle = title;
         this.onClieckNote(note.NoteId,note.IsMarkdown);
   }
 
   //{title: 'leaf', key: '1001', icon: 'folder'},
   nodes = new Array<TreeNodeModel>();
-
-
   selectedIndex = 0;
 
   rightClickNode!: TreeNodeModel;//右键选中
-  clickNode!: TreeNodeModel;//单击选中
+  clickTreeNode!: TreeNodeModel;//单击选中
+  clickNoteId?:string;//选择的笔记的ID
 
   @ViewChild('vditor')
   vditor?: VditorMarkdownEditorComponent;
@@ -97,7 +99,8 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
       let node: TreeNodeModel = <TreeNodeModel>event.node;
       let key: string = node!.key;
       let title: string = node!.title;
-      this.clickNode = node;
+      this.clickTreeNode = node;
+      this.clickNoteId=node.key;
       let type = node?.isLeaf;
       this.message.success(key + '=' + title + type);
       if (type != null && type) {
@@ -119,7 +122,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
           setTimeout(() => {
             this.vditor!.SetContent(noteContent.Content!, true);
             this.editor = this.vditor;
-          }, 200);
+          }, 500);
         } else {
           console.log('note is textbus')
           console.log('Content is ' + noteContent.Content?.length)
@@ -127,7 +130,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
             //todo:textbus在ready之后才可以使用
             this.textbusEditor!.SetContent(noteContent.Content!, true);
             this.editor = this.textbusEditor;
-          }, 200);
+          }, 500);
 
         }
         setTimeout(() => {
@@ -309,7 +312,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
       //是笔记本
       let apiRe= await this.notebookService.deleteNotebook(this.repositoryId, this.rightClickNode.key, true, true);
       if (apiRe.Ok) {
-        this.message.success('删除文件夹成功,文件夹title=' + this.clickNode.title);
+        this.message.success('删除文件夹成功,文件夹title=' + this.clickTreeNode.title);
         let a = this.rightClickNode.parentNode?.getChildren().filter((x) => x.key != this.rightClickNode.key);
         this.rightClickNode.parentNode?.clearChildren();
         if (a) {
@@ -375,9 +378,10 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
 
   saveMessageId!: string;
 
+  //快捷键按下
   onKeyDown(event: KeyboardEvent) {
     if (event.ctrlKey && event.code == 'KeyS') {
-      if (this.clickNode == null) {
+      if (this.clickTreeNode == null && this.clickNoteId==null) {
         event.preventDefault();
         this.message.info('未选择笔记，无需保存')
         return;
@@ -399,7 +403,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   }
 
   async updateNote() {
-    let noteId = this.clickNode.key;
+
     let title = this.noteTitle;
     let content = this.editor?.GetContent();
     if (content == null || content == undefined) {
@@ -407,9 +411,9 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
       this.message.error('保存内容存在错误，无法保存当前笔记内容');
       return;
     }
-    let apiRe = await this.noteService.UpdateNoteTitleAndContent(noteId, title!, content!);
+    let apiRe = await this.noteService.UpdateNoteTitleAndContent(this.clickNoteId!, title!, content!);
     if (apiRe.Ok) {
-      this.clickNode.title = title!;
+      this.clickTreeNode.title = title!;
     }
     setTimeout(() => {
       if (this.saveMessageId != null) {

@@ -26,6 +26,9 @@ import {
   ISearchNoteAction,
   SerchNoteModalComponent
 } from "../../../my-components/MyModal/serch-note-modal/serch-note-modal.component";
+import {Watermark} from "../../../shared/utils/WaterMark/watermark";
+import {ConfigService} from "../../../services/config/config.service";
+import {TimeFormatUtil} from "../../../shared/utils/Time/time-format-util";
 
 @Component({
   selector: 'app-myeditor',
@@ -42,10 +45,14 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   //<i nz-icon nzType="folder" nzTheme="outline"></i>
   constructor(private nzContextMenuService: NzContextMenuService,
               public route: ActivatedRoute,
+              private configService:ConfigService,
               public message: NzMessageService,
               private notebookService: NotebookService,
               private modal: NzModalService,
               private noteService: NoteService) {
+
+
+
   }
 
   openNote(note: Note): void {
@@ -85,7 +92,6 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   nzEvent(event: NzFormatEmitEvent): void {
     console.log(event);
     // load child async
-
     if (event.eventName === 'expand') {
       let node: TreeNodeModel = <TreeNodeModel>event.node;
       if (node?.getChildren().length === 0 && node?.isExpanded) {
@@ -212,6 +218,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
 
   ngOnInit(): void {
     this.repositoryId = this.route.snapshot.queryParams["repository"];
+
     this.notebookService.GetRootNotebooks(this.repositoryId).subscribe((apiRe: ApiRep) => {
         if (apiRe.Ok == true) {
           let data: Array<Notebook> = apiRe.Data;
@@ -234,6 +241,12 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
         }
       }
     );
+    if (this.configService.openWatermark()){
+      let userId=this.configService.GetUserToken().UserId;
+      let userName=this.configService.GetUserToken().Username;
+      let wTest=userName+" "+TimeFormatUtil.nowToString("yyyy-MM-dd");
+      let watermark:Watermark=new Watermark({watermark_txt:wTest});
+    }
   }
 
   beforeDrop(arg: NzFormatBeforeDropEvent): Observable<boolean> {

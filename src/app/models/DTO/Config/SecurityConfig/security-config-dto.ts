@@ -16,5 +16,5 @@ export class SecurityConfigDTO {
   public  ForceDigitalSignatureProtocol?:DigitalSignatureProtocol;
 
   public NeedVerificationCode?:NeedVerificationCode;
-
+  public OpenWatermark?:boolean;//是否开启防泄密水印
 }

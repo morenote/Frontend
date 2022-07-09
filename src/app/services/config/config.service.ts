@@ -75,6 +75,8 @@ export class ConfigService {
           })
         })
     }
-
-
+  openWatermark():boolean {
+      let sc=this.GetSecurityConfigDTOFromDB();
+      return  sc.OpenWatermark!;
+  }
 }

@@ -62,7 +62,7 @@ export class ConfigService {
     }
     //调试模式
     if (localStorage.getItem("debug")!=null){
-      config.baseURL="https://localhost:5001";
+      config.baseURL="http://localhost:5000";
     }
     return config;
   }

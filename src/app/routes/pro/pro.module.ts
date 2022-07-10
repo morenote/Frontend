@@ -42,6 +42,9 @@ import {CreateRepositoryFormComponent} from "./form/create-repository/create-rep
 import {LoginAuditProTableListComponent} from "./list/login-audit-table-list/table-list.component";
 import {MyComponentsModule} from "../../my-components/my-components.module";
 import {ProRealPersonAuthenticationComponent} from "./account/settings/RealPersonAuthentication/rpa.component";
+import { ProAccountSettingsEditorComponent } from './account/settings/editor/editor.component';
+
+
 
 const COMPONENTS = [
   BasicFormComponent,
@@ -69,9 +72,8 @@ const COMPONENTS = [
   ProAccountCenterFilesComponent,
   ProAccountSettingsComponent,
   ProAccountSettingsBaseComponent,
-  ProRealPersonAuthenticationComponent,
-
-
+  ProRealPersonAuthenticationComponent,//实名
+  ProAccountSettingsEditorComponent,//编辑器设置
   ProAccountSettingsSecurityComponent,
   ProAccountSettingsBindingComponent,
   ProAccountSettingsNotificationComponent,

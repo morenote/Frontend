@@ -1,0 +1,25 @@
+<nz-list nzItemLayout="horizontal">
+
+  <nz-list-item [nzActions]="[LoginSecurityPolicyLevelOp]">
+    <ng-template #LoginSecurityPolicyLevelOp>
+      <a (click)="OnChangeMDOption()">修改</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="MarkDown编辑器" [nzDescription]="LoginSecurityPolicyLevelDesc">
+      <ng-template #LoginSecurityPolicyLevelDesc> 当前用户设置使用：<span class="text-green" >{{mdOption}}</span>作为MarkDown编辑器</ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+
+  <nz-list-item [nzActions]="[passwordOp]">
+    <ng-template #passwordOp>
+      <a (click)="OnChangeRTOption()">修改</a>
+    </ng-template>
+    <nz-list-item-meta nzTitle="富文本编辑器" [nzDescription]="passwordDesc">
+      <ng-template #passwordDesc> 当前用户设置使用：<span class="text-green">{{rtOption}}</span>作为富文本编辑器</ng-template>
+    </nz-list-item-meta>
+  </nz-list-item>
+
+
+
+</nz-list>
+<app-select-moal  #app_select_moal></app-select-moal>
+

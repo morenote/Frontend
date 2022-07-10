@@ -29,6 +29,8 @@ import {ProAccountCenterFilesComponent} from "./account/center/files/files.compo
 import {CreateRepositoryFormComponent} from "./form/create-repository/create-repository-form.component";
 import {LoginAuditProTableListComponent} from "./list/login-audit-table-list/table-list.component";
 import {ProRealPersonAuthenticationComponent} from "./account/settings/RealPersonAuthentication/rpa.component";
+import {ProAccountSettingsEditorComponent} from "./account/settings/editor/editor.component";
+
 
 const routes: Routes = [
   {
@@ -121,7 +123,10 @@ const routes: Routes = [
           {
             path: 'rpa',
             component: ProRealPersonAuthenticationComponent
-
+          },
+          {
+            path: 'editor',
+            component: ProAccountSettingsEditorComponent
           },
           {
             path: 'security',

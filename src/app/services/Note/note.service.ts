@@ -98,7 +98,6 @@ export class NoteService {
   public UpdateNoteTitleAndContent(noteId: string, noteTitle: string, content: string): Promise<ApiRep> {
     return new Promise<ApiRep>(async resolve => {
       let sc = this.configService.GetSecurityConfigDTOFromDB();
-
       //签名
       let signData = new SignData();
       let dataSign: DataSign = new DataSign();

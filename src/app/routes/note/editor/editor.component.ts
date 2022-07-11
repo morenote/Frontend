@@ -29,6 +29,7 @@ import {
 import {Watermark} from "../../../shared/utils/WaterMark/watermark";
 import {ConfigService} from "../../../services/config/config.service";
 import {TimeFormatUtil} from "../../../shared/utils/Time/time-format-util";
+import {LogUtil} from "../../../shared/utils/log-util";
 
 @Component({
   selector: 'app-myeditor',
@@ -55,12 +56,18 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
 
   }
 
+  /**
+   * 打开笔记
+   * @param note
+   */
   openNote(note: Note): void {
         this.clickNoteId=note.NoteId;
         this.message.info(note.Title)
         let title: string = note.Title;
         this.noteTitle = title;
         this.onClieckNote(note.NoteId,note.IsMarkdown);
+        LogUtil.debug("openNote："+note.NoteId)
+        LogUtil.debug("openNote："+note.Title)
   }
 
   //{title: 'leaf', key: '1001', icon: 'folder'},
@@ -394,13 +401,13 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   //快捷键按下
   onKeyDown(event: KeyboardEvent) {
     if (event.ctrlKey && event.code == 'KeyS') {
-      if (this.clickTreeNode == null && this.clickNoteId==null) {
+      if (this.clickTreeNode == null && this.clickNoteId == null) {
         event.preventDefault();
         this.message.info('未选择笔记，无需保存')
         return;
       }
       this.saveMessageId = this.message.loading('正在努力保存笔记，请勿进行其他操作', {nzDuration: 0}).messageId;
-      this.updateNote();
+      this.updateNote().then();
       event.preventDefault();
     }
 
@@ -415,6 +422,9 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
     }
   }
 
+  /**
+   * 更新笔记内容
+   */
   async updateNote() {
 
     let title = this.noteTitle;
@@ -424,9 +434,13 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
       this.message.error('保存内容存在错误，无法保存当前笔记内容');
       return;
     }
+    LogUtil.debug("updateNote:"+this.clickNoteId)
+    LogUtil.debug("updateNote:"+title)
     let apiRe = await this.noteService.UpdateNoteTitleAndContent(this.clickNoteId!, title!, content!);
     if (apiRe.Ok) {
-      this.clickTreeNode.title = title!;
+      if (this.clickTreeNode!=null){
+        this.clickTreeNode.title = title!;
+      }
     }
     setTimeout(() => {
       if (this.saveMessageId != null) {

@@ -25,9 +25,13 @@ export class TextbusEditorComponent implements OnInit, EditorInterface {
     this.editor?.destroy();
   }
   ngOnInit() {
-    this.editor = createEditor(this.editorContainer!.nativeElement, {
-      content: '<p>欢迎你使用&nbsp;<strong>Textbus</strong> 富文本编辑器...<br></p>'
-    });
+     this.editor = createEditor();
+     this.editor.mount(this.editorContainer!.nativeElement);
+
+
+    // this.editor = createEditor(this.editorContainer!.nativeElement, {
+    //   content: '<p>欢迎你使用&nbsp;<strong>Textbus</strong> 富文本编辑器...<br></p>'
+    // });
   }
 
   SetContent(value: string, clearCache: boolean): void {

@@ -68,7 +68,7 @@
             ],
             "styles": [
               "src/styles.less",
-              "node_modules/vditor/src/assets/scss/index.scss"
+              "node_modules/vditor/src/assets/less/index.less"
 
 
             ],

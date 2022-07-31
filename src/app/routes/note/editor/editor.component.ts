@@ -534,4 +534,9 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
       this.editor?.Disabled();
     }
   }
+
+  pushToBlog() {
+    this.message.info("发布到VuePress");
+
+  }
 }

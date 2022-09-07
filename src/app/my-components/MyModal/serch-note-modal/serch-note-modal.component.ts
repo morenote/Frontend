@@ -101,7 +101,7 @@ export class SerchNoteModalComponent implements OnInit {
   }
 
   OnCopyId(item: Note) {
-    this.copyMessage(item.NoteId)
+    this.copyMessage(item.Id)
     this.nzMessage.success('已经复制文档id到剪贴板')
   }
 

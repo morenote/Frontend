@@ -1,7 +1,7 @@
 import {Note} from "../../entity/note";
 
 export class ApiNote {
-  public NoteId?:string;
+  public Id: string | undefined;
   public NotebookId?:string;
   public UserId?:string;
   public Title?:string;
@@ -21,7 +21,7 @@ export class ApiNote {
 
   public static GetApiNote(note:Note,content:string,abstract:string){
     let apiNote:ApiNote=new ApiNote();
-    apiNote.NoteId=note.NoteId;
+    apiNote.Id=note.Id;
     apiNote.NotebookId=note.NotebookId;
     apiNote.UserId=note.UserId;
     apiNote.Title=note.Title;

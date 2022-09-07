@@ -1,5 +1,5 @@
 export class User {
-  public UserId?:string;
+  public Id?:string;
   public Email?:string;
   public Verified?:string;
   public Username?:string;

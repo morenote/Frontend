@@ -61,12 +61,12 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
    * @param note
    */
   openNote(note: Note): void {
-        this.clickNoteId=note.NoteId;
+        this.clickNoteId=note.Id;
         this.message.info(note.Title)
         let title: string = note.Title;
         this.noteTitle = title;
-        this.onClieckNote(note.NoteId,note.IsMarkdown);
-        LogUtil.debug("openNote："+note.NoteId)
+        this.onClieckNote(note.Id,note.IsMarkdown);
+        LogUtil.debug("openNote："+note.Id)
         LogUtil.debug("openNote："+note.Title)
   }
 
@@ -177,9 +177,9 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
                   if (notebook.IsDeleted || notebook.IsTrash) {
                     continue;
                   }
-                  let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.NotebookId, notebook.Title));
+                  let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.Id, notebook.Title));
                   node.title = notebook.Title;
-                  node.key = notebook.NotebookId;
+                  node.key = notebook.Id;
 
                   node.icon = 'folder';
                   array.push(node)
@@ -194,9 +194,9 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
                       if (note.IsDeleted || note.IsTrash) {
                         continue;
                       }
-                      let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
+                      let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.Id, note.Title));
                       node.title = note.Title;
-                      node.key = note.NoteId;
+                      node.key = note.Id;
                       node.isLeaf = true;
                       node.isMarkdown = note.IsMarkdown;
                       if (node.isMarkdown) {
@@ -230,9 +230,9 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
         if (apiRe.Ok == true) {
           let data: Array<Notebook> = apiRe.Data;
           for (const notebook of data) {
-            let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.NotebookId, notebook.Title));
+            let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.Id, notebook.Title));
             node.title = notebook.Title;
-            node.key = notebook.NotebookId;
+            node.key = notebook.Id;
             node.icon = 'folder';
             this.nodes.push(node)
           }
@@ -295,9 +295,9 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
         let apiRe = await this.notebookService.CreateNoteBook(noteRepositoryId, value, parentFolder);
         if (apiRe.Ok == true) {
           let notebook: Notebook = apiRe.Data;
-          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.NotebookId, notebook.Title));
+          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.Id, notebook.Title));
           node.title = notebook.Title;
-          node.key = notebook.NotebookId;
+          node.key = notebook.Id;
           node.icon = 'folder';
 
           if (isRoot) {
@@ -356,7 +356,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
         let apiRe = await this.noteService.CreateNote(value, this.rightClickNode!.key, true);
         if (apiRe.Ok == true) {
           let note: Note = apiRe.Data;
-          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
+          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.Id, note.Title));
           node.icon = 'file-markdown';
           node.isLeaf = true;
           node.isMarkdown = true;
@@ -380,7 +380,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
         let apiRe = await this.noteService.CreateNote(value, this.rightClickNode!.key, false);
         if (apiRe.Ok == true) {
           let note: Note = apiRe.Data;
-          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.NoteId, note.Title));
+          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.Id, note.Title));
           node.icon = 'html5';
           node.isLeaf = true;
           node.isMarkdown = false;

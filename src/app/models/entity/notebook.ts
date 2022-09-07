@@ -1,5 +1,5 @@
 export class Notebook {
-  public NotebookId!:string;
+  public Id!:string;
   public UserId!:string;
   public NotesRepositoryId!:string;
   public ParentNotebookId!:string;

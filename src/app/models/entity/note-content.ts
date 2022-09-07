@@ -1,5 +1,5 @@
 export class NoteContent {
-  public NoteContentId?:string;
+  public Id?:string;
   public NoteId?:string;
   public UserId?:string;
   public IsBlog?:boolean;

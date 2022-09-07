@@ -1,5 +1,5 @@
 export class APINoteFile {
-    public FileId?:string;
+    public Id?:string;
     public LocalFileId?:string;
     public Type?:string;
     public Title?:string;

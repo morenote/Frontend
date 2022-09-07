@@ -1,7 +1,7 @@
 import {SignData} from "../DTO/USBKey/sign-data";
 
 export class Note {
-  public  NoteId!:string;
+  public  Id!:string;
   public  UserId?:string;
   public  NotesRepositoryId?:string;
   public  CreatedUserId?:string;

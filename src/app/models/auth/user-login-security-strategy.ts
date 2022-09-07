@@ -1,4 +1,5 @@
 export class UserLoginSecurityStrategy {
+  public Id: string | undefined;
   public UserId: string | undefined;
   public UserName: string | undefined;
 

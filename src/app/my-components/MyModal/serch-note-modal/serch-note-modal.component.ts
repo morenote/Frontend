@@ -113,9 +113,12 @@ export class SerchNoteModalComponent implements OnInit {
 
   }
 
-  OnOpenDocument(item: Note) {
-
-    this.func.openNote(item);
+  OnOpenDocument(item: any) {
+    let note=item as Note;
+    if (note==null){
+        throw   new Error("note==null!!!");
+    }
+    this.func.openNote(note);
     this.nzModalComponent.close(false);
   }
   copyMessage(val: string){

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-advanced-form',
@@ -9,13 +9,13 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '
 export class AdvancedFormComponent implements OnInit {
   editIndex = -1;
   editObj = {};
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   users: Array<{ value: string; label: string }> = [
     { value: 'xiao', label: '付晓晓' },
     { value: 'mao', label: '周毛毛' }
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: UntypedFormBuilder) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -60,7 +60,7 @@ export class AdvancedFormComponent implements OnInit {
     });
   }
 
-  createUser(): FormGroup {
+  createUser(): UntypedFormGroup {
     return this.fb.group({
       key: [null],
       workId: [null, [Validators.required]],
@@ -109,8 +109,8 @@ export class AdvancedFormComponent implements OnInit {
   get type2(): AbstractControl {
     return this.form.get('type2')!;
   }
-  get items(): FormArray {
-    return this.form.get('items') as FormArray;
+  get items(): UntypedFormArray {
+    return this.form.get('items') as UntypedFormArray;
   }
   //#endregion
 
@@ -132,7 +132,7 @@ export class AdvancedFormComponent implements OnInit {
   }
 
   save(index: number): void {
-    const item = this.items.at(index) as FormGroup;
+    const item = this.items.at(index) as UntypedFormGroup;
     Object.keys(item.controls).forEach(key => {
       item.controls[key].markAsDirty();
       item.controls[key].updateValueAndValidity();

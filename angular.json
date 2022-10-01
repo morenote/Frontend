@@ -64,13 +64,12 @@
 
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/styles.less",
               "node_modules/vditor/src/assets/less/index.less"
-
-
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
@@ -84,7 +83,9 @@
               "includePaths": [
                 "node_modules/"
               ]
-            }
+            },
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -151,7 +152,8 @@
             "inlineStyleLanguage": "less",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/styles.less"
@@ -170,6 +172,5 @@
         }
       }
     }
-  },
-  "defaultProject": "notion-like-theme"
+  }
 }

@@ -92,6 +92,8 @@ import { NzTreeModule } from 'ng-zorro-antd/tree';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NuMarkdownModule } from '@ng-util/markdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -111,7 +113,13 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     FormsModule,
     HttpClientJsonpModule,
     ReactiveFormsModule,
-    ...FORM_MODULES
+    ...FORM_MODULES,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [...LANG_PROVIDES, ...INTERCEPTOR_PROVIDES, ...I18NSERVICE_PROVIDES, ...APPINIT_PROVIDES],
   bootstrap: [AppComponent]

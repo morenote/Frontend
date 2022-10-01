@@ -7,7 +7,7 @@ import { NzI18nService } from 'ng-zorro-antd/i18n';
 import { of } from 'rxjs';
 
 describe('Service: I18n', () => {
-  let injector: TestBedStatic;
+  let injector: TestBed;
   let srv: I18NService;
   const MockSettingsService: NzSafeAny = {
     layout: {

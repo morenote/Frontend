@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { TransferService } from './transfer.service';
 
@@ -9,13 +9,13 @@ import { TransferService } from './transfer.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Step2Component implements OnInit {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   loading = false;
   get item(): TransferService {
     return this.srv;
   }
 
-  constructor(private fb: FormBuilder, private srv: TransferService) {}
+  constructor(private fb: UntypedFormBuilder, private srv: TransferService) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({

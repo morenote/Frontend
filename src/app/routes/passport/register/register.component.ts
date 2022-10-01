@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { _HttpClient } from '@delon/theme';
 import { MatchControl } from '@delon/util/form';
@@ -15,7 +15,7 @@ import {NzMessageService} from "ng-zorro-antd/message";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserRegisterComponent implements OnDestroy {
-  constructor(fb: FormBuilder,
+  constructor(fb: UntypedFormBuilder,
               private router: Router,
               private http: _HttpClient,
               public nzMessage: NzMessageService,
@@ -53,7 +53,7 @@ export class UserRegisterComponent implements OnDestroy {
   get captcha(): AbstractControl {
     return this.form.get('captcha')!;
   }
-  form: FormGroup;
+  form: UntypedFormGroup;
   error = '';
   type = 0;
   loading = false;
@@ -73,7 +73,7 @@ export class UserRegisterComponent implements OnDestroy {
   count = 0;
   interval$: any;
 
-  static checkPassword(control: FormControl): NzSafeAny {
+  static checkPassword(control: UntypedFormControl): NzSafeAny {
     if (!control) {
       return null;
     }

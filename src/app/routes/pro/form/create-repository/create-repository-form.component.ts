@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {OrganizationService} from "../../../../services/organization/organization.service";
 import {OrganizationAuthorityEnum} from "../../../../models/enum/organization-authority-enum";
@@ -19,7 +19,7 @@ import {ConfigService} from "../../../../services/config/config.service";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateRepositoryFormComponent implements OnInit {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   submitting = false;
   orgs:Array<Organization>=new Array<Organization>();
 
@@ -33,7 +33,7 @@ export class CreateRepositoryFormComponent implements OnInit {
   ownerOptionArray:Array<string>=new Array<string>();
   ownerMap:Map<string,string>=new Map<string, string>();
   private visible: boolean=false;
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private router: Router,
               private msg: NzMessageService,
               private cdr: ChangeDetectorRef,

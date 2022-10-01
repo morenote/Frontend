@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
@@ -8,7 +8,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 export class ExtrasSettingsComponent implements OnInit {
   active = 1;
-  profileForm: FormGroup;
+  profileForm: UntypedFormGroup;
   pwd = {
     old_password: '',
     new_password: '',
@@ -17,7 +17,7 @@ export class ExtrasSettingsComponent implements OnInit {
   // Email
   primary_email = 'cipchk@qq.com';
 
-  constructor(fb: FormBuilder, public msg: NzMessageService) {
+  constructor(fb: UntypedFormBuilder, public msg: NzMessageService) {
     this.profileForm = fb.group({
       name: [null, Validators.compose([Validators.required, Validators.pattern(`^[-_a-zA-Z0-9]{4,20}$`)])],
       email: '',

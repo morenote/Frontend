@@ -3,7 +3,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 
 import {createEditor, Editor} from '@textbus/editor'
 import {EditorInterface} from "../editor-interface";
-import '@textbus/editor/bundles/textbus.min.css';
+// import '@textbus/editor/bundles/textbus.min.css';
 
 
 @Component({

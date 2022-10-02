@@ -10616,6 +10616,7 @@ __metadata:
     node-fetch: ^2.6.1
     prettier: ^2.7.1
     protractor: ~7.0.0
+    qrious: ^4.0.2
     rxjs: ~7.5.0
     screenfull: ^6.0.2
     sm-crypto: ^0.3.8
@@ -12700,6 +12701,13 @@ __metadata:
   version: 1.2.0
   resolution: "qjobs@npm:1.2.0"
   checksum: eb64c00724d2fecaf9246383b4eebc3a4c34845b25d41921dd57f41b30a4310cef661543facac27ceb6911aab64a1acdf45b5d8f1d5e2838554d0c010ee56852
+  languageName: node
+  linkType: hard
+
+"qrious@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "qrious@npm:4.0.2"
+  checksum: 13c72ca7d2738cb73bcda25fb98b32004e136bfbfb154355ebbccac396fa3e2d46ecf6b298abd745c8cbc60e839868a8ec3aef1995c65983ad74bdbde43bc56c
   languageName: node
   linkType: hard
 

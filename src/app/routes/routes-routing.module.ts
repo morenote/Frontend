@@ -36,6 +36,11 @@ const routes: Routes = [
     component: LayoutBasicComponent,
     children: [{path: 'editor', loadChildren: () => import('./note/note.module').then(m => m.NoteModule),data: {isHideAside:true}}]
   },
+  {
+    path: 'file',
+    component: LayoutBasicComponent,
+    children: [{path: 'browser', loadChildren: () => import('./file-manager/file-manager.module').then(m => m.FileManagerModule),data: {isHideAside:true}}]
+  },
   // passport
   {
     path: '',

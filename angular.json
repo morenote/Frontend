@@ -71,7 +71,9 @@
               "src/styles.less",
               "node_modules/vditor/src/assets/less/index.less"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/qrious/dist/qrious.min.js"
+            ],
             "allowedCommonJsDependencies": [
               "@antv/g2",
               "ajv",

@@ -132,42 +132,62 @@
         </nz-tab>
       </nz-tabset>
     </div>
-    <div nz-col nzFlex="auto" style="background-color: green">
-      <nz-table
-        #virtualTable
-        nzShowSizeChanger
-        [nzTotal]="10000"
-        [nzBordered]="true"
-        [nzVirtualItemSize]="54"
-        [nzVirtualForTrackBy]="trackByIndex"
-        [nzFrontPagination]="false"
-        [nzShowPagination]="false"
-        [nzPageSize]="10"
-        [nzScroll]="{  x: '800px',y:'800px' }"
-        [nzData]="listOfData">
-        <thead>
+    <div nz-col nzFlex="auto" >
+      <div nz-row nzFlex="200px" style="height: 40px">
+        <nz-breadcrumb>
+          <nz-breadcrumb-item>
+            <i nz-icon nzType="home"></i>
+            <span>Home</span>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+            <a>
+              <i nz-icon nzType="user"></i>
+              <span>Application List</span>
+            </a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>Application</nz-breadcrumb-item>
+        </nz-breadcrumb>
+      </div>
+      <div nz-row nzFlex="auto" style="background-color: #0e76ac;text-align: center;vertical-align: center">
+        <nz-table
+          #virtualTable
+          nzShowSizeChanger
+          [nzTotal]="10000"
+          [nzBordered]="true"
+          [nzVirtualItemSize]="54"
+          [nzVirtualForTrackBy]="trackByIndex"
+          [nzFrontPagination]="false"
+          [nzShowPagination]="false"
+          [nzPageSize]="10"
+          [nzScroll]="{  x: '800px',y:'800px' }"
+          [nzData]="listOfData"
 
-        <tr>
-          <th nzWidth="600px" nzLeft>Name</th>
-          <th nzWidth="200px"> Modify date</th>
-          <th nzWidth="100px">Size</th>
-          <th nzWidth="200px" nzRight>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let data of virtualTable.data">
-          <td nzLeft>{{ data.Name }}</td>
-          <td>{{data.ModifyDate | date:'yyyy-MM-dd HH:mm:ss'  }}</td>
-          <td>{{ data.Size }}</td>
-          <td nzRight>
-            <a>Action 一 {{ data.Name }}</a>
-            <nz-divider nzType="vertical"></nz-divider>
-            <a>Delete</a>
-          </td>
-        </tr>
-        </tbody>
-      </nz-table>
+          style="width: 100%">
+          <thead>
 
+          <tr>
+            <th nzWidth="100px"  [nzChecked]="false"    ></th>
+            <th nzWidth="600px"  nzLeft>Name</th>
+            <th nzWidth="200px"> Modify date</th>
+            <th nzWidth="100px">Size</th>
+            <th nzWidth="200px" nzRight>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let data of virtualTable.data" (click)="clickTableTr(data)" (dblclick)="dbClick(data)" >
+            <td [nzChecked]="false"></td>
+            <td nzLeft style="cursor: pointer;user-select: none"   (contextmenu)="contextMenu2($event, menu)">{{ data.Name }}</td>
+            <td>{{data.ModifyDate | date:'yyyy-MM-dd HH:mm:ss'  }}</td>
+            <td>{{ data.Size }}GB</td>
+            <td nzRight>
+              <a>Action</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a>Delete</a>
+            </td>
+          </tr>
+          </tbody>
+        </nz-table>
+      </div>
     </div>
     <div nz-col nzFlex="300px" style="">
       <div nz-row nzFlex="300px" nzAlign="middle" nzJustify="center" style="height: 300px" >
@@ -180,10 +200,15 @@
         />
       </div>
       <div nz-row nzFlex="300px" nzAlign="top"   nzJustify="center" style="height: 300px;flex-wrap: nowrap" >
-        <div>
-          <p  nz-typography nzCopyable nzCopyText="Hello, Ant Design!">Replace copy text.</p>
-          <p nz-typography nzCopyable nzCopyText="Hello, Ant Design!">Replace copy text.</p>
-          <p nz-typography nzCopyable nzCopyText="Hello, Ant Design!">Replace copy text.</p>
+        <div style="vertical-align: center;text-align: center" >
+          <p nz-typography nzCopyable nzCopyText="Hello, Ant Design!">{{selectFile?.Name}}</p>
+          <p nz-typography nzCopyable nzCopyText="Hello, Ant Design!">{{selectFile?.ModifyDate| date:'yyyy-MM-dd HH:mm:ss' }}</p>
+          <p nz-typography nzCopyable nzCopyText="Hello, Ant Design!">{{selectFile?.Size}}GB</p>
+          <a (click)="sayHello()">Download</a><br>
+          <a (click)="sayHello()" >Play Video</a><br>
+          <a (click)="sayHello()" >Preview images</a><br>
+          <a (click)="sayHello()">Share Link</a><br>
+          <a (click)="sayHello()">Push to Mobile</a>
         </div>
 
       </div>

@@ -51,9 +51,6 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
               private notebookService: NotebookService,
               private modal: NzModalService,
               private noteService: NoteService) {
-
-
-
   }
 
   /**

@@ -7,12 +7,8 @@ import {TreeNodeOptionsModel} from "../../../models/model/tree-node-options-mode
 import {TimeFormatUtil} from "../../../shared/utils/Time/time-format-util"
 import {NzTableComponent} from "ng-zorro-antd/table";
 import {NzMessageService} from "ng-zorro-antd/message";
-interface FileInfo {
-  key: string;
-  Name: string;
-  ModifyDate: Date;
-  Size: number;
-}
+import {VirtualFileInfo} from "../../../models/entity/File/virtual-file-info";
+
 @Component({
   selector: 'app-file-browser',
   templateUrl: './file-browser.component.html',
@@ -22,10 +18,11 @@ interface FileInfo {
 
 export class FileBrowserComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @ViewChild('virtualTable', { static: false }) nzTableComponent?: NzTableComponent<FileInfo>;
+  @ViewChild('virtualTable', { static: false }) nzTableComponent?: NzTableComponent<VirtualFileInfo>;
   private destroy$ = new Subject();
 
-  listOfData: FileInfo[] = [];
+  listOfData: VirtualFileInfo[] = [];
+  selectFile: VirtualFileInfo | undefined;
   qrValue:string='https://dev.morenote.top';
 
   constructor(public message:NzMessageService,
@@ -46,8 +43,8 @@ export class FileBrowserComponent implements OnInit, AfterViewInit, OnDestroy {
     this.nodes.push(node);
     for (let i = 0; i <50; i++) {
       this.listOfData.push({
-        key: '3'+i,
-        Name: 'Joe Black',
+        Id: '3'+i,
+        Name: 'Westworld.S03E07.2020.1080p.WEB-DL.x265.10bit.AC3'+i+".mp4",
         Size: 32,
         ModifyDate: new Date()
 
@@ -61,9 +58,9 @@ export class FileBrowserComponent implements OnInit, AfterViewInit, OnDestroy {
   scrollToIndex(index: number): void {
     this.nzTableComponent?.cdkVirtualScrollViewport?.scrollToIndex(index);
   }
-  trackByIndex(index: number, data: FileInfo): string {
+  trackByIndex(index: number, data: VirtualFileInfo): string {
     this.message.info("trackByIndex"+index);
-    return data.key;
+    return data.Id!;
   }
 
   beforeDrop(arg: NzFormatBeforeDropEvent): Observable<boolean> {
@@ -99,6 +96,12 @@ export class FileBrowserComponent implements OnInit, AfterViewInit, OnDestroy {
     this.nzContextMenuService.create(event.event!, menu);
 
   }
+  contextMenu2(event: MouseEvent, menu: NzDropdownMenuComponent): void {
+
+
+    this.nzContextMenuService.create(event, menu);
+
+  }
 
   OnReName() {
 
@@ -130,5 +133,17 @@ export class FileBrowserComponent implements OnInit, AfterViewInit, OnDestroy {
 
   index($event: any) {
     this.message.info("index");
+  }
+
+  clickTableTr(data: VirtualFileInfo) {
+    this.selectFile=data;
+  }
+
+  dbClick(data: VirtualFileInfo) {
+      this.message.info("双击"+data.Name);
+  }
+
+  sayHello() {
+      this.message.info('hello world');
   }
 }

@@ -45,4 +45,9 @@ testem.log
 .DS_Store
 Thumbs.db
 /.angular
-/.yarn
+
+.pnp.js
+.pnp.cjs
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz

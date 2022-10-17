@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {NotesRepository} from "../../models/entity/notes-repository";
+import {Repository} from "../../models/entity/repository";
 import {AuthService} from "../auth/auth.service";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {ConfigService} from "../config/config.service";
@@ -10,11 +10,12 @@ import {SignData} from "../../models/DTO/USBKey/sign-data";
 import {EPass2001Service} from "../Usbkey/EnterSafe/ePass2001/e-pass2001.service";
 import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security-config-dto";
 import {DataSign} from "../../models/DTO/USBKey/data-sign";
+import {RepositoryType} from "../../models/enum/repository-type";
 
 @Injectable({
   providedIn: 'root'
 })
-export class NotesRepositoryService {
+export class RepositoryService {
 
   userId: string;
   token: string;
@@ -37,34 +38,34 @@ export class NotesRepositoryService {
    *  获得我的笔记仓库列表
    * @constructor
    */
-  public GetMyNoteRepository(): Observable<ApiRep> {
-    let url = this.config.baseURL + '/api/NotesRepository/GetMyNoteRepository';
+  public GetMyRepository(repositoryType:RepositoryType): Observable<ApiRep> {
+    let url = this.config.baseURL + '/api/Repository/GetMyRepository';
     let queryParams = new HttpParams()
       .append('userId', (this.userId)!)
-      .append('token', this.token!);
+      .append('userId', (this.userId)!)
+      .append('repositoryType', repositoryType)
+      .append('token', this.token);
     let result = this.http.get<ApiRep>(url, {params: queryParams});
     return result;
   }
 
-  public CreateNoteRepository(notesRepository: NotesRepository): Promise<ApiRep> {
+  public CreateRepository(repository: Repository): Promise<ApiRep> {
     return new Promise<ApiRep>(async resolve => {
-
-
       let signData = new SignData();
       let dataSign=new DataSign();
       if (this.sc.ForceDigitalSignature){
         signData.Id = "";
-        signData.Data = JSON.stringify(notesRepository);
+        signData.Data = JSON.stringify(repository);
         signData.UserId = this.userId;
         signData.UinxTime = Math.round(new Date().getTime() / 1000);
-        signData.Operate = "/api/NotesRepository/CreateNoteRepository";
+        signData.Operate = "/api/Repository/CreateRepository";
         dataSign = await this.epass.SendSignToePass2001(signData);
       }
 
-      let url = this.config.baseURL + '/api/NotesRepository/CreateNoteRepository';
+      let url = this.config.baseURL + '/api/Repository/CreateRepository';
       let fromData = new FormData()
       fromData.set('token', this.token!)
-      fromData.set('data', JSON.stringify(notesRepository));
+      fromData.set('data', JSON.stringify(repository));
       fromData.set('dataSignJson', JSON.stringify(dataSign));
       let result = this.http.post<ApiRep>(url, fromData).subscribe(apiRe => {
         resolve(apiRe);
@@ -75,26 +76,26 @@ export class NotesRepositoryService {
 
   }
 
-  public DeleteNoteRepository(noteRepositoryId: string): Promise<ApiRep> {
+  public DeleteRepository(repositoryId: string): Promise<ApiRep> {
     return new Promise<ApiRep>(async resolve => {
       let signData = new SignData();
       let dataSign = new DataSign();
 
       if (this.sc.ForceDigitalSignature) {
         signData.Id = "";
-        signData.Data = noteRepositoryId;
+        signData.Data = repositoryId;
         signData.UserId = this.userId;
         signData.UinxTime = Math.round(new Date().getTime() / 1000);
-        signData.Operate = "/api/NotesRepository/DeleteNoteRepository";
+        signData.Operate = "/api/Repository/DeleteRepository";
 
         dataSign = await this.epass.SendSignToePass2001(signData);
       }
 
 
-      let url = this.config.baseURL + '/api/NotesRepository/DeleteNoteRepository';
+      let url = this.config.baseURL + '/api/Repository/DeleteRepository';
       let fromData = new FormData();
       fromData.set('token', this.token!)
-      fromData.set('noteRepositoryId', noteRepositoryId);
+      fromData.set('repositoryId', repositoryId);
       fromData.set('dataSignJson', JSON.stringify(dataSign));
       let result = this.http.post<ApiRep>(url, fromData).subscribe(apiRe => {
         resolve(apiRe);

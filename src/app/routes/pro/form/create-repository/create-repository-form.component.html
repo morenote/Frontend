@@ -1,4 +1,4 @@
-<page-header [title]="'创建文档库'"> 文档库用于托管文档和笔记，允许更多创作者参与到文档创作，可以站在更高的角度和更低的细粒度去融合创造力和想象力。</page-header>
+<page-header [title]="'创建文档库'"> {{des}}</page-header>
 <nz-card [nzBordered]="false">
   <form nz-form [formGroup]="form" (ngSubmit)="submit()" se-container="1" labelWidth="200">
 
@@ -6,11 +6,24 @@
     <se label="仓库名称" error="请输入仓库名称（纯英文，不包含特殊符号）" required>
       <input
         nz-input
-
         autocomplete="off"
         formControlName="repositoryName"
         (ngModelChange)="OnRepositoryNameChange($event)"
         placeholder="请输入仓库名称（建议使用英文、数字，不允许含特殊符号和中文）"/>
+    </se>
+    <se label="虚拟文件基础路径" error="请输入仓库基础路径" required>
+      <input
+        nz-input
+        autocomplete="off"
+        formControlName="VirtualFileBasePath"
+        placeholder="请输入虚拟文件基础路径"/>
+    </se>
+    <se label="虚拟文件访问器" error="请输入虚拟机文件访问器" required>
+      <input
+        nz-input
+        autocomplete="off"
+        formControlName="VirtualFileAccessor"
+        placeholder="请输入虚拟机文件访问器"/>
     </se>
     <se label="归属" error="请输入标题" required>
       <div nz-row>

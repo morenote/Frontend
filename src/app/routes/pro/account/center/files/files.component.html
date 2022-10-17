@@ -21,28 +21,28 @@
           <nz-dropdown-menu #op4Menu="nzDropdownMenu">
             <i nz-dropdown nz-icon nzType="ellipsis"></i>
             <ul nz-menu>
-              <li nz-menu-item>1st menu item</li>
+              <li nz-menu-item (click)="OnDelete(item.Id)">删除仓库</li>
               <li nz-menu-item>2st menu item</li>
               <li nz-menu-item>3st menu item</li>
             </ul>
           </nz-dropdown-menu>
         </ng-template>
-        <nz-card-meta [nzTitle]="item.title" [nzAvatar]="nzAvatar">
+        <nz-card-meta  (click)="OnCardClick(item)" [nzTitle]="item.Name" [nzAvatar]="nzAvatar">
           <ng-template #nzAvatar>
             <nz-avatar nzSize="small" [nzSrc]="item.avatar"></nz-avatar>
           </ng-template>
         </nz-card-meta>
         <div class="card-info d-flex">
           <div>
-            <p>活跃用户</p>
+            <p>收藏</p>
             <p>
-              {{ item.activeUser }}
+              {{ item.StarCounter }}
               <em class="wan">万</em>
             </p>
           </div>
           <div>
-            <p>新增用户</p>
-            <p>{{ item.newUser | number: '3.' }}</p>
+            <p>被引用</p>
+            <p>{{ item.ForkCounter | number: '3.' }}</p>
           </div>
         </div>
       </nz-card>

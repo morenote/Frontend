@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {TreeNodeModel} from "../../../models/model/tree-node-model";
-import {NzFormatBeforeDropEvent, NzFormatEmitEvent} from "ng-zorro-antd/tree";
+import {NzFormatBeforeDropEvent, NzFormatEmitEvent, NzTreeNode, NzTreeNodeOptions} from "ng-zorro-antd/tree";
 import {delay, Observable, of, Subject, takeUntil} from "rxjs";
 import {NzContextMenuService, NzDropdownMenuComponent} from "ng-zorro-antd/dropdown";
 import {TreeNodeOptionsModel} from "../../../models/model/tree-node-options-model";
@@ -8,6 +8,13 @@ import {TimeFormatUtil} from "../../../shared/utils/Time/time-format-util"
 import {NzTableComponent} from "ng-zorro-antd/table";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {VirtualFileInfo} from "../../../models/entity/File/virtual-file-info";
+import {VirtualFolderAccessService} from "../../../services/VirtualIO/virtual-folder-access.service";
+import {ActivatedRoute} from "@angular/router";
+import {VirtualFolderInfo} from "../../../models/entity/File/VirtualFolderInfo";
+import {NzTreeComponent} from "ng-zorro-antd/tree/tree.component";
+import {ApiRep} from "../../../models/api/api-rep";
+import {Notebook} from "../../../models/entity/notebook";
+import {Note} from "../../../models/entity/note";
 
 @Component({
   selector: 'app-file-browser',
@@ -21,11 +28,19 @@ export class FileBrowserComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('virtualTable', { static: false }) nzTableComponent?: NzTableComponent<VirtualFileInfo>;
   private destroy$ = new Subject();
 
+  @ViewChild('nzTree')
+  nzTree?: NzTreeComponent;
+
   listOfData: VirtualFileInfo[] = [];
   selectFile: VirtualFileInfo | undefined;
   qrValue:string='https://dev.morenote.top';
+  repositoryId:string="";
+
+
 
   constructor(public message:NzMessageService,
+              public route: ActivatedRoute,
+              private  folderService:VirtualFolderAccessService,
               private nzContextMenuService: NzContextMenuService,) {
   }
 
@@ -35,23 +50,22 @@ export class FileBrowserComponent implements OnInit, AfterViewInit, OnDestroy {
   inputVisible: any;
 
 
-  ngOnInit(): void {
-    let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel('111', '111'));
-    node.title = '111';
-    node.key = '1111';
-    node.isLeaf = true;
-    this.nodes.push(node);
-    for (let i = 0; i <50; i++) {
-      this.listOfData.push({
-        Id: '3'+i,
-        Name: 'Westworld.S03E07.2020.1080p.WEB-DL.x265.10bit.AC3'+i+".mp4",
-        Size: 32,
-        ModifyDate: new Date()
+  async ngOnInit() {
+    this.repositoryId = this.route.snapshot.queryParams["repository"];
 
-      });
+    let rootFolder = await this.folderService.GetRootVirtualFolderInfos(this.repositoryId);
+    if (rootFolder != null && rootFolder.Ok) {
+      let list = rootFolder.Data as Array<VirtualFolderInfo>;
+      for (const item of list) {
+        let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(item.Id!, item.Name!));
+        node.icon = 'folder';
+        node.key=item.Id!;
+        this.nodes.push(node);
+      }
+
     }
     this.message.info("init");
-    this.nzTableComponent?.cdkVirtualScrollViewport?.renderedRangeStream.subscribe(()=>{
+    this.nzTableComponent?.cdkVirtualScrollViewport?.renderedRangeStream.subscribe(() => {
       this.message.info("renderedRangeStream");
     });
   }
@@ -85,8 +99,73 @@ export class FileBrowserComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   nzEvent(event: NzFormatEmitEvent): void {
-    console.log(event);
+    if (event.eventName === 'expand') {
+      let node: TreeNodeModel = <TreeNodeModel>event.node;
+      if (node?.getChildren().length === 0 && node?.isExpanded) {
+        this.loadNode(node.key).then(data => {
+          node.addChildren(data);
+        });
+      }
+    }
 
+  }
+  loadNode(key: string): Promise<NzTreeNodeOptions[]> {
+    return new Promise(resolve => {
+      setTimeout(
+        () => {
+          let array: Array<TreeNodeModel> = new Array<TreeNodeModel>();
+          let a = this.notebookService.GetNotebookChildren(key).subscribe((apiRe: ApiRep) => {
+              if (apiRe.Ok == true) {
+                let data: Array<Notebook> = apiRe.Data;
+
+                for (const notebook of data) {
+                  if (notebook.IsDeleted || notebook.IsTrash) {
+                    continue;
+                  }
+                  let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.Id, notebook.Title));
+                  node.title = notebook.Title;
+                  node.key = notebook.Id;
+
+                  node.icon = 'folder';
+                  array.push(node)
+                }
+                //{title: 'leaf', key: '1001', icon: 'folder'},
+                console.log(this.nodes)
+                let b = this.noteService.GetNotebookChildren(key).subscribe((apiRe: ApiRep) => {
+                  if (apiRe.Ok == true) {
+                    let data: Array<Note> = apiRe.Data;
+
+                    for (const note of data) {
+                      if (note.IsDeleted || note.IsTrash) {
+                        continue;
+                      }
+                      let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.Id, note.Title));
+                      node.title = note.Title;
+                      node.key = note.Id;
+                      node.isLeaf = true;
+                      node.isMarkdown = note.IsMarkdown;
+                      if (node.isMarkdown) {
+                        node.icon = 'file-markdown';
+                      } else {
+                        //<i nz-icon nzType="html5" nzTheme="outline"></i>
+                        node.icon = 'html5';
+                      }
+
+                      array.push(node)
+                    }
+                    //{title: 'leaf', key: '1001', icon: 'folder'},
+                    console.log(this.nodes)
+                    resolve(array);
+                  }
+                });
+              }
+            }
+          );
+        }
+        ,
+        10
+      );
+    });
   }
 
   contextMenu(event: NzFormatEmitEvent, menu: NzDropdownMenuComponent): void {

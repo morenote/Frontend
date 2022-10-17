@@ -1,11 +1,12 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {_HttpClient} from '@delon/theme';
 import {NzSafeAny} from 'ng-zorro-antd/core/types';
-import {NotesRepositoryService} from "../../../../../services/NotesRepository/notes-repository.service";
+import {RepositoryService} from "../../../../../services/repository/repository.service";
 import {ApiRep} from "../../../../../models/api/api-rep";
-import {NotesRepository} from "../../../../../models/entity/notes-repository";
+import {Repository} from "../../../../../models/entity/repository";
 import {Router} from "@angular/router";
 import {NzMessageService} from "ng-zorro-antd/message";
+import {RepositoryType} from "../../../../../models/enum/repository-type";
 
 @Component({
   selector: 'app-account-center-documents',
@@ -15,18 +16,18 @@ import {NzMessageService} from "ng-zorro-antd/message";
 })
 export class ProAccountCenterDocumentsComponent {
   listLoading = true;
-  public list: Array<NotesRepository> = [];
+  public list: Array<Repository> = [];
 
   constructor(private http: _HttpClient,
               private cdr: ChangeDetectorRef,
               public router:Router,
-              public notesRepositoryService: NotesRepositoryService,
+              public repositoryService: RepositoryService,
               private message:NzMessageService) {
-    notesRepositoryService.GetMyNoteRepository().subscribe(
+    repositoryService.GetMyRepository(RepositoryType.NoteRepository).subscribe(
       (apiRe: ApiRep) => {
         console.log(apiRe.Ok)
         if (apiRe.Ok) {
-          let notesRepositoryList: Array<NotesRepository> = apiRe.Data as Array<NotesRepository>;
+          let notesRepositoryList: Array<Repository> = apiRe.Data as Array<Repository>;
           console.log(notesRepositoryList.length)
           for (const notesRepository of notesRepositoryList) {
             console.log(notesRepository.Name)
@@ -62,13 +63,13 @@ export class ProAccountCenterDocumentsComponent {
     return result.toString();
   }
 
-  OnCardClick(repository: NotesRepository) {
+  OnCardClick(repository: Repository) {
     //alert(repository.Name);
     this.router.navigate(['/note/editor'],{queryParams:{repository:repository.Id}})
   }
 
   async OnDelete(noteRepositoryId: string) {
-    let apiRe = await this.notesRepositoryService.DeleteNoteRepository(noteRepositoryId);
+    let apiRe = await this.repositoryService.DeleteRepository(noteRepositoryId);
     if (apiRe.Ok == true) {
       //alert(apiRe.Ok)
       this.list=this.list.filter(item => item.Id != noteRepositoryId);

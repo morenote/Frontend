@@ -2,11 +2,14 @@
 
   "version": "0.2.0",
   "configurations": [
+    
     {
       "type": "msedge",
       "request": "launch",
+      "preLaunchTask": "build",
       "name": "Launch Chrome against localhost",
       "url": "http://localhost:3201",
+      
       "webRoot": "${workspaceRoot}",
       "sourceMaps": true
     }

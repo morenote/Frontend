@@ -2,14 +2,21 @@
 
   "version": "0.2.0",
   "configurations": [
+
     
     {
+      "name": "debug with node",
+      "type": "node",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "sourceMaps": true
+    },
+    {
+      "name": "debug with msedge",
       "type": "msedge",
       "request": "launch",
       "preLaunchTask": "build",
-      "name": "Launch Chrome against localhost",
       "url": "http://localhost:3201",
-      
       "webRoot": "${workspaceRoot}",
       "sourceMaps": true
     }

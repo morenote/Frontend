@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzContextMenuService, NzDropdownMenuComponent, NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -38,6 +38,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   searchValue = '';
   noteTitle?: string;
   isSpinning = false;
+  switchValue: boolean = false;
 
   //<i nz-icon nzType="folder" nzTheme="outline"></i>
   constructor(
@@ -505,5 +506,8 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
 
   pushToBlog() {
     this.message.info('发布到VuePress');
+  }
+  BlogSwitchChange(event: any) {
+    this.message.info(event);
   }
 }

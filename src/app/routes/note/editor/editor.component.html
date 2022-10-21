@@ -1,10 +1,10 @@
-<div class="ant-card ">
+<div class="ant-card">
   <div nz-row>
     <div nz-col nzFlex="300px">
       <nz-tabset nzType="card">
-        <nz-tab  nzTitle='仓库'>
+        <nz-tab nzTitle="仓库">
           <nz-input-group [nzSuffix]="suffixIcon" style="margin-bottom: 1rem">
-            <input type="text" nz-input placeholder="搜索笔记" [(ngModel)]="searchValue"  />
+            <input type="text" nz-input placeholder="搜索笔记" [(ngModel)]="searchValue" />
           </nz-input-group>
           <ng-template #suffixIcon>
             <i nz-icon nzType="search"></i>
@@ -26,11 +26,23 @@
             (nzExpandChange)="nzEvent($event)"
           ></nz-tree>
           <nz-dropdown-menu #menu="nzDropdownMenu" #action="nzDropdownMenu">
-            <ul nz-menu style="min-width:8rem">
-              <li nz-menu-item>复制</li>
-              <li nz-menu-item>剪切</li>
-              <li nz-menu-item (click)="OnReName()">重命名</li>
-              <li nz-menu-item (click)="onMenuDelete()">删除</li>
+            <ul nz-menu style="min-width: 8rem">
+              <li nz-submenu nzTitle="编辑">
+                <ul>
+                  <li nz-menu-item>复制</li>
+                  <li nz-menu-item>剪切</li>
+                  <li nz-menu-item (click)="OnReName()">重命名</li>
+                  <li nz-menu-item (click)="onMenuDelete()">删除</li>
+                </ul>
+              </li>
+              <li nz-submenu nzTitle="博客">
+                <ul>
+                  <li nz-menu-item>前往</li>
+                  <li nz-menu-item>公开</li>
+                  <li nz-menu-item (click)="OnReName()">上锁</li>
+                  <li nz-menu-item (click)="onMenuDelete()">解锁</li>
+                </ul>
+              </li>
               <li nz-submenu nzTitle="分享">
                 <ul>
                   <li nz-menu-item>发送到我的好友</li>
@@ -49,8 +61,8 @@
               </li>
               <li nz-submenu nzTitle="新建">
                 <ul>
-                  <li nz-menu-item (click)="onCreateNotebook($event,false)">文件夹</li>
-                  <li nz-menu-item (click)="onCreateNotebook($event,true)">根文件夹</li>
+                  <li nz-menu-item (click)="onCreateNotebook($event, false)">文件夹</li>
+                  <li nz-menu-item (click)="onCreateNotebook($event, true)">根文件夹</li>
                   <li nz-menu-item (click)="onCreateMdDoc()">markdown文档</li>
                   <li nz-menu-item (click)="onCreateHtmlDoc()">富文本文档</li>
                 </ul>
@@ -93,13 +105,13 @@
             </ul>
           </nz-dropdown-menu>
         </nz-tab>
-        <nz-tab  nzTitle='工具'>
-          <div style="height:50rem">
-            <ul nz-menu nzMode="inline" nzTheme='light' style="margin-bottom: 1rem">
+        <nz-tab nzTitle="工具">
+          <div style="height: 50rem">
+            <ul nz-menu nzMode="inline" nzTheme="light" style="margin-bottom: 1rem">
               <li nz-submenu nzTitle="搜索" nzIcon="search">
                 <ul>
-                  <li nz-menu-item >搜索笔记</li>
-                  <li nz-menu-item >搜索附件 </li>
+                  <li nz-menu-item>搜索笔记</li>
+                  <li nz-menu-item>搜索附件 </li>
                 </ul>
               </li>
               <li nz-submenu nzTitle="管理" nzIcon="setting">
@@ -111,7 +123,6 @@
                   <li nz-menu-item>WebHook</li>
                 </ul>
               </li>
-
 
               <li nz-submenu nzTitle="回收" nzIcon="delete">
                 <ul>
@@ -126,24 +137,52 @@
                 </ul>
               </li>
             </ul>
-
           </div>
+        </nz-tab>
+        <nz-tab nzTitle="属性">
+          <div style="height: 50rem; padding: 2rem">
+            <span>My Blog:</span>
+            <nz-switch
+              (ngModelChange)="BlogSwitchChange($event)"
+              style="padding-left: 1rem"
+              [(ngModel)]="switchValue"
+              nzCheckedChildren="Enable"
+              nzUnCheckedChildren="Disable"
+            ></nz-switch>
+            <br />
+            <p nz-typography> Allow notes to be posted as a blog </p>
 
+            <span>Public all:</span>
+            <nz-switch
+              (ngModelChange)="BlogSwitchChange($event)"
+              style="padding-left: 1rem"
+              [(ngModel)]="switchValue"
+              nzCheckedChildren="Enable"
+              nzUnCheckedChildren="Disable"
+            ></nz-switch>
+            <p nz-typography> Make all notes public as a blog </p>
+
+            <span>Protect Mode:</span>
+            <nz-switch
+              (ngModelChange)="BlogSwitchChange($event)"
+              style="padding-left: 1rem"
+              [(ngModel)]="switchValue"
+              nzCheckedChildren="Enable"
+              nzUnCheckedChildren="Disable"
+            ></nz-switch>
+            <p nz-typography> Protect your data by disabling dangerous operations </p>
+          </div>
         </nz-tab>
       </nz-tabset>
       <app-re-name-modal-component #reNameModalComponent></app-re-name-modal-component>
-      <app-serch-note-modal    #serchNoteModalComponent> </app-serch-note-modal>
+      <app-serch-note-modal #serchNoteModalComponent> </app-serch-note-modal>
     </div>
     <div nz-col nzFlex="auto">
       <div nz-row>
-        <input nz-input placeholder="Basic usage" [(ngModel)]="noteTitle"    (keydown)="onKeyDown($event)" style="width: 500px"/>
+        <input nz-input placeholder="Basic usage" [(ngModel)]="noteTitle" (keydown)="onKeyDown($event)" style="width: 500px" />
 
         <div style="vertical-align: center">
-          <nz-tag
-            *ngFor="let tag of tags; let i = index"
-            [nzMode]="i === 0 ? 'default' : 'closeable'"
-            (nzOnClose)="handleClose(tag)"
-          >
+          <nz-tag *ngFor="let tag of tags; let i = index" [nzMode]="i === 0 ? 'default' : 'closeable'" (nzOnClose)="handleClose(tag)">
             {{ sliceTagName(tag) }}
           </nz-tag>
           <nz-tag *ngIf="!inputVisible" class="editable-tag" nzNoAnimation (click)="showInput()">
@@ -157,16 +196,22 @@
             *ngIf="inputVisible"
             type="text"
             [(ngModel)]="inputValue"
-            style="width: 78px;"
+            style="width: 78px"
             (blur)="handleInputConfirm()"
             (keydown.enter)="handleInputConfirm()"
           />
         </div>
-        <nz-switch (ngModelChange)="onChangeEditorEditable($event)" style="margin-left: 1rem" [ngModel]="false" nzCheckedChildren="编辑模式" nzUnCheckedChildren="预览模式"></nz-switch>
+        <nz-switch
+          (ngModelChange)="onChangeEditorEditable($event)"
+          style="margin-left: 1rem"
+          [ngModel]="false"
+          nzCheckedChildren="编辑模式"
+          nzUnCheckedChildren="预览模式"
+        ></nz-switch>
       </div>
-      <nz-row  >
+      <nz-row>
         <div>
-          <app-VditorMarkdownEditor (keydown)="onKeyDown($event)" #vditor *ngIf="isMarkdown"  ></app-VditorMarkdownEditor>
+          <app-VditorMarkdownEditor (keydown)="onKeyDown($event)" #vditor *ngIf="isMarkdown"></app-VditorMarkdownEditor>
           <app-textbus-editor (keydown)="onKeyDown($event)" #textbus *ngIf="!isMarkdown"></app-textbus-editor>
         </div>
       </nz-row>

@@ -176,9 +176,9 @@ export class UserLoginComponent implements OnDestroy {
     }, 2000)
     this.cdr.detectChanges();
     try {
-      let requestNumber=await  this.authService.TackNumber();
+      let requestNumber=await  this.authService.TakeSessionCode();
       //登录
-      let  apiRe = await this.authService.LoginByPassword(String(this.type), this.userName.value, this.password.value,requestNumber);
+      let  apiRe = await this.authService.PasswordChallenge(String(this.type), this.userName.value, this.password.value,requestNumber);
       if (this.error) {
         this.loading = false;
         alert("无法正常登录");
@@ -200,7 +200,7 @@ export class UserLoginComponent implements OnDestroy {
            return;
          }
       }
-      let userToken=await  this.authService.TakeToken(this.userName.value,requestNumber);
+      let userToken=await  this.authService.SubmitLogin(this.userName.value,requestNumber);
       // 清空路由复用信息
       this.reuseTabService.clear();
       // 设置用户Token信息

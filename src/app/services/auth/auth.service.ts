@@ -41,14 +41,14 @@ export class AuthService {
   }
 
   /**
-   * 通过用户口令登录
+   * 通过用户口令挑战系统
    * @param type
    * @param email
    * @param pwd
-   * @param requestNumber
+   * @param session
    * @constructor
    */
-  public LoginByPassword(type: string, email: string, pwd: string,requestNumber:string): Promise<ApiRep> {
+  public PasswordChallenge(type: string, email: string, pwd: string, sessionCode:string): Promise<ApiRep> {
     return  new Promise<ApiRep>(async resolve => {
       let scDTO: SecurityConfigDTO;
       //获得服务器密码安全策略
@@ -73,21 +73,25 @@ export class AuthService {
       let userInfo = apiRe.Data as User;
       pwd=this.sjj1962.TransferEncryptionIfUser(pwd,userInfo,scDTO);
 
-      let url = this.config.baseURL + '/api/Auth/Login?_allow_anonymous=true';
+      let url = this.config.baseURL + '/api/Auth/PasswordChallenge?_allow_anonymous=true';
       let formData = new FormData();
       formData.set('type', type!);
       formData.set('email', email!);
       formData.set('pwd', pwd);
-      formData.set('requestNumber', requestNumber);
+      formData.set('sessionCode', sessionCode);
       let result = this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
           resolve(apiRe);
       })
     })
   }
 
-  public TackNumber():Promise<string>{
+  /**
+   * 获取Session号码用于维护会话状态
+   * @constructor
+   */
+  public TakeSessionCode():Promise<string>{
     return  new Promise<string>(resolve => {
-      let url = this.config.baseURL + '/api/Auth/TakeNumber?_allow_anonymous=true';
+      let url = this.config.baseURL + '/api/Auth/TakeSessionCode?_allow_anonymous=true';
       let result = this.http.get<ApiRep>(url).subscribe(apiRe=>{
         if (apiRe!=null && apiRe.Ok){
           resolve(apiRe.Data);
@@ -99,7 +103,11 @@ export class AuthService {
   }
 
 
-
+  /**
+   * 获取用户登录设置
+   * @param email
+   * @constructor
+   */
   public GetUserLoginSecurityPolicyLevel(email:string):Promise<LoginSecurityPolicyLevel>{
     return  new Promise<LoginSecurityPolicyLevel>((resolve)=>{
       let url = this.config.baseURL + '/api/Auth/GetUserLoginSecurityPolicyLevel?_allow_anonymous=true';
@@ -115,20 +123,24 @@ export class AuthService {
     });
   }
 
-  public  TakeToken(email:string,requestNumber:string):Promise<UserToken>{
+  /**
+   * 提交登录，并获得token
+   * token获取后，sission号码失效
+   * @param email
+   * @param sessionCode
+   * @constructor
+   */
+  public  SubmitLogin(email:string, sessionCode:string):Promise<UserToken>{
     return  new Promise<UserToken>(resolve => {
-      let url = this.config.baseURL + '/api/Auth/TakeToken';
+      let url = this.config.baseURL + '/api/Auth/SubmitLogin';
       let formData = new FormData();
       formData.set('email', email);
-      formData.set('requestNumber', requestNumber);
+      formData.set('sessionCode', sessionCode);
       this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
         if (apiRe!=null){
         return   resolve(apiRe.Data);
         }
       });
-
-
-
     })
   }
 

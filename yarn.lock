@@ -11155,6 +11155,11 @@ trough@^1.0.0:
   resolved "https://registry.npmmirror.com/trough/-/trough-1.0.5.tgz#b8b639cefad7d0bb2abd37d433ff8293efa5f406"
   integrity sha512-rvuRbTarPXmMb79SmzEp8aqXNKcK+y0XaB298IXueQ8I2PsrATcPBCSPyK/dDNa2iWOhKlfNnOjdAOTBU/nkFA==
 
+ts-indexdb@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.npmmirror.com/ts-indexdb/-/ts-indexdb-0.0.6.tgz#9234ef41eb3d2b9df39c0817b00a3bbf673fd008"
+  integrity sha512-65L4VgqRVrb9HOAleMBkOftqmmtgu1iLF9PtwTNZtQKPlSHUQ/Yof5m70S/c5FabALT/EPj60ZuPIK82WfSuBQ==
+
 ts-node@10.9.1:
   version "10.9.1"
   resolved "https://registry.npmmirror.com/ts-node/-/ts-node-10.9.1.tgz#e73de9102958af9e1f0b168a6ff320e25adcff4b"

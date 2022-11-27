@@ -73,6 +73,7 @@
     "rxjs": "~7.5.0",
     "screenfull": "^6.0.2",
     "sm-crypto": "^0.3.8",
+    "ts-indexdb": "^0.0.6",
     "tslib": "^2.3.0",
     "uuid-int": "^3.1.0",
     "vditor": "^3.8.11",

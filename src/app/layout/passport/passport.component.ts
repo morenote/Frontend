@@ -9,16 +9,16 @@ import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 export class LayoutPassportComponent implements OnInit {
   links = [
     {
-      title: '帮助',
-      href: ''
+      title: 'Wiki',
+      href: 'https://github.com/morenote/Server/wiki'
     },
     {
-      title: '隐私',
-      href: ''
+      title: 'Blog',
+      href: 'https://www.morenote.top/blog/14e884a2fc021000/Index'
     },
     {
-      title: '条款',
-      href: ''
+      title: 'Issues',
+      href: 'https://github.com/morenote/Server/issues'
     }
   ];
 

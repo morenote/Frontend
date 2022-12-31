@@ -13,7 +13,7 @@ cd Frontend #进入工作文件夹
 node -v # 查看 Node.js 当前版本
 npm install -g pnpm #安装pnpm
 pnpm config set registry https://registry.npmmirror.com/ #设置淘宝镜像（可选）
-yarn global add @angular/cli #安装Angular Cli
+pnpm add -g @angular/cli #安装Angular Cli
 pnpm install 安装依赖
 ```
 ## IDE选择

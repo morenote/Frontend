@@ -13,6 +13,7 @@ import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security
 import {LogUtil} from "../../shared/utils/log-util";
 import {PayLoadDTO} from "../../models/DTO/Api/pay-load-d-t-o";
 import {DataSign} from "../../models/DTO/USBKey/data-sign";
+import {LocalForageService} from "../data-storage/local-forage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,7 @@ export class NoteService {
   constructor(public authService: AuthService,
               public http: HttpClient,
               public epass: EPass2001Service,
+              public  localForageService:LocalForageService,
               public configService: ConfigService) {
     let userToken = this.configService.GetUserToken();
     this.userId = userToken.UserId;

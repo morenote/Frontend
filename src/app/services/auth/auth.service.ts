@@ -108,9 +108,9 @@ export class AuthService {
    * @param email
    * @constructor
    */
-  public GetUserLoginSecurityPolicyLevel(email:string):Promise<LoginSecurityPolicyLevel>{
+  public GetUserLoginSettings(email:string):Promise<LoginSecurityPolicyLevel>{
     return  new Promise<LoginSecurityPolicyLevel>((resolve)=>{
-      let url = this.config.baseURL + '/api/Auth/GetUserLoginSecurityPolicyLevel?_allow_anonymous=true';
+      let url = this.config.baseURL + '/api/Auth/GetUserLoginSettings?_allow_anonymous=true';
       let httpParams = new HttpParams()
         .append('email', email);
       let result = this.http.get<ApiRep>(url, {params: httpParams}).subscribe(apiRe=>{
@@ -168,9 +168,9 @@ export class AuthService {
   // }
 
 
-  SetUserLoginSecurityPolicyLevel(level: LoginSecurityPolicyLevel) :Promise<ApiRep>{
+  SetUserLoginSettings(level: LoginSecurityPolicyLevel) :Promise<ApiRep>{
     return  new Promise<ApiRep>((resolve)=>{
-      let url = this.config.baseURL + '/api/Auth/SetUserLoginSecurityPolicyLevel';
+      let url = this.config.baseURL + '/api/Auth/SetUserLoginSettings';
       let formData = new FormData();
       formData.set('token', this.configService.GetUserToken().Token);
       formData.set('level', level.toString());

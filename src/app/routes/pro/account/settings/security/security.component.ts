@@ -61,7 +61,7 @@ export class ProAccountSettingsSecurityComponent {
     this.fido2list.set("key4", "key4 — 已于 2021 年 01 月 01 日注册");
     this.fido2list.set("key5", "key5 — 已于 2021 年 01 月 01 日注册");
     //获得安全策略
-    let level = await this.authService.GetUserLoginSecurityPolicyLevel(this.userToken!.Email!);
+    let level = await this.authService.GetUserLoginSettings(this.userToken!.Email!);
 
     this.levelText=LoginSecurityPolicyLevel[level];
     this.levelDes=LoginSecurityPolicyLevelConvert.toString(level);
@@ -312,7 +312,7 @@ export class ProAccountSettingsSecurityComponent {
               this.nzMessage.error("选择的安全策略无效");
               return;
           }
-          let apiRe = await this.authService.SetUserLoginSecurityPolicyLevel(level!);
+          let apiRe = await this.authService.SetUserLoginSettings(level!);
            if (apiRe.Ok){
              this.nzMessage.success("设置"+value+"登录安全策略成功")
              this.levelText=value;

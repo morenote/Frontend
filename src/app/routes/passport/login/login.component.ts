@@ -192,7 +192,7 @@ export class UserLoginComponent implements OnDestroy {
         return;
       }
       //获得登录方式
-      let level=await  this.authService.GetUserLoginSecurityPolicyLevel(this.userName.value);
+      let level=await  this.authService.GetUserLoginSettings(this.userName.value);
       if (level==LoginSecurityPolicyLevel.compliant){
          let apoRe=  await  this.epass.login(this.userName.value,requestNumber);
          if (apiRe==null || !apiRe.Ok){
@@ -259,7 +259,7 @@ export class UserLoginComponent implements OnDestroy {
           this.nzMessage.error("请先填写登录邮箱");
           return;
         }
-        let  level=await this.authService.GetUserLoginSecurityPolicyLevel(this.userName.value);
+        let  level=await this.authService.GetUserLoginSettings(this.userName.value);
         this.nzMessage.info("已经获得用户安全策略："+LoginSecurityPolicyLevel[level])
         await this.sleep(2000);
         if (level > 1 && this.password.value==null){

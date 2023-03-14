@@ -14,7 +14,7 @@ import {LoginSecurityPolicyLevel} from "../../models/enum/LoginSecurityPolicyLev
 import {UserService} from "../User/user.service";
 import {SJJ1962Service} from "../Cryptography/sj1962/s-j-j1962.service";
 import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security-config-dto";
-import {User} from "../../models/entity/user";
+import {UserInfo} from "../../models/entity/userInfo";
 import {LogUtil} from "../../shared/utils/log-util";
 import {Base64Util} from "../../shared/utils/base64-util";
 
@@ -64,13 +64,9 @@ export class AuthService {
       }
 
       //获得用户密码算法
-      apiRe = await this.userService.GetUserInfoByEmail(email);
-      if (apiRe == null || !apiRe.Ok) {
-        resolve(apiRe);
-        LogUtil.log("GetUserInfoByEmail is error");
-        return ;
-      }
-      let userInfo = apiRe.Data as User;
+      let userInfo = await this.userService.GetUserInfoByEmail(email);
+
+
       pwd=this.sjj1962.TransferEncryptionIfUser(pwd,userInfo,scDTO);
 
       let url = this.config.baseURL + '/api/Auth/PasswordChallenge?_allow_anonymous=true';

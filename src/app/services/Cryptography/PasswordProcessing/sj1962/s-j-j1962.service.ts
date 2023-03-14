@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import {SecurityConfigDTO} from "../../../models/DTO/Config/SecurityConfig/security-config-dto";
-import {HexUtil} from "../../../shared/utils/hex-util";
+import {GMService} from "../../GM/gm.service";
+import {SecurityConfigDTO} from "../../../../models/DTO/Config/SecurityConfig/security-config-dto";
+import {LogUtil} from "../../../../shared/utils/log-util";
+import {HexUtil} from "../../../../shared/utils/hex-util";
 import {Base64} from "js-base64";
-import {User} from "../../../models/entity/user";
-import {GMService} from "../GM/gm.service";
-import {LogUtil} from "../../../shared/utils/log-util";
+import {UserInfo} from "../../../../models/entity/userInfo";
+import {PasswordAnswering} from "../password-answering";
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class SJJ1962Service {
+export class SJJ1962Service  implements PasswordAnswering{
 
   constructor(public  gm:GMService) { }
   public  TransferEncryptionIf(pwd:string,scDto:SecurityConfigDTO):string{
@@ -25,7 +27,14 @@ export class SJJ1962Service {
     return  pwd;
   }
 
-  public  TransferEncryptionIfUser(pwd:string,user:User,scDto:SecurityConfigDTO):string{
+  /**
+   * 对用户的口令处理
+   * @param pwd
+   * @param user
+   * @param scDto
+   * @constructor
+   */
+  public  TransferEncryptionIfUser(pwd:string, user:UserInfo, scDto:SecurityConfigDTO):string{
 
     if (user.PasswordHashAlgorithm=="sjj1962"){
       pwd=pwd.padEnd(16,"0");

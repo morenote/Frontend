@@ -1,4 +1,4 @@
-export class User {
+export class UserInfo {
   public Id?:string;
   public Email?:string;
   public Verified?:string;

@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
 import {ApiRep} from "../../models/api/api-rep";
 import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security-config-dto";
 import {GMService} from "../Cryptography/GM/gm.service";
-import {User} from "../../models/entity/user";
+import {UserInfo} from "../../models/entity/userInfo";
 import {HexUtil} from "../../shared/utils/hex-util";
 import {Base64} from "js-base64";
 import {SJJ1962Service} from "../Cryptography/sj1962/s-j-j1962.service";
@@ -166,19 +166,24 @@ export class UserService {
    * 通过邮箱获得用户详情
    * @constructor
    */
-  public GetUserInfoByEmail(email: string): Promise<ApiRep> {
-    return new Promise<ApiRep>(resolve => {
+  public GetUserInfoByEmail(email: string): Promise<UserInfo> {
+    return new Promise<UserInfo>(resolve => {
       let url = this.config.baseURL + '/api/User/GetUserInfoByEmail';
       let httpParams = new HttpParams()
         .append('email', email!);
       let result = this.http.get<ApiRep>(url, {params: httpParams}).subscribe(apiRe => {
-        resolve(apiRe);
+       if(apiRe!=null&&apiRe.Ok){
+         let user= apiRe.Data as UserInfo;
+          resolve(user);
+       }else {
+        throw new Error("GetUserInfoByEmail is Error");
+       }
       })
     })
   }
 
-  public GetUserInfo(): Promise<User> {
-    return new Promise<User>(resolve => {
+  public GetUserInfo(): Promise<UserInfo> {
+    return new Promise<UserInfo>(resolve => {
       let url = this.config.baseURL + '/api/User/GetUserInfoByUserId';
       let httpParams = new HttpParams()
         .append('userId', this.userId!);
@@ -216,7 +221,7 @@ export class UserService {
       //获得用户信息
       apiRe = await this.GetUserInfoByToken();
       if (apiRe != null && apiRe.Ok) {
-        let userInfo = apiRe.Data as User;
+        let userInfo = apiRe.Data as UserInfo;
         //判断旧密码是否需要转加密
         oldPwd = this.sjj1962.TransferEncryptionIfUser(oldPwd, userInfo, scDTO);
       } else {

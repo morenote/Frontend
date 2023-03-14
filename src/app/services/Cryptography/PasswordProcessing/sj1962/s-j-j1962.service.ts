@@ -11,7 +11,7 @@ import {PasswordAnswering} from "../password-answering";
 @Injectable({
   providedIn: 'root'
 })
-export class SJJ1962Service  implements PasswordAnswering{
+export class SJJ1962Service {
 
   constructor(public  gm:GMService) { }
   public  TransferEncryptionIf(pwd:string,scDto:SecurityConfigDTO):string{

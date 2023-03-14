@@ -10,13 +10,14 @@ import {GMService} from "../Cryptography/GM/gm.service";
 import {UserInfo} from "../../models/entity/userInfo";
 import {HexUtil} from "../../shared/utils/hex-util";
 import {Base64} from "js-base64";
-import {SJJ1962Service} from "../Cryptography/sj1962/s-j-j1962.service";
+
 import {DataSign} from "../../models/DTO/USBKey/data-sign";
 import {SignData} from "../../models/DTO/USBKey/sign-data";
 import {DigitalEnvelope} from "../../models/DTO/Api/digital-envelope";
 import {LogUtil} from "../../shared/utils/log-util";
 import {EPass2001Service} from "../Usbkey/EnterSafe/ePass2001/e-pass2001.service";
 import {PayLoadDTO} from "../../models/DTO/Api/pay-load-d-t-o";
+import { SJJ1962Service } from "../Cryptography/PasswordProcessing/sj1962/s-j-j1962.service";
 
 @Injectable({
   providedIn: 'root'

@@ -34,16 +34,18 @@ export class SJJ1962Service  implements PasswordAnswering{
    * @param scDto
    * @constructor
    */
-  public  TransferEncryptionIfUser(pwd:string, user:UserInfo, scDto:SecurityConfigDTO):string{
-
+  public  TransferEncryptionIfUser(pwd:string, user:UserInfo, scDto:SecurityConfigDTO):Promise<string>{
+  return  new Promise(resolve => {
     if (user.PasswordHashAlgorithm=="sjj1962"){
       pwd=pwd.padEnd(16,"0");
       LogUtil.log("pwd_padEnd="+pwd);
       let enc=this.gm.TransferEncryption(pwd,scDto.TransEncryptedPublicKey!);
       enc=HexUtil.hexToBase64(enc);
-      return  enc;
+      resolve(enc);
     }
     pwd=Base64.encode(pwd);
-    return  pwd;
+    resolve(pwd);
+  })
+
   }
 }

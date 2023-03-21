@@ -12,5 +12,5 @@ export interface PasswordAnswering {
    * @param scDto 服务器安全设置
    * @constructor
    */
-    TransferEncryptionIfUser(pwd:string, user:UserInfo, scDto:SecurityConfigDTO):string;
+    TransferEncryptionIfUser(pwd:string, user:UserInfo, scDto:SecurityConfigDTO):Promise<string>;
 }

@@ -309,6 +309,23 @@
               "i18n": "menu.account.settings"
             }
           ]
+        },
+        {
+          "text": "Setting",
+          "i18n": "menu.settings",
+          "icon": "anticon-setting",
+          "children": [
+            {
+              "text": "center",
+              "link": "/pro/account/center",
+              "i18n": "menu.account.center"
+            },
+            {
+              "text": "settings",
+              "link": "/pro/account/settings",
+              "i18n": "menu.account.settings"
+            }
+          ]
         }
       ]
     },

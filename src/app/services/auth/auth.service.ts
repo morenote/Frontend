@@ -68,7 +68,7 @@ export class AuthService {
       let userInfo = await this.userService.GetUserInfoByEmail(email);
 
 
-      pwd=this.sjj1962.TransferEncryptionIfUser(pwd,userInfo,scDTO);
+      pwd=await  this.sjj1962.TransferEncryptionIfUser(pwd,userInfo,scDTO);
 
       let url = this.config.baseURL + '/api/Auth/PasswordChallenge?_allow_anonymous=true';
       let formData = new FormData();

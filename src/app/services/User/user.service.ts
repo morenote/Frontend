@@ -224,7 +224,7 @@ export class UserService {
       if (apiRe != null && apiRe.Ok) {
         let userInfo = apiRe.Data as UserInfo;
         //判断旧密码是否需要转加密
-        oldPwd = this.sjj1962.TransferEncryptionIfUser(oldPwd, userInfo, scDTO);
+        oldPwd =await this.sjj1962.TransferEncryptionIfUser(oldPwd, userInfo, scDTO);
       } else {
         //返回失败
         resolve(apiRe)

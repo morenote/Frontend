@@ -17,7 +17,7 @@ import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security
 import {UserInfo} from "../../models/entity/userInfo";
 import {LogUtil} from "../../shared/utils/log-util";
 import {Base64Util} from "../../shared/utils/base64-util";
-import {SJJ1962Service} from "../Cryptography/PasswordProcessing/sj1962/s-j-j1962.service";
+import { SJJ1962Service } from "../Cryptography/PasswordProcessing/sj1962/s-j-j1962.service";
 
 
 
@@ -68,7 +68,7 @@ export class AuthService {
       let userInfo = await this.userService.GetUserInfoByEmail(email);
 
 
-      pwd=await this.sjj1962.TransferEncryptionIfUser(pwd,userInfo,scDTO);
+      pwd=await  this.sjj1962.TransferEncryptionIfUser(pwd,userInfo,scDTO);
 
       let url = this.config.baseURL + '/api/Auth/PasswordChallenge?_allow_anonymous=true';
       let formData = new FormData();

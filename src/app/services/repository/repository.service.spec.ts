@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
+import {RepositoryService} from "./repository.service";
 
-import { RepositoryService } from './notes-repository.service';
+
 
 describe('NotesRepositoryService', () => {
   let service: RepositoryService;

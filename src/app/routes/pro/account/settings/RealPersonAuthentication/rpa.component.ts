@@ -7,6 +7,8 @@ import {EPass2001Service} from "../../../../../services/Usbkey/EnterSafe/ePass20
 import {SignData} from "../../../../../models/DTO/USBKey/sign-data";
 import {UserService} from "../../../../../services/User/user.service";
 import {RealNameInformation} from "../../../../../models/entity/User/real-name-information";
+import {WebsiteConfig} from "../../../../../models/config/website-config";
+import {ConfigService} from "../../../../../services/config/config.service";
 
 interface ProAccountSettingsUser {
   email: string;
@@ -38,12 +40,17 @@ interface ProAccountSettingsCity {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProRealPersonAuthenticationComponent implements OnInit {
+  config?: WebsiteConfig;
+
   constructor(private http: _HttpClient,
+              private configService: ConfigService,
               public nzMessage: NzMessageService,
               private cdr: ChangeDetectorRef,
               private  userService:UserService,
               private epass:EPass2001Service,
-              private msg: NzMessageService) {}
+              private msg: NzMessageService) {
+    this.config = configService.GetWebSiteConfig();
+  }
   avatar = '';
   userLoading = true;
   user!: ProAccountSettingsUser;
@@ -54,7 +61,7 @@ export class ProRealPersonAuthenticationComponent implements OnInit {
   cities: ProAccountSettingsCity[] = [];
 
   async ngOnInit() {
-    zip(this.http.get('/api/user/current'), this.http.get('/api/geo/province')).subscribe(
+    zip(this.http.get(this.config?.baseURL +'/api/user/current'), this.http.get(this.config?.baseURL +'/api/geo/province')).subscribe(
       ([user, province]: [ProAccountSettingsUser, ProAccountSettingsCity[]]) => {
         this.userLoading = false;
         this.user = user;
@@ -83,7 +90,7 @@ export class ProRealPersonAuthenticationComponent implements OnInit {
   }
 
   choProvince(pid: string, cleanCity: boolean = true): void {
-    this.http.get(`/api/geo/${pid}`).subscribe(res => {
+    this.http.get(this.config?.baseURL +`/api/geo/${pid}`).subscribe(res => {
       this.cities = res;
       if (cleanCity) {
         this.user.geographic.city.key = '';

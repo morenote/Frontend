@@ -195,7 +195,7 @@ export class UserLoginComponent implements OnDestroy {
       let level=await  this.authService.GetUserLoginSettings(this.userName.value);
       if (level==LoginSecurityPolicyLevel.compliant){
          let apoRe=  await  this.epass.login(this.userName.value,requestNumber);
-         if (apiRe==null || !apiRe.Ok){
+         if (apoRe==null || !apoRe.Ok){
            this.nzMessage.error("USBKey身份鉴别失败")
            return;
          }

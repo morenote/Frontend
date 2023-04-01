@@ -40,7 +40,7 @@ export class EPass2001Service {
     }
   }
 
-  public SendChallengeToePass2001(serverChallenge: ServerChallenge): Promise<ApiRep> {
+  public async SendChallengeToePass2001(serverChallenge: ServerChallenge): Promise<ApiRep> {
     return  new Promise<ApiRep>(resolve => {
       let message = new ClientMessage();
       message.MessageType = ClientMessageType.Challenge;
@@ -56,7 +56,7 @@ export class EPass2001Service {
       });
     })
   }
-  public SendSignToePass2001(signData: SignData): Promise<DataSign> {
+  public async SendSignToePass2001(signData: SignData): Promise<DataSign> {
     return  new Promise<DataSign>(resolve => {
       let message = new ClientMessage();
       message.MessageType = ClientMessageType.Sign;
@@ -81,13 +81,13 @@ export class EPass2001Service {
 
 
 
-  public LoginByResponse(clinetResponse:ClientResponse):Promise<ApiRep>{
+  public async LoginByResponse(clinetResponse:ClientResponse):Promise<ApiRep>{
     return  new Promise<ApiRep>(resolve => {
       let data=JSON.stringify(clinetResponse);
       let url = this.config.baseURL + '/api/USBKey/LoginResponse';
       let formData = new FormData();
       formData.set('data', data);
-      let result = this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
+      this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
         resolve(apiRe);
       });
     })
@@ -98,7 +98,7 @@ export class EPass2001Service {
       let url = this.config.baseURL + '/api/USBKey/GetLoginChallenge';
       let httpParams = new HttpParams()
         .append('email', email)
-        .append('requestNumber', requestNumber);
+        .append('sessionCode', requestNumber);
       let result = this.http.get<ApiRep>(url, {params: httpParams});
       result.subscribe(apiRe => {
         resolve(apiRe);
@@ -152,8 +152,10 @@ export class EPass2001Service {
       apiRep = await this.LoginByResponse(res);
       if (apiRep!=null){
         resolve(apiRep)
+      }else {
+        throw  new Error("epass2001 login is error")
       }
-      throw  new Error("epass2001 login is error")
+
     });
   }
 

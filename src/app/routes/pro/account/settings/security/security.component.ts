@@ -18,6 +18,9 @@ import {
   ChangePassWordModalComponentComponent
 } from "../../../../../my-components/MyModal/change-pass-word-modal-component/change-pass-word-modal-component.component";
 import {UserService} from "../../../../../services/User/user.service";
+import {EPass2001Service} from "../../../../../services/Usbkey/EnterSafe/ePass2001/e-pass2001.service";
+import {USBKeyBinding} from "../../../../../models/entity/usbkey-binding";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-account-settings-security',
@@ -41,16 +44,40 @@ export class ProAccountSettingsSecurityComponent {
               public helperService: HelperServiceService,
               public configService:ConfigService,
               public  nzMessage:NzMessageService,
+              public  epass2001:EPass2001Service,
+              public router: Router,
               public http: _HttpClient,) {
     this.config=configService.GetWebSiteConfig();
     this.userToken=this.configService.GetUserToken();
   }
   loginSecurityPolicyLevel?:string;
   fido2list:Map<string,string> =new Map<string, string>();
-  OnBindUsbKey() {
-    alert('已经绑定');
+  usbKeylist:Map<string,string> =new Map<string, string>();
+  async OnBindUsbKey() {
+    let apiRe = await this.epass2001.Register(this.configService.GetUserToken().Email, "1111");
+    if (apiRe.Ok) {
+      let key= apiRe.Data as USBKeyBinding;
+      alert("您已经成功注册key："+key.Id);
+      this.usbKeylist.set(key.Id!, key.Modulus!);
+      this.cdr.detectChanges();
+    } else {
+      alert("注册key失败："+apiRe.Msg);
+    }
   }
-
+  async unBindUsbKey(keyid: string) {
+    if (this.usbKeylist.has(keyid)) {
+      let apiRe = await this.epass2001.Delete(keyid);
+      if (apiRe.Ok){
+        this.usbKeylist.delete(keyid);
+        alert("您已经成功解绑key：" + keyid);
+        this.cdr.detectChanges();
+      }else {
+        alert("解绑key失败：" + keyid);
+      }
+    } else {
+      alert("您请求解绑的key不存在：" + keyid);
+    }
+  }
   levelText?:string="加载中";
   levelDes?:string;
 
@@ -60,6 +87,11 @@ export class ProAccountSettingsSecurityComponent {
     this.fido2list.set("key3", "key3 — 已于 2021 年 01 月 01 日注册");
     this.fido2list.set("key4", "key4 — 已于 2021 年 01 月 01 日注册");
     this.fido2list.set("key5", "key5 — 已于 2021 年 01 月 01 日注册");
+    //更新列表
+    let list=await this.epass2001.List(this.configService.GetUserToken().UserId);
+    for (const item of list) {
+      this.usbKeylist.set(item.Id!, item.Modulus!);
+    }
     //获得安全策略
     let level = await this.authService.GetUserLoginSettings(this.userToken!.Email!);
 
@@ -319,7 +351,8 @@ export class ProAccountSettingsSecurityComponent {
              this.levelDes=LoginSecurityPolicyLevelConvert.toString(level);
              this.cdr.detectChanges();
            }else {
-             this.nzMessage.error("设置"+value+"登录安全策略失败")
+
+             this.nzMessage.error("设置"+value+"登录安全策略失败:"+apiRe.Msg);
            }
         }else {
           this.nzMessage.success("未修改登录安全策略");

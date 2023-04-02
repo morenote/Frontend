@@ -93,7 +93,14 @@
       <a (click)="OnBindUsbKey()">绑定</a>
     </ng-template>
     <nz-list-item-meta nzTitle="智能密码钥匙" [nzDescription]="usbkeyDesc">
-      <ng-template #usbkeyDesc> 未绑定 智能密码钥匙，绑定后，可以使用 智能密码钥匙 登录和抗抵赖签名</ng-template>
+      <ng-template #usbkeyDesc>  智能密码钥匙绑定后，可以使用 智能密码钥匙 登录和抗抵赖签名
+        <ul>
+          <li *ngFor="let key_id of usbKeylist.keys(),index as i">
+            {{key_id}}---- <a (click)="unBindUsbKey(key_id)">解绑</a>
+          </li>
+        </ul>
+      </ng-template>
+
     </nz-list-item-meta>
   </nz-list-item>
 

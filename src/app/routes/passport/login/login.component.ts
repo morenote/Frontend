@@ -272,7 +272,7 @@ export class UserLoginComponent implements OnDestroy {
 
         let apiRep=await  this.epass.login(this.userName.value,"");
         if (!apiRep.Ok){
-          this.nzMessage.error("应用系统身份鉴别失败");
+          this.nzMessage.error("应用系统身份鉴别失败："+apiRep.Msg);
         }else {
           this.nzMessage.success("应用系统身份鉴别成功")
           await this.sleep(2000);

@@ -7,9 +7,9 @@ export class LoginSecurityPolicyLevelConvert {
       case LoginSecurityPolicyLevel.unlimited:
         return " 无限制，可以使用单一因子认证登录"
       case LoginSecurityPolicyLevel.loose:
-        return  " 宽松，在已经登录过并信任的设备上，允许使用单一因子登录"
+        return  " 宽松，在已经登录过并信任的设备上，允许使用单一因子登录。系统感知到风险行为时也会强制两步登录验证                                                                                                                                                                                                                                                                                                                                                。"
       case LoginSecurityPolicyLevel.strict:
-        return " 严格，必须使用口令+U2F、FIDO2、智能密码钥匙三种方式的任意一种方式"
+        return " 严格，必须使用口令+U2F、FIDO2、智能密码钥匙、邮箱验证码、短信验证码等方式的任意一种方式"
       case LoginSecurityPolicyLevel.compliant:
         return  " 合规，必须使用口令+智能密码钥匙的双因素登录认证方式"
       default:

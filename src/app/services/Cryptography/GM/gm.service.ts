@@ -14,7 +14,7 @@ export class GMService {
     if (publicKey.length==128){
       publicKey="04"+publicKey;
     }
-    const sm2 = require('sm-crypto').sm2
+    const sm2 = require('github-hyfree-sm-crypto').sm2
     const cipherMode = 1 // 1 - C1C3C2，0 - C1C2C3，默认为1
     let len=msgString.length;
     let lenStr=len+"";
@@ -33,7 +33,7 @@ export class GMService {
   }
 
   public  SM3(data:string ):string{
-    let sm3 = require('sm-crypto').sm3
+    let sm3 = require('github-hyfree-sm-crypto').sm3
     return sm3(data);
   }
   public  SM2Enc(msgString:string,publicKey:string):string{
@@ -41,7 +41,7 @@ export class GMService {
       publicKey="04"+publicKey;
     }
     const cipherMode = 1; // 1 - C1C3C2，0 - C1C2C3，默认为1
-    let sm2 = require('sm-crypto').sm2
+    let sm2 = require('github-hyfree-sm-crypto').sm2
     LogUtil.log("加密数据="+msgString);
     LogUtil.log("公钥="+publicKey);
     LogUtil.log("密码算法=SM2-C1C3C2");
@@ -50,18 +50,18 @@ export class GMService {
   }
   public  SM2Dec(encryptData:string,privateKey:string):string{
 
-    let sm2 = require('sm-crypto').sm2
+    let sm2 = require('github-hyfree-sm-crypto').sm2
     const cipherMode = 1 // 1 - C1C3C2，0 - C1C2C3，默认为1
     let decryptData = sm2.doDecrypt(encryptData, privateKey, cipherMode) // 解密结果
     return decryptData;
   }
   public SM4Enc(msg:string,key:string,iv:string):string{
-    let sm4 = require('sm-crypto').sm4
+    let sm4 = require('github-hyfree-sm-crypto').sm4
     let encryptData = sm4.encrypt(msg, key,{mode:'cbc',iv:iv})
     return encryptData;
   }
   public SM4Dec(msg:string,key:string,iv:string):string{
-    let sm4 = require('sm-crypto').sm4
+    let sm4 = require('github-hyfree-sm-crypto').sm4
     let decryptData  = sm4.decrypt(msg, key,{mode:'cbc',iv:iv})
     return decryptData ;
   }

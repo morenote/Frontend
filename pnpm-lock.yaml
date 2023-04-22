@@ -50,7 +50,7 @@ specifiers:
   eslint-plugin-prefer-arrow: ~1.2.3
   eslint-plugin-prettier: ~4.2.1
   futoin-hkdf: ^1.5.0
-  github-hyfre-sm-crypto: 0.3.12
+  github-hyfree-sm-crypto: 0.3.12
   husky: ^7.0.4
   jasmine-core: ~4.3.0
   jasmine-spec-reporter: ^7.0.0
@@ -119,7 +119,7 @@ dependencies:
   ajv-formats: 2.1.1
   date-fns: 2.29.3
   futoin-hkdf: 1.5.1
-  github-hyfre-sm-crypto: 0.3.12
+  github-hyfree-sm-crypto: 0.3.12
   js-base64: 3.7.5
   jsonc-parser: 3.0.0
   jszip: 3.10.1
@@ -6346,8 +6346,8 @@ packages:
       assert-plus: 1.0.0
     dev: true
 
-  /github-hyfre-sm-crypto/0.3.12:
-    resolution: {integrity: sha512-24sol7sW+mxdWs9wiq34vLI6eSsorVE5xN4QYRLNtEcLNK5JXBOEj08gAIrS8cXwIthx0TBfb8X3vRuo7ZkZpQ==}
+  /github-hyfree-sm-crypto/0.3.12:
+    resolution: {integrity: sha512-2GhInUZqpHVoSgQjwSif52uXhS2V5S6Szd8rqcdu9wYSquz51Fz4DDEiJymwvmAC4Gb/aknH6bYX8H6HVrX55A==}
     dependencies:
       jsbn: 1.1.0
     dev: false

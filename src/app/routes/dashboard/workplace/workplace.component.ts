@@ -104,7 +104,7 @@ export class DashboardWorkplaceComponent implements OnInit {
         this.radarData = chart.radarData;
         this.notice = notice;
         this.activities = activities.map((item: any) => {
-          item.template = item.template.split(/@\{([^{}]*)\}/gi).map((key: string) => {
+          item.template = item.template.toString().split(/@\{([^{}]*)\}/gi).map((key: string) => {
             if (item[key]) {
               return `<a>${item[key].name}</a>`;
             }

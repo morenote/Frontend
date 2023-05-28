@@ -25,8 +25,8 @@ export class PasswordDerivationService implements PasswordAnswering {
     let passphraseKey = encoder.encode(pwd);//口令明文
     let saltBuffer = encoder.encode(user.Id);//用户id
     let cryptoKey = await window.crypto.subtle.importKey('raw', passphraseKey, {name: "PBKDF2"}, false, ['deriveBits', 'deriveKey']);
-    //备注：由于js实现的GM算法性能太低了，所以PBKDF使用的是SHA256的PBKDF2算法
-    let webKey = await window.crypto.subtle.deriveKey(
+    //todo：由于js实现的GM算法性能太低了，所以PBKDF使用的是SHA256的PBKDF2算法
+    let masterKey = await window.crypto.subtle.deriveKey(
       {
         "name": 'PBKDF2',
         "salt": saltBuffer,
@@ -38,10 +38,32 @@ export class PasswordDerivationService implements PasswordAnswering {
       true,
       ["encrypt", "decrypt"]
     );
-    let exportKey = crypto.subtle.exportKey("raw", webKey);
-    let masterKey = Base64.encode(pwd);
-
-
-    return  masterKey;
+    let exportMasterKey = await crypto.subtle.exportKey("raw", masterKey);
+    //派生加密密钥
+    let encInfoBuffer = encoder.encode("enc");//用户id
+    let encKey = await window.crypto.subtle.deriveBits(
+      {
+        name: "HKDF",
+        salt: saltBuffer,
+        info: encInfoBuffer,
+        hash: "SHA-256",
+      },
+      masterKey,
+      16
+    );
+    //派生认证密钥
+    let macInfoBuffer= encoder.encode("mac");//用户id
+    let macKey=await  window.crypto.subtle.deriveBits(
+      {
+        name: "HKDF",
+        salt: saltBuffer,
+        info: macInfoBuffer,
+        hash: "SHA-256",
+      },
+      masterKey,
+      16
+    )
+    let exportMasterKeyBase64 = Base64.encode(pwd);
+    return Base64.fromUint8Array(new Uint8Array(macKey));
   }
 }

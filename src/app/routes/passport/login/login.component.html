@@ -5,7 +5,7 @@
       <nz-form-item>
         <nz-form-control nzErrorTip="Please enter mobile username">
           <nz-input-group nzSize="large" nzPrefixIcon="user">
-            <input type="text" nz-input (input)="okUserNameChage()" formControlName="userName" placeholder="username or email" />
+            <input type="text" nz-input (input)="okUserNameChage()" formControlName="userName" placeholder=" Please enter your email address" />
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
@@ -17,6 +17,7 @@
         </nz-form-control>
       </nz-form-item>
     </nz-tab>
+
     <nz-tab [nzTitle]="'手机号登录'">
       <nz-form-item>
         <nz-form-control [nzErrorTip]="mobileErrorTip">
@@ -45,6 +46,9 @@
           </nz-row>
         </nz-form-control>
       </nz-form-item>
+    </nz-tab>
+    <nz-tab [nzTitle]="'扫码登录'">
+
     </nz-tab>
   </nz-tabset>
   <nz-form-item>

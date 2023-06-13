@@ -20,7 +20,7 @@ export class ConfigService {
   }
   public GetUserToken(): UserToken {
     let json = this.localStorageDBService.GetValue('AuthService-UserToken');
-    return JSON.parse(json!);
+    return JSON.parse(json!) as UserToken;
   }
   public SetUserToken(userToken: UserToken) {
     this.localStorageDBService.SetValue('AuthService-UserToken', JSON.stringify(userToken));

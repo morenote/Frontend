@@ -203,6 +203,7 @@ export class UserLoginComponent implements OnDestroy {
          }
       }
       let userToken=await  this.authService.SubmitLogin(this.userName.value,requestNumber);
+
       // 清空路由复用信息
       this.reuseTabService.clear();
       // 设置用户Token信息
@@ -218,14 +219,32 @@ export class UserLoginComponent implements OnDestroy {
 
       this.configService.SetUserToken(userToken);
       this.nzMessage.success("业务系统身份鉴别成功")
-
       // 跳转到工作台
       await this.router.navigate(['/']);
     }catch (error:any) {
       this.nzMessage.error(error.message);
     }
   }
+  async toLogin(userToken: UserToken) {
+    // 清空路由复用信息
+    this.reuseTabService.clear();
+    // 设置用户Token信息
+    this.tokenService.set({
+      token: userToken.Token
+    });
 
+    this.settingService.setUser({
+      name: userToken.Username,
+      avatar: "https://gw.alipayobjects.com/zos/rmsportal/lctvVCLfRpYCkYxAsiVQ.png",
+      email: userToken.Email
+    });
+
+    this.configService.SetUserToken(userToken);
+    this.nzMessage.success("业务系统身份鉴别成功")
+
+    // 跳转到工作台
+    await this.router.navigate(['/']);
+  }
   // #region social
 
   async open(type: string, openType: SocialOpenType = 'href') {
@@ -235,7 +254,15 @@ export class UserLoginComponent implements OnDestroy {
         this.nzMessage.error("请先填写登录邮箱");
         return;
       }
-     await this.fido2.handleSignInSubmit(userNameText);
+
+      this.cdr.detectChanges();
+      let credential= await this.fido2.getAssertionOptions(userNameText);
+      if (credential!=null){
+       let userToken= await this.fido2.verifyTheAssertionResponse(userNameText,credential);
+       if (userToken!=null){
+        await   this.toLogin(userToken);
+       }
+      }
       return;
     }
     let url = ``;
@@ -337,10 +364,6 @@ export class UserLoginComponent implements OnDestroy {
       this.userNameIsOk = false;
     }
   }
-
-
-
-
 
 
 }

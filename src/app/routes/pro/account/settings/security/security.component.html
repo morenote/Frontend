@@ -68,7 +68,7 @@
         未绑定 FIDO2 设备，绑定后，可以使用FIDO2设备认证登录,支持: Yubikey、WindowsHello、支持FIDO2协议的安全令牌<br>
         <ul>
           <li *ngFor="let key_id of fido2list.keys(),index as i">
-            {{fido2list.get(key_id)}}---- <a (click)="unBindFIDO2(key_id)">解绑</a>
+           {{key_id}}  {{fido2list.get(key_id)}} <a (click)="unBindFIDO2(key_id)">解绑</a>
           </li>
         </ul>
       </ng-template>

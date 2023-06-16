@@ -5,6 +5,12 @@ import {ConfigService} from "../config/config.service";
 import {WebsiteConfig} from "../../models/config/website-config";
 import {HelperServiceService} from "../helper/helper-service.service";
 import {UserToken} from "../../models/DTO/user-token";
+import {HttpClient, HttpParams} from "@angular/common/http";
+import {ApiRep} from "../../models/api/api-rep";
+import {promise} from "protractor";
+import {Base64} from "js-base64";
+import {USBKeyBinding} from "../../models/entity/usbkey-binding";
+import {FIDO2Item} from "../../models/DTO/fido2/fido2-item";
 
 @Injectable({
   providedIn: 'root'
@@ -12,48 +18,32 @@ import {UserToken} from "../../models/DTO/user-token";
 export class Fido2Service {
   config: WebsiteConfig;
   userToken:UserToken;
+
   constructor( private messageUI: MessageUIService,
+               public http: HttpClient,
                public configService: ConfigService,
                public helperService: HelperServiceService) {
 
     this.config = this.configService.GetWebSiteConfig();
     this.userToken=this.configService.GetUserToken();
+
   }
   /**
    * 注册请求
    */
   async handleRegisterSubmit(keyName:string) {
-    let username = this.userToken.Username;
-    let displayName =  this.userToken.Username;
 
-    // possible values: none, direct, indirect
-    let attestation_type = 'none';
-    // possible values: <empty>, platform, cross-platform
-    let authenticator_attachment = '';
-
-    // possible values: preferred, required, discouraged
-    let user_verification = 'preferred';
-
-    // possible values: true,false
-    let require_resident_key = 'false';
 
 
     // prepare form post data
-    var data = new FormData();
-    data.append('username', username);
-    data.append('displayName', displayName);
-    data.append('attType', attestation_type);
-    data.append('authType', authenticator_attachment);
-    data.append('userVerification', user_verification);
-    data.append('requireResidentKey', require_resident_key);
-    data.append('token',this.userToken.Token);
-    data.append('userId', this.userToken.UserId!);
+    var formData = new FormData();
 
+    formData.append('token',this.userToken.Token);
     // send to server for registering
     let makeCredentialOptions;
     try {
       //请求fido2注册选项
-      makeCredentialOptions = await this.fetchMakeCredentialOptions(data);
+      makeCredentialOptions = await this.fetchMakeCredentialOptions(formData);
     } catch (e) {
       console.error(e);
       let msg = "Something wen't really wrong";
@@ -84,7 +74,7 @@ export class Fido2Service {
 
     console.log('Credential Options Formatted', makeCredentialOptions);
 
-    this.helperService.ShowInfoMessage('Tap your security key to finish registration');
+    //this.helperService.ShowInfoMessage('Tap your security key to finish registration');
 
     console.log('Creating PublicKeyCredential...');
 
@@ -96,7 +86,6 @@ export class Fido2Service {
       });
     } catch (e) {
       var msg =  '😟Could not create credentials in browser. Probably because the username is already registered with your authenticator. Please change username or authenticator.<br>';
-
       console.error(msg,e);
       this.helperService.ShowErrorMessage(msg);
     }
@@ -122,11 +111,8 @@ export class Fido2Service {
     });
 
     let data = await response.json();
-
     return data;
   }
-
-
 
   async registerCredentialWithServer(formData: any) {
 
@@ -206,120 +192,108 @@ export class Fido2Service {
     //window.location.href = "/dashboard/" + state.user.displayName;
   }
 
-
-
-
   //-----------------------------------------------------
-  async handleSignInSubmit(username:string) {
-    let urlCreateAssertionOptions = this.config.baseURL + '/api/fido2/CreateAssertionOptions';
-    // prepare form post data
-    let formData = new FormData();
-    formData.append('username', username);
+  /**
+   * 请求FIDO2断言 请求fido2登录断言
+   * @param email
+   */
+  async getAssertionOptions(email:string):Promise<Credential | null | undefined > {
+    return new Promise<Credential | null | undefined >(async resolve => {
+      let urlCreateAssertionOptions = this.config.baseURL + '/api/fido2/CreateAssertionOptions';
+      // prepare form post data
+      let formData = new FormData();
+      formData.append('email', email);
 
-    // send to server for registering
-    let makeAssertionOptions;
-    try {
-      let res = await fetch(urlCreateAssertionOptions, {
-        method: 'POST', // or 'PUT'
-        body: formData, // data can be `string` or {object}!
-        headers: {
-          Accept: 'application/json'
-        }
-      });
+      // send to server for registering
+      let makeAssertionOptions;
+      try {
+        let url = this.config.baseURL + '/api/fido2/CreateAssertionOptions';
+        let formData = new FormData();
+        formData.set("email", email);
 
-      makeAssertionOptions = await res.json();
-    } catch (e) {
-      this.messageUI.ShowErrorMessage('Request to server failed');
-    }
+        let res = await fetch(urlCreateAssertionOptions, {
+          method: 'POST', // or 'PUT'
+          body: formData, // data can be `string` or {object}!
+          headers: {
+            Accept: 'application/json'
+          }
+        });
 
-    console.log('Assertion Options Object', makeAssertionOptions);
-
-    // show options error to user
-    if (makeAssertionOptions.status !== 'ok') {
-      console.log('Error creating assertion options');
-      console.log(makeAssertionOptions.errorMessage);
-      this.messageUI.ShowErrorMessage(makeAssertionOptions.errorMessage);
-      return;
-    }
-
-    // todo: switch this to coercebase64
-    const challenge = makeAssertionOptions.challenge.replace(/-/g, '+').replace(/_/g, '/');
-    makeAssertionOptions.challenge = Uint8Array.from(atob(challenge), c => c.charCodeAt(0));
-
-    // fix escaping. Change this to coerce
-    makeAssertionOptions.allowCredentials.forEach((listItem: any) => {
-      let fixedId = listItem.id.replace(/\_/g, '/').replace(/\-/g, '+');
-      listItem.id = Uint8Array.from(atob(fixedId), c => c.charCodeAt(0));
-    });
-
-    console.log('Assertion options', makeAssertionOptions);
-
-    this.messageUI.ShowInfoMessage('Tap your security key to login');
-
-    // ask browser for credentials (browser will ask connected authenticators)
-    let credential;
-    try {
-      credential = await navigator.credentials.get({publicKey: makeAssertionOptions});
-    } catch (err) {
-      this.messageUI.ShowErrorMessage('error');
-    }
-
-    try {
-      await this.verifyAssertionWithServer(credential);
-    } catch (e) {
-      this.messageUI.ShowErrorMessage('Could not verify assertion');
-    }
-  }
-
-  async verifyAssertionWithServer(assertedCredential: any) {
-    // Move data into Arrays incase it is super long
-    let authData = new Uint8Array(assertedCredential.response.authenticatorData);
-    let clientDataJSON = new Uint8Array(assertedCredential.response.clientDataJSON);
-    let rawId = new Uint8Array(assertedCredential.rawId);
-    let sig = new Uint8Array(assertedCredential.response.signature);
-    const data = {
-      id: assertedCredential.id,
-      rawId: this.coerceToBase64Url(rawId),
-      type: assertedCredential.type,
-      extensions: assertedCredential.getClientExtensionResults(),
-      response: {
-        authenticatorData: this.coerceToBase64Url(authData),
-        clientDataJson: this.coerceToBase64Url(clientDataJSON),
-        signature: this.coerceToBase64Url(sig)
+        makeAssertionOptions = await res.json();
+      } catch (e) {
+        this.messageUI.ShowErrorMessage('Request to server failed');
       }
-    };
 
+      console.log('Assertion Options Object', makeAssertionOptions);
 
-    let response;
-    try {
-      let res = await fetch('/makeAssertion', {
-        method: 'POST', // or 'PUT'
-        body: JSON.stringify(data), // data can be `string` or {object}!
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
+      // show options error to user
+      if (makeAssertionOptions.status !== 'ok') {
+        console.log('Error creating assertion options');
+        console.log(makeAssertionOptions.errorMessage);
+        this.messageUI.ShowErrorMessage(makeAssertionOptions.errorMessage);
+        return;
+      }
+
+      // todo: switch this to coercebase64
+      const challenge = makeAssertionOptions.challenge.replace(/-/g, '+').replace(/_/g, '/');
+      makeAssertionOptions.challenge = Uint8Array.from(atob(challenge), c => c.charCodeAt(0));
+
+      // fix escaping. Change this to coerce
+      makeAssertionOptions.allowCredentials.forEach((listItem: any) => {
+        let fixedId = listItem.id.replace(/\_/g, '/').replace(/\-/g, '+');
+        listItem.id = Uint8Array.from(atob(fixedId), c => c.charCodeAt(0));
       });
 
-      response = await res.json();
-    } catch (e) {
-      this.messageUI.ShowErrorMessage('Request to server failed');
-      throw e;
-    }
+      console.log('Assertion options', makeAssertionOptions);
 
-    console.log('Assertion Object', response);
+     // this.messageUI.ShowInfoMessage('Tap your security key to login');
 
-    // show error
-    if (response.status !== 'ok') {
-      console.log('Error doing assertion');
-      console.log(response.errorMessage);
-      this.messageUI.ShowErrorMessage(response.errorMessage);
-      return;
-    }
+      // ask browser for credentials (browser will ask connected authenticators)
+      let credential;
+      try {
+        credential = await navigator.credentials.get({publicKey: makeAssertionOptions});
+      } catch (err) {
+        this.messageUI.ShowErrorMessage('error');
+      }
+        resolve(credential);
+    })
 
-    // show success message
+  }
+  async verifyTheAssertionResponse(email:string,assertedCredential: any):Promise<UserToken|null>{
+    return  new Promise<UserToken|null>(resolve => {
+      let authData = new Uint8Array(assertedCredential.response.authenticatorData);
+      let clientDataJSON = new Uint8Array(assertedCredential.response.clientDataJSON);
+      let rawId = new Uint8Array(assertedCredential.rawId);
+      let sig = new Uint8Array(assertedCredential.response.signature);
+      const data = {
+        id: assertedCredential.id,
+        rawId: this.coerceToBase64Url(rawId),
+        type: assertedCredential.type,
+        extensions: assertedCredential.getClientExtensionResults(),
+        response: {
+          authenticatorData: this.coerceToBase64Url(authData),
+          clientDataJSON: this.coerceToBase64Url(clientDataJSON),
+          signature: this.coerceToBase64Url(sig)
+        }
+      };
+      console.log("verifyTheAssertionResponse");
+      console.log(data);
+      let url = this.config.baseURL + '/api/fido2/VerifyTheAssertionResponse';
+      let formData = new FormData();
+      formData.set('email', email);
+      formData.set('data', Base64.encode(JSON.stringify(data)));
+      let result=this.http.post<ApiRep>(url,formData).subscribe(apiRe=>
+      {
+        if (apiRe!=null&& apiRe.Ok){
+          let userToken=apiRe.Data as UserToken;
+          resolve(userToken);
+        }else {
+          resolve(null);
+        }
 
-    this.messageUI.ShowInfoMessage("You're logged in successfully.");
+      })
+
+    })
   }
   //==========================================================
   coerceToBase64Url(thing: any): any {
@@ -351,5 +325,51 @@ export class Fido2Service {
     thing = thing.replace(/\+/g, '-').replace(/\//g, '_').replace(/=*$/g, '');
 
     return thing;
+  }
+  //==========================================================
+
+  public async  List(userId:string):Promise<Array<FIDO2Item>>{
+    return  new Promise<Array<FIDO2Item>>((resolve)=>{
+
+      let url = this.config.baseURL + '/api/fido2/List';
+      let httpParams = new HttpParams()
+        .append('userId', userId)
+      let result = this.http.get<ApiRep>(url, {params: httpParams});
+      result.subscribe(apiRe => {
+        if (apiRe.Ok){
+          let arr=apiRe.Data as Array<FIDO2Item>;
+          resolve(arr);
+        }
+        let arr=new Array<FIDO2Item>();
+        resolve(arr);
+      });
+
+    })
+  }
+
+  public async  Delete(keyId:string):Promise<ApiRep>{
+    return  new Promise<ApiRep>((resolve)=>{
+
+      let url = this.config.baseURL + '/api/fido2/Delete';
+      let httpParams = new HttpParams()
+        .append('keyId', keyId)
+        .append('token', this.userToken.Token!)
+      let result = this.http.delete<ApiRep>(url, {params: httpParams});
+      result.subscribe(apiRe => {
+        resolve(apiRe);
+      });
+    })
+  }
+  public async  Find(keyId:string):Promise<USBKeyBinding>{
+    return  new Promise<FIDO2Item>((resolve)=>{
+      let url = this.config.baseURL + '/api/fido2/Find';
+      let httpParams = new HttpParams()
+        .append('keyId', keyId)
+
+      let result = this.http.get<ApiRep>(url, {params: httpParams});
+      result.subscribe(apiRe => {
+        resolve(apiRe.Data);
+      });
+    })
   }
 }

@@ -84,15 +84,15 @@ export class ProAccountSettingsSecurityComponent {
   levelDes?:string;
 
   async ngOnInit() {
-    this.fido2list.set("key1", "key1 — 已于 2021 年 01 月 01 日注册");
-    this.fido2list.set("key2", "key2 — 已于 2021 年 01 月 01 日注册");
-    this.fido2list.set("key3", "key3 — 已于 2021 年 01 月 01 日注册");
-    this.fido2list.set("key4", "key4 — 已于 2021 年 01 月 01 日注册");
-    this.fido2list.set("key5", "key5 — 已于 2021 年 01 月 01 日注册");
+
     //更新列表
     let list=await this.epass2001.List(this.configService.GetUserToken().UserId);
     for (const item of list) {
       this.usbKeylist.set(item.Id!, item.Modulus!);
+    }
+    let serverFido2List=await  this.fido2.List(this.configService.GetUserToken().UserId);
+    for (let item of serverFido2List){
+      this.fido2list.set(item.Id!,item.RegDate!.toLocaleString());
     }
     //获得安全策略
     let level = await this.authService.GetUserLoginSettings(this.userToken!.Email!);
@@ -101,12 +101,14 @@ export class ProAccountSettingsSecurityComponent {
     this.levelDes=LoginSecurityPolicyLevelConvert.toString(level);
     this.cdr.detectChanges();
   }
-  unBindFIDO2(keyid:string){
-    if (this.fido2list.has(keyid)){
+  async unBindFIDO2(keyid: string) {
+    if (this.fido2list.has(keyid)) {
+      await this.fido2.Delete(keyid);
       this.fido2list.delete(keyid);
-      alert("您已经成功解绑key："+keyid);
-    }else {
-      alert("您请求解绑的key不存在："+keyid);
+      alert("您已经成功解绑key：" + keyid);
+      this.cdr.detectChanges();
+    } else {
+      alert("您请求解绑的key不存在：" + keyid);
     }
   }
 

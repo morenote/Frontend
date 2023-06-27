@@ -15,13 +15,16 @@ import {AmEditorComponent} from "../../my-components/Editor/AM/am-editor/am-edit
 const COMPONENTS: Array<Type<void>> = [EditorComponent];
 
 @NgModule({
-  imports: [SharedModule, NoteRoutingModule, NzTreeModule, NzIconModule, MyComponentsModule],
-  declarations: [COMPONENTS,
-    VditorMarkdownEditorComponent,
-    AmEditorComponent,
-    TextbusEditorComponent,
-    InputModalComponent
-  ]
+    imports: [SharedModule, NoteRoutingModule, NzTreeModule, NzIconModule, MyComponentsModule],
+    exports: [
+        InputModalComponent
+    ],
+    declarations: [COMPONENTS,
+        VditorMarkdownEditorComponent,
+        AmEditorComponent,
+        TextbusEditorComponent,
+        InputModalComponent
+    ]
 })
 export class NoteModule {
 }

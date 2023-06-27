@@ -68,7 +68,7 @@
         未绑定 FIDO2 设备，绑定后，可以使用FIDO2设备认证登录,支持: Yubikey、WindowsHello、支持FIDO2协议的安全令牌<br>
         <ul>
           <li *ngFor="let key_id of fido2list.keys(),index as i">
-           {{key_id}}  {{fido2list.get(key_id)}} <a (click)="unBindFIDO2(key_id)">解绑</a>
+           {{key_id}}  {{fido2list.get(key_id)?.FIDO2Name}} <a (click)="unBindFIDO2(key_id)">解绑</a>&nbsp; <a (click)="SetFido2Name(key_id)">重命名</a>
           </li>
         </ul>
       </ng-template>
@@ -106,14 +106,8 @@
 
 
 </nz-list>
-<nz-modal
-  [(nzVisible)]="isVisible"
-  nzTitle="Please enter the name of the key"
 
-  (nzOnCancel)="handleCancel()"
-  (nzOnOk)="handleOk()"
-  [nzOkLoading]="isOkLoading"
-></nz-modal>
   <app-select-moal  #app_select_moal></app-select-moal>
   <app-change-pass-word-modal-component #app_change_user_passwd></app-change-pass-word-modal-component>
+  <app-re-name-modal-component #app_rename_modal></app-re-name-modal-component>
   <input *nzModalContent nz-input placeholder="{{placeholder}}" [(ngModel)]="value"/>

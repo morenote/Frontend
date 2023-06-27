@@ -360,6 +360,19 @@ export class Fido2Service {
       });
     })
   }
+  public async  SetFIDO2Name(keyId:string,fido2Name:string):Promise<ApiRep>{
+    return  new Promise<ApiRep>((resolve)=>{
+      let url = this.config.baseURL + '/api/fido2/FIDO2Name';
+      let formData = new FormData();
+      formData  .set('keyId', keyId)
+      formData.set('token', this.userToken.Token!)
+      formData .set('fido2Name', fido2Name)
+      let result = this.http.post<ApiRep>(url, formData);
+      result.subscribe(apiRe => {
+        resolve(apiRe);
+      });
+    })
+  }
   public async  Find(keyId:string):Promise<USBKeyBinding>{
     return  new Promise<FIDO2Item>((resolve)=>{
       let url = this.config.baseURL + '/api/fido2/Find';

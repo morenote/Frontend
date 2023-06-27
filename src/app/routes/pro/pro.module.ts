@@ -43,6 +43,7 @@ import {LoginAuditProTableListComponent} from "./list/login-audit-table-list/tab
 import {MyComponentsModule} from "../../my-components/my-components.module";
 import {ProRealPersonAuthenticationComponent} from "./account/settings/RealPersonAuthentication/rpa.component";
 import { ProAccountSettingsEditorComponent } from './account/settings/editor/editor.component';
+import {NoteModule} from "../note/note.module";
 
 
 
@@ -95,7 +96,8 @@ const COMPONENTS = [
         NzStepsModule,
 
         CurrencyPipeModule,
-        MyComponentsModule
+        MyComponentsModule,
+        NoteModule
     ],
   declarations: COMPONENTS
 })

@@ -22,6 +22,8 @@ import {EPass2001Service} from "../../../../../services/Usbkey/EnterSafe/ePass20
 import {USBKeyBinding} from "../../../../../models/entity/usbkey-binding";
 import {Router} from "@angular/router";
 import {Fido2Service} from "../../../../../services/auth/fido2.service";
+import {FIDO2Item} from "../../../../../models/DTO/fido2/fido2-item";
+import {InputModalComponent} from "../../../../../my-components/MyModal/re-name-modal-component/input-modal.component";
 
 @Component({
   selector: 'app-account-settings-security',
@@ -38,6 +40,8 @@ export class ProAccountSettingsSecurityComponent {
   app_select_moal!:SelectMoalComponent;
   @ViewChild("app_change_user_passwd")
   app_change_user_passwd!:ChangePassWordModalComponentComponent;
+  @ViewChild("app_rename_modal")
+  app_rename_modal!:InputModalComponent;
 
   constructor(public authService: AuthService,
               public userService:UserService,
@@ -53,7 +57,7 @@ export class ProAccountSettingsSecurityComponent {
     this.userToken=this.configService.GetUserToken();
   }
   loginSecurityPolicyLevel?:string;
-  fido2list:Map<string,string> =new Map<string, string>();
+  fido2list:Map<string,FIDO2Item> =new Map<string, FIDO2Item>();
   usbKeylist:Map<string,string> =new Map<string, string>();
   async OnBindUsbKey() {
     let apiRe = await this.epass2001.Register(this.configService.GetUserToken().Email, "1111");
@@ -92,7 +96,8 @@ export class ProAccountSettingsSecurityComponent {
     }
     let serverFido2List=await  this.fido2.List(this.configService.GetUserToken().UserId);
     for (let item of serverFido2List){
-      this.fido2list.set(item.Id!,item.RegDate!.toLocaleString());
+      //this.fido2list.set(item.Id!,item.RegDate!.toLocaleString());
+      this.fido2list.set(item.Id!,item);
     }
     //获得安全策略
     let level = await this.authService.GetUserLoginSettings(this.userToken!.Email!);
@@ -111,6 +116,19 @@ export class ProAccountSettingsSecurityComponent {
       alert("您请求解绑的key不存在：" + keyid);
     }
   }
+  SetFido2Name(key_id: string) {
+      this.app_rename_modal.showModal("修改fido2名称","给你的设备起个名字吧",async (ok: boolean, value: string)=>{
+        if (ok&&value!=null){
+         await this.fido2.SetFIDO2Name(key_id,value);
+          this.fido2list.get(key_id)!.FIDO2Name=value;
+          this.cdr.detectChanges();
+          this.nzMessage.success("修改成功");
+
+        }else {
+          this.nzMessage.success("未修改FIDO2名称");
+        }
+      })
+  }
 
 
   isVisible = false;
@@ -122,13 +140,7 @@ export class ProAccountSettingsSecurityComponent {
     this.isVisible = true;
   }
 
-  async handleOk() {
-    this.isVisible = false;
-    this.isOkLoading = false;
-    if (this.value != null || this.value != '') {
-      await this.fido2.handleRegisterSubmit(this.value as string);
-    }
-  }
+
 
   handleCancel(): void {
     this.isVisible = false;
@@ -138,8 +150,18 @@ export class ProAccountSettingsSecurityComponent {
    * 绑定FIDO2令牌
    * @constructor
    */
-  OnBindFIDO2() {
-    this.isVisible=true;
+  async OnBindFIDO2() {
+    if (this.value != null || this.value != '') {
+      this.app_rename_modal.showModal("注册新的fido2设备","给你的设备起个名字吧",async (ok: boolean, value: string)=>{
+        if (ok&&value!=null){
+          await this.fido2.handleRegisterSubmit(this.value as string);
+
+        }else {
+          this.nzMessage.success("注册失败");
+        }
+      })
+
+    }
 
   }
 
@@ -204,4 +226,6 @@ export class ProAccountSettingsSecurityComponent {
     });
 
   }
+
+
 }

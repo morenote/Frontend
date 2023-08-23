@@ -21,6 +21,7 @@ export class Note {
   public  LikeNum?:number;
   public  CommentNum?:number;
   public  IsMarkdown?:boolean;
+  public  ExtendedName?:boolean;
   public  AttachNum?:number;
   public  CreatedTime?:Date;
   public  UpdatedTime?:Date;

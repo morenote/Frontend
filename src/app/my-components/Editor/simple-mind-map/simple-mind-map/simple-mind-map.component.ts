@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {EditorInterface} from "../../editor-interface";
-import MindMap from "simple-mind-map";
+import MindMap  from "simple-mind-map";
+
 @Component({
   selector: 'app-simple-mind-map',
   templateUrl: './simple-mind-map.component.html',
@@ -9,10 +10,9 @@ import MindMap from "simple-mind-map";
 })
 export class SimpleMindMapComponen implements  EditorInterface,OnInit{
 
-  public mindMap:MindMap;
+  mindMap: MindMap | undefined ;
   ngOnInit():void{
-    let
-     mindMap = new MindMap({
+    this.mindMap = new MindMap({
       el: document.getElementById('mindMapContainer'),
       data: {
         "data": {

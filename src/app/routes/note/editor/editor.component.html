@@ -213,6 +213,8 @@
         <div>
           <app-VditorMarkdownEditor (keydown)="onKeyDown($event)" #vditor *ngIf="isMarkdown"></app-VditorMarkdownEditor>
           <app-textbus-editor (keydown)="onKeyDown($event)" #textbus *ngIf="!isMarkdown"></app-textbus-editor>
+          <app-simple-mind-map   *ngIf="false" ></app-simple-mind-map>
+
         </div>
       </nz-row>
     </div>

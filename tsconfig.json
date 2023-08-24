@@ -31,6 +31,9 @@
       ],
       "@env/*": [
         "src/environments/*"
+      ],
+      "simple-mind-map": [
+        "src/typings/simple-mind-map/index"
       ]
     },
     "useDefineForClassFields": false

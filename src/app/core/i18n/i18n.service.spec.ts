@@ -1,10 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TestBed, TestBedStatic } from '@angular/core/testing';
-import { I18NService } from '@core';
+import { TestBed } from '@angular/core/testing';
 import { DelonLocaleService, SettingsService } from '@delon/theme';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzI18nService } from 'ng-zorro-antd/i18n';
 import { of } from 'rxjs';
+
+import { I18NService } from './i18n.service';
 
 describe('Service: I18n', () => {
   let injector: TestBed;

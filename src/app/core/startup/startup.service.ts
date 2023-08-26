@@ -5,8 +5,7 @@ import { ACLService } from '@delon/acl';
 import { ALAIN_I18N_TOKEN, MenuService, SettingsService, TitleService } from '@delon/theme';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzIconService } from 'ng-zorro-antd/icon';
-import { Observable, zip } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, zip, catchError, map } from 'rxjs';
 
 import { ICONS } from '../../../style-icons';
 import { ICONS_AUTO } from '../../../style-icons-auto';
@@ -47,7 +46,7 @@ export class StartupService {
         // 应用信息：包括站点名、描述、年份
         this.settingService.setApp(appData.app);
         // 用户信息：包括姓名、头像、邮箱地址
-        //this.settingService.setUser(appData.user);
+        this.settingService.setUser(appData.user);
         // ACL：设置权限为全量
         this.aclService.setFull(true);
         // 初始化菜单

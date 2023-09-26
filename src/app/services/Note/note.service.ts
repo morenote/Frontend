@@ -111,6 +111,7 @@ export class NoteService {
         signData.Operate = "/api/Note/UpdateNoteTitleAndContent";
         signData.SM3Data(noteId + noteTitle + content);
         dataSign = await this.epass.SendSignToePass2001(signData);
+
       }
       //数字信封
       let gm = new GMService();

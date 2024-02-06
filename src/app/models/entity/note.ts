@@ -1,4 +1,5 @@
 import {SignData} from "../DTO/USBKey/sign-data";
+import {ExtendedNameEnum} from "../enum/extended-name-enum";
 
 export class Note {
   public  Id!:string;
@@ -20,8 +21,8 @@ export class Note {
   public  ReadNum?:number;
   public  LikeNum?:number;
   public  CommentNum?:number;
-  public  IsMarkdown?:boolean;
-  public  ExtendedName?:boolean;
+  // public  IsMarkdown?:boolean;
+  public  ExtendedName?:ExtendedNameEnum;
   public  AttachNum?:number;
   public  CreatedTime?:Date;
   public  UpdatedTime?:Date;

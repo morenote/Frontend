@@ -64,6 +64,7 @@
                   <li nz-menu-item (click)="onCreateNotebook($event, false)">文件夹</li>
                   <li nz-menu-item (click)="onCreateNotebook($event, true)">根文件夹</li>
                   <li nz-menu-item (click)="onCreateMdDoc()">markdown文档</li>
+                  <li nz-menu-item (click)="onCreateMdDoc()">SimpleMind思维导图</li>
                   <li nz-menu-item (click)="onCreateHtmlDoc()">富文本文档</li>
                 </ul>
               </li>
@@ -211,9 +212,9 @@
       </div>
       <nz-row>
         <div>
-          <app-VditorMarkdownEditor (keydown)="onKeyDown($event)" #vditor *ngIf="isMarkdown"></app-VditorMarkdownEditor>
-          <app-textbus-editor (keydown)="onKeyDown($event)" #textbus *ngIf="!isMarkdown"></app-textbus-editor>
-          <app-simple-mind-map   *ngIf="false" ></app-simple-mind-map>
+          <app-VditorMarkdownEditor (keydown)="onKeyDown($event)" #vditor *ngIf="(clickTreeNode!= undefined) && clickTreeNode.extendedName==ExtendedNameEnum.md"></app-VditorMarkdownEditor>
+          <app-textbus-editor (keydown)="onKeyDown($event)" #textbus *ngIf="(clickTreeNode!= undefined) &&clickTreeNode.extendedName==ExtendedNameEnum.textbus"></app-textbus-editor>
+          <app-simple-mind-map   *ngIf="(clickTreeNode!= undefined) &&clickTreeNode.extendedName==ExtendedNameEnum.simpleMind"></app-simple-mind-map>
 
         </div>
       </nz-row>

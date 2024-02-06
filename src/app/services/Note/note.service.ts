@@ -56,20 +56,6 @@ export class NoteService {
 
   public CreateNote(noteTitle: string, notebookId: string, isMarkdown: boolean): Promise<ApiRep> {
     return new Promise<ApiRep>(async resolve => {
-      //签名
-      let signData = new SignData();
-      let dataSign = new DataSign();
-      if (this.sc.ForceDigitalSignature) {
-        signData.Id = "";
-        signData.Data = noteTitle;
-        signData.UserId = this.userId;
-        signData.UinxTime = Math.round(new Date().getTime() / 1000);
-        signData.Operate = "/api/Note/CreateNote";
-        signData.SM3Data(noteTitle + notebookId + isMarkdown);
-        dataSign = await this.epass.SendSignToePass2001(signData);
-      }
-
-
       //CreateNote
       let url = this.config.baseURL + '/api/Note/CreateNote';
       let formData = new FormData();
@@ -77,7 +63,7 @@ export class NoteService {
       formData.set('noteTitle', noteTitle);
       formData.set('notebookId', notebookId);
       formData.set('isMarkdown', isMarkdown + '');
-      formData.set('dataSignJson', JSON.stringify(dataSign));
+
       let result = this.http.post<ApiRep>(url, formData).subscribe(apiRe => {
         resolve(apiRe);
       });

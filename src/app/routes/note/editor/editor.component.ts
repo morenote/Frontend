@@ -1,31 +1,35 @@
-import { Component, ElementRef, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NzContextMenuService, NzDropdownMenuComponent, NzDropDownModule } from 'ng-zorro-antd/dropdown';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
-import { NzFormatBeforeDropEvent, NzFormatEmitEvent, NzTreeNode, NzTreeNodeOptions } from 'ng-zorro-antd/tree';
-import { NzTreeComponent } from 'ng-zorro-antd/tree/tree.component';
-import { delay, Observable, of } from 'rxjs';
-import Vditor from 'vditor';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {NzContextMenuService, NzDropdownMenuComponent} from 'ng-zorro-antd/dropdown';
+import {NzMessageService} from 'ng-zorro-antd/message';
+import {NzModalRef, NzModalService} from 'ng-zorro-antd/modal';
+import {NzFormatBeforeDropEvent, NzFormatEmitEvent, NzTreeNodeOptions} from 'ng-zorro-antd/tree';
+import {NzTreeComponent} from 'ng-zorro-antd/tree/tree.component';
+import {delay, Observable, of} from 'rxjs';
 
-import { ApiRep } from '../../../models/api/api-rep';
-import { Note } from '../../../models/entity/note';
-import { NoteContent } from '../../../models/entity/note-content';
-import { Notebook } from '../../../models/entity/notebook';
-import { TreeNodeModel } from '../../../models/model/tree-node-model';
-import { TreeNodeOptionsModel } from '../../../models/model/tree-node-options-model';
-import { TextbusEditorComponent } from '../../../my-components/Editor/TextbusEditor/textbus-editor.component';
-import { VditorMarkdownEditorComponent } from '../../../my-components/Editor/VditorMarkdomEditor/vditor-markdown-editor.component';
-import { EditorInterface } from '../../../my-components/Editor/editor-interface';
-import { InputModalComponent } from '../../../my-components/MyModal/re-name-modal-component/input-modal.component';
-import { ISearchNoteAction, SerchNoteModalComponent } from '../../../my-components/MyModal/serch-note-modal/serch-note-modal.component';
-import { NoteService } from '../../../services/Note/note.service';
-import { NotebookService } from '../../../services/NoteBook/notebook.service';
-import { ConfigService } from '../../../services/config/config.service';
-import { TimeFormatUtil } from '../../../shared/utils/Time/time-format-util';
-import { Watermark } from '../../../shared/utils/WaterMark/watermark';
-import { LogUtil } from '../../../shared/utils/log-util';
+import {ApiRep} from '../../../models/api/api-rep';
+import {Note} from '../../../models/entity/note';
+import {NoteContent} from '../../../models/entity/note-content';
+import {Notebook} from '../../../models/entity/notebook';
+import {TreeNodeModel} from '../../../models/model/tree-node-model';
+import {TreeNodeOptionsModel} from '../../../models/model/tree-node-options-model';
+import {TextbusEditorComponent} from '../../../my-components/Editor/TextbusEditor/textbus-editor.component';
+import {
+  VditorMarkdownEditorComponent
+} from '../../../my-components/Editor/VditorMarkdomEditor/vditor-markdown-editor.component';
+import {EditorInterface} from '../../../my-components/Editor/editor-interface';
+import {InputModalComponent} from '../../../my-components/MyModal/re-name-modal-component/input-modal.component';
+import {
+  ISearchNoteAction,
+  SerchNoteModalComponent
+} from '../../../my-components/MyModal/serch-note-modal/serch-note-modal.component';
+import {NoteService} from '../../../services/Note/note.service';
+import {NotebookService} from '../../../services/NoteBook/notebook.service';
+import {ConfigService} from '../../../services/config/config.service';
+import {TimeFormatUtil} from '../../../shared/utils/Time/time-format-util';
+import {Watermark} from '../../../shared/utils/WaterMark/watermark';
+import {LogUtil} from '../../../shared/utils/log-util';
+import {ExtendedNameEnum} from "../../../models/enum/extended-name-enum";
 
 @Component({
   selector: 'app-myeditor',
@@ -61,7 +65,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
     this.message.info(note.Title);
     let title: string = note.Title;
     this.noteTitle = title;
-    this.onClieckNote(note.Id, note.IsMarkdown);
+    this.onClieckNote(note.Id, note.ExtendedName);
     LogUtil.debug(`openNote：${note.Id}`);
     LogUtil.debug(`openNote：${note.Title}`);
   }
@@ -88,7 +92,6 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   //编辑器
   editor: EditorInterface | undefined;
 
-  isMarkdown: boolean = true;
 
   nzEvent(event: NzFormatEmitEvent): void {
     console.log(event);
@@ -111,32 +114,38 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
       let type = node?.isLeaf;
       this.message.success(`${key}=${title}${type}`);
       if (type != null && type) {
-        this.onClieckNote(key, node.isMarkdown);
+        this.onClieckNote(key, node.extendedName);
         this.noteTitle = title;
       }
     }
   }
 
-  protected onClieckNote(noteId: string, isMarkdown?: boolean) {
+  protected onClieckNote(noteId: string,extendedName:ExtendedNameEnum|undefined) {
+
     this.noteService.GetNoteContent(noteId).subscribe((apiRe: ApiRep) => {
       if (apiRe.Ok == true) {
         let noteContent: NoteContent = apiRe.Data;
-        this.isMarkdown = isMarkdown!;
-        this.message.info(`${this.isMarkdown}?`);
-        if (isMarkdown) {
-          //todo:vditor在ready之后才可以使用
-          setTimeout(() => {
-            this.vditor!.SetContent(noteContent.Content!, true);
-            this.editor = this.vditor;
-          }, 500);
-        } else {
-          console.log('note is textbus');
-          console.log(`Content is ${noteContent.Content?.length}`);
-          setTimeout(() => {
-            //todo:textbus在ready之后才可以使用
-            this.textbusEditor!.SetContent(noteContent.Content!, true);
-            this.editor = this.textbusEditor;
-          }, 500);
+
+        this.message.info(`${this.ExtendedNameEnum}?`);
+
+        switch (extendedName) {
+          case ExtendedNameEnum.md:
+            setTimeout(() => {
+              this.vditor!.SetContent(noteContent.Content!, true);
+              this.editor = this.vditor;
+            }, 500);
+            break;
+          case ExtendedNameEnum.textbus:
+            console.log('note is textbus');
+            console.log(`Content is ${noteContent.Content?.length}`);
+            setTimeout(() => {
+              //todo:textbus在ready之后才可以使用
+              this.textbusEditor!.SetContent(noteContent.Content!, true);
+              this.editor = this.textbusEditor;
+            }, 500);
+            break;
+          case ExtendedNameEnum.simpleMind:
+            break;
         }
         setTimeout(() => {
           this.message.info(`切换编辑器到${this.editor?.GetYourName()}`);
@@ -189,8 +198,9 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
                   node.title = note.Title;
                   node.key = note.Id;
                   node.isLeaf = true;
-                  node.isMarkdown = note.IsMarkdown;
-                  if (node.isMarkdown) {
+                  node.extendedName = note.ExtendedName;
+
+                  if (node.extendedName==ExtendedNameEnum.md) {
                     node.icon = 'file-markdown';
                   } else {
                     //<i nz-icon nzType="html5" nzTheme="outline"></i>
@@ -341,7 +351,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
           let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.Id, note.Title));
           node.icon = 'file-markdown';
           node.isLeaf = true;
-          node.isMarkdown = true;
+          node.extendedName = ExtendedNameEnum.md;
           node.parentNode = this.rightClickNode;
           let array = new Array<TreeNodeModel>();
           array.push(node);
@@ -350,6 +360,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
       }
     });
   }
+
 
   /**
    * 新建富文本文档
@@ -363,7 +374,25 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
           let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.Id, note.Title));
           node.icon = 'html5';
           node.isLeaf = true;
-          node.isMarkdown = false;
+          node.extendedName = ExtendedNameEnum.textbus;
+          node.parentNode = this.rightClickNode;
+          let array = new Array<TreeNodeModel>();
+          array.push(node);
+          this.rightClickNode?.addChildren(array);
+        }
+      }
+    });
+  }
+  onCreateSimpleMindDoc() {
+    this.reNameModalComponent.showModal('新建思维导图文档', '请输入文档名称', async (result: boolean, value: string) => {
+      if (result && value != null && value != '') {
+        let apiRe = await this.noteService.CreateNote(value, this.rightClickNode!.key, false);
+        if (apiRe.Ok == true) {
+          let note: Note = apiRe.Data;
+          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.Id, note.Title));
+          node.icon = 'html5';
+          node.isLeaf = true;
+          node.extendedName = ExtendedNameEnum.simpleMind;
           node.parentNode = this.rightClickNode;
           let array = new Array<TreeNodeModel>();
           array.push(node);
@@ -510,4 +539,6 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   BlogSwitchChange(event: any) {
     this.message.info(event);
   }
+
+  protected readonly ExtendedNameEnum = ExtendedNameEnum;
 }

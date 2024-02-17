@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import {SHARED_IMPORTS} from "@shared";
+import {EllipsisComponent} from "@delon/abc/ellipsis";
 
 @Component({
   selector: 'app-list-card-list',
@@ -13,6 +15,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
     `
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  standalone: true,
+  imports: [...SHARED_IMPORTS, EllipsisComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProCardListComponent implements OnInit {

@@ -1,5 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
+import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
+import {NzFormControlComponent, NzFormItemComponent, NzFormLabelComponent} from "ng-zorro-antd/form";
+import {SEComponent} from "@delon/abc/se";
+import {TagSelectComponent} from "@delon/abc/tag-select";
+import {NzTagComponent} from "ng-zorro-antd/tag";
+import {SharedModule} from "@shared";
 
 interface ProListApplicationListItem {
   title: string;
@@ -12,6 +18,18 @@ interface ProListApplicationListItem {
   selector: 'app-list-applications',
   templateUrl: './applications.component.html',
   styleUrls: ['./applications.component.less'],
+  standalone: true,
+  imports: [
+    NzSelectComponent,
+    NzFormLabelComponent,
+    NzFormControlComponent,
+    NzOptionComponent,
+    NzFormItemComponent,
+    SEComponent,
+    TagSelectComponent,
+    NzTagComponent,
+    SharedModule
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProListApplicationsComponent implements OnInit {

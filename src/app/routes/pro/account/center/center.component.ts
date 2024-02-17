@@ -7,19 +7,22 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import {ActivationEnd, Router} from '@angular/router';
+import {ActivationEnd, Router, RouterOutlet} from '@angular/router';
 import {_HttpClient} from '@delon/theme';
 import {Subscription, zip} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {ConfigService} from "../../../../services/config/config.service";
 import {WebsiteConfig} from "../../../../models/config/website-config";
 import {UserService} from "../../../../services/User/user.service";
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [...SHARED_IMPORTS, RouterOutlet,],
   selector: 'app-account-center',
-  templateUrl: './center.component.html',
+  standalone: true,
   styleUrls: ['./center.component.less'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './center.component.html'
 })
 export class ProAccountCenterComponent implements OnInit, OnDestroy {
   config?: WebsiteConfig;

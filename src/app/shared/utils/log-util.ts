@@ -4,12 +4,8 @@ export class LogUtil {
     return true;
   }
   private  static  isDebug():boolean{
-   let debug=localStorage.getItem("debug");
-   if (debug!=null&&debug=="1"){
-     return  true
-   }else {
-     return  false;
-   }
+   let log=localStorage.getItem("log");
+   return log != null && log == "1";
   }
 
 

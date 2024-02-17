@@ -1,13 +1,19 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
-import { SettingsService, User } from '@delon/theme';
+import {I18nPipe, SettingsService, User} from '@delon/theme';
 import {ConfigService} from "../../../services/config/config.service";
+import {NzDropDownModule} from "ng-zorro-antd/dropdown";
+import {NzMenuModule} from "ng-zorro-antd/menu";
+import {NzIconModule} from "ng-zorro-antd/icon";
+import {NzAvatarModule} from "ng-zorro-antd/avatar";
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
   selector: 'header-user',
   template: `
-    <div class="alain-default__nav-item d-flex align-items-center px-sm" nz-dropdown nzPlacement="bottomRight" [nzDropdownMenu]="userMenu">
+    <div class="alain-default__nav-item d-flex align-items-center px-sm" nz-dropdown nzPlacement="bottomRight"
+         [nzDropdownMenu]="userMenu">
       <nz-avatar [nzSrc]="user.avatar" nzSize="small" class="mr-sm"></nz-avatar>
       {{ user.name }}
     </div>
@@ -33,7 +39,9 @@ import {ConfigService} from "../../../services/config/config.service";
       </div>
     </nz-dropdown-menu>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ ...SHARED_IMPORTS,NzDropDownModule, NzMenuModule, NzIconModule, I18nPipe, NzAvatarModule]
 })
 export class HeaderUserComponent {
 

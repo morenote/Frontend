@@ -7,12 +7,17 @@ import {AuthService} from "../../../services/auth/auth.service";
 import {UserToken} from "../../../models/DTO/user-token";
 import {ConfigService} from "../../../services/config/config.service";
 import {WebsiteConfig} from "../../../models/config/website-config";
+import {SHARED_IMPORTS} from "@shared";
+import {NzAvatarModule} from "ng-zorro-antd/avatar";
+import {G2RadarModule} from "@delon/chart/radar";
 
 @Component({
   selector: 'app-dashboard-workplace',
   templateUrl: './workplace.component.html',
   styleUrls: ['./workplace.component.less'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [...SHARED_IMPORTS, NzAvatarModule, G2RadarModule]
 })
 export class DashboardWorkplaceComponent implements OnInit {
   notice: any[] = [];

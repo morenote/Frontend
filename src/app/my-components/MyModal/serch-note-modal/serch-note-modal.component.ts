@@ -5,6 +5,17 @@ import {HttpClient} from "@angular/common/http";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {Note} from "../../../models/entity/note";
 import {NzModalComponent} from "ng-zorro-antd/modal";
+import {NzInputGroupComponent} from "ng-zorro-antd/input";
+import {CdkFixedSizeVirtualScroll} from "@angular/cdk/scrolling";
+import {
+  NzListComponent, NzListItemActionComponent,
+  NzListItemComponent,
+  NzListItemMetaAvatarComponent,
+  NzListItemMetaTitleComponent
+} from "ng-zorro-antd/list";
+import {NzSkeletonComponent} from "ng-zorro-antd/skeleton";
+import {NzDropDownDirective, NzDropdownMenuComponent} from "ng-zorro-antd/dropdown";
+import {SharedModule} from "@shared";
 
 export interface ISearchNoteAction {
   openNote(note:Note):void;
@@ -13,6 +24,21 @@ export interface ISearchNoteAction {
 @Component({
   selector: 'app-serch-note-modal',
   templateUrl: './serch-note-modal.component.html',
+  standalone: true,
+  imports: [
+    NzModalComponent,
+    NzInputGroupComponent,
+    CdkFixedSizeVirtualScroll,
+    NzListComponent,
+    NzListItemComponent,
+    NzSkeletonComponent,
+    NzListItemMetaAvatarComponent,
+    NzListItemMetaTitleComponent,
+    NzListItemActionComponent,
+    NzDropDownDirective,
+    NzDropdownMenuComponent,
+    SharedModule
+  ],
 
   styleUrls: ['./serch-note-modal.component.less']
 })

@@ -1,7 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import {NgTemplateOutlet} from "@angular/common";
+import {NzDropDownModule} from "ng-zorro-antd/dropdown";
+import {NzBadgeModule} from "ng-zorro-antd/badge";
+import {NzIconModule} from "ng-zorro-antd/icon";
+import {NzSpinModule} from "ng-zorro-antd/spin";
+import {NzGridModule} from "ng-zorro-antd/grid";
+import {NzAvatarModule} from "ng-zorro-antd/avatar";
+import {NzCardModule} from "ng-zorro-antd/card";
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ ...SHARED_IMPORTS,NgTemplateOutlet, NzDropDownModule, NzBadgeModule, NzIconModule, NzSpinModule, NzGridModule, NzAvatarModule, NzCardModule],
   selector: 'header-task',
+  standalone: true,
   template: `
     <div
       class="alain-default__nav-item"
@@ -17,7 +29,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
     </div>
     <nz-dropdown-menu #taskMenu="nzDropdownMenu">
       <div nz-menu class="wd-lg">
-        <div *ngIf="loading" class="mx-lg p-lg"><nz-spin></nz-spin></div>
+        <div *ngIf="loading" class="mx-lg p-lg">
+          <nz-spin></nz-spin>
+        </div>
         <nz-card *ngIf="!loading" nzTitle="Notifications" nzBordered="false" class="ant-card__body-nopadding">
           <ng-template #extra><i nz-icon nzType="plus"></i></ng-template>
           <div nz-row [nzJustify]="'center'" [nzAlign]="'middle'" class="py-sm pr-md point bg-grey-lighter-h">
@@ -71,8 +85,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
         </nz-card>
       </div>
     </nz-dropdown-menu>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  `
 })
 export class HeaderTaskComponent {
   loading = true;

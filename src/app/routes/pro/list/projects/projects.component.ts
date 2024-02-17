@@ -1,11 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import {SHARED_IMPORTS} from "@shared";
+import {TagSelectComponent} from "@delon/abc/tag-select";
+import {AvatarListComponent, AvatarListItemComponent} from "@delon/abc/avatar-list";
 
 @Component({
   selector: 'app-list-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.less'],
+  standalone: true,
+  imports: [...SHARED_IMPORTS, TagSelectComponent, AvatarListComponent, AvatarListItemComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProListProjectsComponent implements OnInit {

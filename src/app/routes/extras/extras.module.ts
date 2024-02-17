@@ -6,11 +6,12 @@ import { HelpCenterComponent } from './helpcenter/helpcenter.component';
 import { ExtrasPoiEditComponent } from './poi/edit/edit.component';
 import { ExtrasPoiComponent } from './poi/poi.component';
 import { ExtrasSettingsComponent } from './settings/settings.component';
+import {NzUploadComponent} from "ng-zorro-antd/upload";
 
 const COMPONENTS = [HelpCenterComponent, ExtrasSettingsComponent, ExtrasPoiComponent, ExtrasPoiEditComponent];
 
 @NgModule({
-  imports: [SharedModule, ExtrasRoutingModule],
+  imports: [SharedModule, ExtrasRoutingModule, NzUploadComponent],
   declarations: [...COMPONENTS]
 })
 export class ExtrasModule {}

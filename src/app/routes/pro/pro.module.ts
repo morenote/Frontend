@@ -40,10 +40,17 @@ import {ProAccountCenterDocumentsComponent} from "./account/center/documents/doc
 import {ProAccountCenterFilesComponent} from "./account/center/files/files.component";
 import {CreateRepositoryFormComponent} from "./form/create-repository/create-repository-form.component";
 import {LoginAuditProTableListComponent} from "./list/login-audit-table-list/table-list.component";
-import {MyComponentsModule} from "../../my-components/my-components.module";
+
 import {ProRealPersonAuthenticationComponent} from "./account/settings/RealPersonAuthentication/rpa.component";
 import { ProAccountSettingsEditorComponent } from './account/settings/editor/editor.component';
 import {NoteModule} from "../note/note.module";
+import {NzUploadComponent} from "ng-zorro-antd/upload";
+import {SelectMoalComponent} from "../../my-components/MyModal/select-moal/select-moal.component";
+import {
+  ChangePassWordModalComponentComponent
+} from "../../my-components/MyModal/change-pass-word-modal-component/change-pass-word-modal-component.component";
+import {InputModalComponent} from "../../my-components/MyModal/re-name-modal-component/input-modal.component";
+import {ResultComponent} from "@delon/abc/result";
 
 
 
@@ -85,20 +92,25 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-    imports: [
-        SharedModule,
-        ProRoutingModule,
-        EllipsisModule,
-        TagSelectModule,
-        AvatarListModule,
-        FooterToolbarModule,
-        NzPaginationModule,
-        NzStepsModule,
+  imports: [
+    SharedModule,
+    ProRoutingModule,
+    EllipsisModule,
+    TagSelectModule,
+    AvatarListModule,
+    FooterToolbarModule,
+    NzPaginationModule,
+    NzStepsModule,
 
-        CurrencyPipeModule,
-        MyComponentsModule,
-        NoteModule
-    ],
-  declarations: COMPONENTS
+    CurrencyPipeModule,
+
+    NoteModule,
+    NzUploadComponent,
+    SelectMoalComponent,
+    ChangePassWordModalComponentComponent,
+    InputModalComponent,
+    ResultComponent
+  ],
+  declarations: []
 })
 export class ProModule {}

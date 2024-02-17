@@ -18,11 +18,19 @@ import {
   ChangePassWordModalComponentComponent
 } from "../../../../../my-components/MyModal/change-pass-word-modal-component/change-pass-word-modal-component.component";
 import {UserService} from "../../../../../services/User/user.service";
+import {NzListComponent, NzListItemComponent, NzListItemMetaComponent} from "ng-zorro-antd/list";
 
 @Component({
   selector: 'app-account-settings-editor',
   templateUrl: './editor.component.html',
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
+  imports: [
+    NzListComponent,
+    NzListItemComponent,
+    NzListItemMetaComponent,
+    SelectMoalComponent
+  ],
+  standalone: true
 })
 export class ProAccountSettingsEditorComponent {
 

@@ -1,20 +1,35 @@
-import { Component } from '@angular/core';
-import { SettingsService, User } from '@delon/theme';
-import { LayoutDefaultOptions } from '@delon/theme/layout-default';
+import {Component, inject} from '@angular/core';
+import {I18nPipe, SettingsService, User} from '@delon/theme';
+import {LayoutDefaultModule, LayoutDefaultOptions} from '@delon/theme/layout-default';
 import { environment } from '@env/environment';
+import {RouterLink, RouterOutlet} from "@angular/router";
+import {NzIconModule} from "ng-zorro-antd/icon";
+import {NzMenuModule} from "ng-zorro-antd/menu";
+import {NzDropDownModule} from "ng-zorro-antd/dropdown";
+import {NzAvatarModule} from "ng-zorro-antd/avatar";
+import {SettingDrawerModule} from "@delon/theme/setting-drawer";
+import {ThemeBtnComponent} from "@delon/theme/theme-btn";
+import {HeaderSearchComponent} from "./widgets/search.component";
+import {HeaderNotifyComponent} from "./widgets/notify.component";
+import {HeaderTaskComponent} from "./widgets/task.component";
+import {HeaderIconComponent} from "./widgets/icon.component";
+import {HeaderRTLComponent} from "./widgets/rtl.component";
+import {HeaderI18nComponent} from "./widgets/i18n.component";
+import {HeaderClearStorageComponent} from "./widgets/clear-storage.component";
+import {HeaderFullScreenComponent} from "./widgets/fullscreen.component";
+import {HeaderUserComponent} from "./widgets/user.component";
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
   selector: 'layout-basic',
   template: `
     <layout-default [options]="options" [asideUser]="asideUserTpl" [content]="contentTpl" [customError]="null">
       <layout-default-header-item direction="left">
-        <!--github图标-->
         <a layout-default-header-item-trigger href="//github.com/ng-alain/ng-alain" target="_blank">
           <i nz-icon nzType="github"></i>
         </a>
       </layout-default-header-item>
       <layout-default-header-item direction="left" hidden="mobile">
-        <!--锁屏-->
         <a layout-default-header-item-trigger routerLink="/passport/lock">
           <i nz-icon nzType="lock"></i>
         </a>
@@ -25,51 +40,44 @@ import { environment } from '@env/environment';
         </div>
       </layout-default-header-item>
       <layout-default-header-item direction="middle">
-        <header-search class="alain-default__search" [(toggleChange)]="searchToggleStatus"></header-search>
+        <header-search class="alain-default__search" [(toggleChange)]="searchToggleStatus" />
       </layout-default-header-item>
       <layout-default-header-item direction="right">
-        <header-notify></header-notify>
+        <header-notify />
       </layout-default-header-item>
       <layout-default-header-item direction="right" hidden="mobile">
-        <header-task></header-task>
+        <header-task />
       </layout-default-header-item>
       <layout-default-header-item direction="right" hidden="mobile">
-        <header-create-repository></header-create-repository>
-      </layout-default-header-item>
-      <layout-default-header-item direction="right" hidden="mobile">
-        <header-icon></header-icon>
+        <header-icon />
       </layout-default-header-item>
       <layout-default-header-item direction="right" hidden="mobile">
         <div layout-default-header-item-trigger nz-dropdown [nzDropdownMenu]="settingsMenu" nzTrigger="click" nzPlacement="bottomRight">
           <i nz-icon nzType="setting"></i>
         </div>
-        <!--设置按钮        -->
         <nz-dropdown-menu #settingsMenu="nzDropdownMenu">
           <div nz-menu style="width: 200px;">
             <div nz-menu-item>
-              <header-rtl></header-rtl>
+              <header-rtl />
             </div>
             <div nz-menu-item>
-              <header-fullscreen></header-fullscreen>
+              <header-fullscreen />
             </div>
             <div nz-menu-item>
-              <header-clear-storage></header-clear-storage>
+              <header-clear-storage />
             </div>
             <div nz-menu-item>
-              <!-- 国际化-->
-              <header-i18n></header-i18n>
+              <header-i18n />
             </div>
           </div>
         </nz-dropdown-menu>
       </layout-default-header-item>
       <layout-default-header-item direction="right">
-        <!--用户头像        -->
-        <header-user></header-user>
+        <header-user />
       </layout-default-header-item>
       <ng-template #asideUserTpl>
-        <!-- 左侧用户头像       -->
         <div nz-dropdown nzTrigger="click" [nzDropdownMenu]="userMenu" class="alain-default__aside-user">
-          <nz-avatar class="alain-default__aside-user-avatar" [nzSrc]="user.avatar"></nz-avatar>
+          <nz-avatar class="alain-default__aside-user-avatar" [nzSrc]="user.avatar" />
           <div class="alain-default__aside-user-info">
             <strong>{{ user.name }}</strong>
             <p class="mb0">{{ user.email }}</p>
@@ -83,38 +91,48 @@ import { environment } from '@env/environment';
         </nz-dropdown-menu>
       </ng-template>
       <ng-template #contentTpl>
-        <router-outlet></router-outlet>
+        <router-outlet />
       </ng-template>
     </layout-default>
-
-    <setting-drawer *ngIf="showSettingDrawer"></setting-drawer>
-    <theme-btn></theme-btn>
-  `
+    @if (showSettingDrawer) {
+      <setting-drawer />
+    }
+    <theme-btn />
+  `,
+  standalone: true,
+  imports: [
+    ...SHARED_IMPORTS,
+    RouterOutlet,
+    RouterLink,
+    I18nPipe,
+    LayoutDefaultModule,
+    NzIconModule,
+    NzMenuModule,
+    NzDropDownModule,
+    NzAvatarModule,
+    SettingDrawerModule,
+    ThemeBtnComponent,
+    HeaderSearchComponent,
+    HeaderNotifyComponent,
+    HeaderTaskComponent,
+    HeaderIconComponent,
+    HeaderRTLComponent,
+    HeaderI18nComponent,
+    HeaderClearStorageComponent,
+    HeaderFullScreenComponent,
+    HeaderUserComponent
+  ]
 })
 export class LayoutBasicComponent {
-  //是否隐藏侧边栏
-  public isHideAside = false;
-  searchToggleStatus = false;
-  //是否显示主题设置按钮
-  // showSettingDrawer = !environment.production;
-  showSettingDrawer = true;
 
+  private readonly settings = inject(SettingsService);
   options: LayoutDefaultOptions = {
     logoExpanded: `./assets/logo-full.svg`,
-    logoCollapsed: `./assets/logo.svg`,
-    hideAside: this.isHideAside
+    logoCollapsed: `./assets/logo.svg`
   };
-
-  onSetHideAside(isHideAside: boolean) {
-    console.log('setHideAside---log');
-    this.options.hideAside = false;
-  }
-  ngOnInit(): void {
-    console.log('LayoutBasicComponent is work');
-  }
+  searchToggleStatus = false;
+  showSettingDrawer = !environment.production;
   get user(): User {
     return this.settings.user;
   }
-
-  constructor(private settings: SettingsService) {}
 }

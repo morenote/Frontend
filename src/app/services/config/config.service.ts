@@ -3,10 +3,11 @@ import { Injectable } from '@angular/core';
 import { WebsiteConfig } from '../../models/config/website-config';
 import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security-config-dto";
 import {AuthService} from "../auth/auth.service";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpContext} from "@angular/common/http";
 import {ApiRep} from "../../models/api/api-rep";
 import {UserToken} from "../../models/DTO/user-token";
 import {LocalStorageDBService} from "../data-storage/local-storage-db.service";
+import {ALLOW_ANONYMOUS} from "@delon/auth";
 
 @Injectable({
   providedIn: 'root'
@@ -57,11 +58,11 @@ export class ConfigService {
     let config = new WebsiteConfig();
     config.baseURL = '';
     //调试baseURL
-    if (localStorage.getItem("baseURL")!=null){
-      config.baseURL = localStorage.getItem("baseURL") as string;
+    if (localStorage.getItem("url")!=null){
+      config.baseURL = localStorage.getItem("url") as string;
     }
     //调试模式
-    if (localStorage.getItem("debug")!=null){
+    if (localStorage.getItem("localhost")!=null){
       config.baseURL="http://localhost:5000";
     }
     return config;
@@ -70,7 +71,7 @@ export class ConfigService {
         return  new Promise<ApiRep>(resolve => {
           let config=this.GetWebSiteConfig();
           let url=config.baseURL+"/api/Config/GetSecurityConfig";
-          this.http.get<ApiRep>(url).subscribe(apiRe=>{
+          this.http.get<ApiRep>(url,{ context: new HttpContext().set(ALLOW_ANONYMOUS, true)}).subscribe(apiRe=>{
             resolve(apiRe);
           })
         })

@@ -5,10 +5,13 @@ import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { map, tap } from 'rxjs/operators';
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
   selector: 'app-table-list',
   templateUrl: './table-list.component.html',
+  standalone: true,
+  imports:[SHARED_IMPORTS],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProTableListComponent implements OnInit {

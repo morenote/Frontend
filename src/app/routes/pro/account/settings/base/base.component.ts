@@ -5,6 +5,10 @@ import {zip} from 'rxjs';
 import {ConfigService} from "../../../../../services/config/config.service";
 import {WebsiteConfig} from "../../../../../models/config/website-config";
 import {UserService} from "../../../../../services/User/user.service";
+import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
+import {SEComponent} from "@delon/abc/se";
+import {SharedModule} from "@shared";
+import {NzUploadComponent} from "ng-zorro-antd/upload";
 
 interface ProAccountSettingsUser {
   email?: string;
@@ -33,6 +37,14 @@ interface ProAccountSettingsCity {
   selector: 'app-account-settings-base',
   templateUrl: './base.component.html',
   styleUrls: ['./base.component.less'],
+  standalone: true,
+  imports: [
+    NzSelectComponent,
+    NzOptionComponent,
+    SEComponent,
+    SharedModule,
+    NzUploadComponent
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProAccountSettingsBaseComponent implements OnInit {

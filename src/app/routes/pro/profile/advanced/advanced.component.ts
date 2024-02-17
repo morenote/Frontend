@@ -4,11 +4,15 @@ import { _HttpClient } from '@delon/theme';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTabChangeEvent } from 'ng-zorro-antd/tabs';
+import {SHARED_IMPORTS} from "@shared";
+import {NzStepComponent, NzStepsComponent} from "ng-zorro-antd/steps";
 
 @Component({
   selector: 'app-profile-advanced',
   templateUrl: './advanced.component.html',
   styleUrls: ['./advanced.component.less'],
+  standalone: true,
+  imports: [SHARED_IMPORTS, NzStepsComponent, NzStepComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProProfileAdvancedComponent implements OnInit {

@@ -13,11 +13,20 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {UserToken} from "../../../../models/DTO/user-token";
 import {ConfigService} from "../../../../services/config/config.service";
 import {RepositoryOwnerType} from "../../../../models/enum/repository-owner-type";
+import {NzMentionComponent} from "ng-zorro-antd/mention";
+import {NzRadioGroupComponent} from "ng-zorro-antd/radio";
+import {SharedModule} from "@shared";
 
 @Component({
   selector: 'app-create-repository',
   templateUrl: './create-repository-form.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    NzMentionComponent,
+    NzRadioGroupComponent,
+    SharedModule
+  ],
+  standalone: true
 })
 export class CreateRepositoryFormComponent implements OnInit {
   form!: UntypedFormGroup;

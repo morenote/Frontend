@@ -1,16 +1,20 @@
 import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import screenfull from 'screenfull';
+import {NzIconModule} from "ng-zorro-antd/icon";
+import {I18nPipe} from "@delon/theme";
 
 @Component({
-  selector: 'header-fullscreen',
-  template: `
-    <i nz-icon [nzType]="status ? 'fullscreen-exit' : 'fullscreen'"></i>
-    {{ (status ? 'menu.fullscreen.exit' : 'menu.fullscreen') | i18n }}
-  `,
-  host: {
-    '[class.flex-1]': 'true'
-  },
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'header-fullscreen',
+    template: `
+        <i nz-icon [nzType]="status ? 'fullscreen-exit' : 'fullscreen'"></i>
+        {{ (status ? 'menu.fullscreen.exit' : 'menu.fullscreen') | i18n }}
+    `,
+    host: {
+        '[class.flex-1]': 'true'
+    },
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NzIconModule, I18nPipe]
 })
 export class HeaderFullScreenComponent {
   status = false;

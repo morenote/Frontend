@@ -1,14 +1,17 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy } from '@angular/core';
-import { ActivationEnd, Router } from '@angular/router';
+import {ActivationEnd, Router, RouterOutlet} from '@angular/router';
 import { NzMenuModeType } from 'ng-zorro-antd/menu';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime, filter } from 'rxjs/operators';
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
   selector: 'app-account-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.less'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [...SHARED_IMPORTS, RouterOutlet,]
 })
 export class ProAccountSettingsComponent implements AfterViewInit, OnDestroy {
   private resize$!: Subscription;

@@ -9,6 +9,7 @@ import {EditorInterface} from "../editor-interface";
 @Component({
   selector: 'app-textbus-editor',
   templateUrl: './textbus-editor.component.html',
+  standalone:true,
   styleUrls: ['./textbus-editor.component.css']
 })
 export class TextbusEditorComponent implements OnInit, EditorInterface {

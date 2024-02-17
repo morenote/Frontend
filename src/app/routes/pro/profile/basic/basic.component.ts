@@ -3,11 +3,15 @@ import { STColumn } from '@delon/abc/st';
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { tap } from 'rxjs/operators';
+import {SHARED_IMPORTS} from "@shared";
+import {CurrencyPricePipe} from "@delon/util";
 
 @Component({
   selector: 'app-profile-basic',
   templateUrl: './basic.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [...SHARED_IMPORTS, CurrencyPricePipe]
 })
 export class ProProfileBaseComponent {
   basicNum = 0;

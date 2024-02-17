@@ -8,11 +8,28 @@ import {RepositoryType} from "../../../../../models/enum/repository-type";
 import {ApiRep} from "../../../../../models/api/api-rep";
 import {Router} from "@angular/router";
 import {NzMessageService} from "ng-zorro-antd/message";
+import {NzAvatarComponent} from "ng-zorro-antd/avatar";
+import {NzCardComponent, NzCardMetaComponent} from "ng-zorro-antd/card";
+import {NzDropDownDirective, NzDropdownMenuComponent} from "ng-zorro-antd/dropdown";
+import {NzListComponent, NzListGridDirective, NzListItemComponent} from "ng-zorro-antd/list";
+import {DecimalPipe} from "@angular/common";
 
 @Component({
   selector: 'app-account-center-documents',
   templateUrl: './files.component.html',
   styleUrls: ['./files.component.less'],
+  standalone: true,
+  imports: [
+    NzAvatarComponent,
+    NzCardMetaComponent,
+    NzDropdownMenuComponent,
+    NzListGridDirective,
+    NzListComponent,
+    NzListItemComponent,
+    NzCardComponent,
+    NzDropDownDirective,
+    DecimalPipe
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProAccountCenterFilesComponent {

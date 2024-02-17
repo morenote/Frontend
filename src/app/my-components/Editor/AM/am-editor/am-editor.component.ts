@@ -4,6 +4,7 @@ import {EditorInterface} from "../../editor-interface";
 @Component({
   selector: 'app-am-editor',
   templateUrl: './am-editor.component.html',
+  standalone:true,
   styles: [
   ]
 })

@@ -24,11 +24,22 @@ import {Router} from "@angular/router";
 import {Fido2Service} from "../../../../../services/auth/fido2.service";
 import {FIDO2Item} from "../../../../../models/DTO/fido2/fido2-item";
 import {InputModalComponent} from "../../../../../my-components/MyModal/re-name-modal-component/input-modal.component";
+import {NzListItemComponent, NzListItemMetaComponent} from "ng-zorro-antd/list";
+import {SharedModule} from "@shared";
 
 @Component({
   selector: 'app-account-settings-security',
   templateUrl: './security.component.html',
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
+  imports: [
+    NzListItemMetaComponent,
+    NzListItemComponent,
+    SelectMoalComponent,
+    ChangePassWordModalComponentComponent,
+    InputModalComponent,
+    SharedModule
+  ],
+  standalone: true
 })
 export class ProAccountSettingsSecurityComponent {
 

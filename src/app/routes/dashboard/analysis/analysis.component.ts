@@ -4,16 +4,40 @@ import { STColumn } from '@delon/abc/st';
 import { ALAIN_I18N_TOKEN, _HttpClient } from '@delon/theme';
 import { getTimeDistance } from '@delon/util/date-time';
 import { deepCopy } from '@delon/util/other';
-import { yuan } from '@shared';
+import {SHARED_IMPORTS, yuan} from '@shared';
 import type { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import {ConfigService} from "../../../services/config/config.service";
+import {G2TimelineModule} from "@delon/chart/timeline";
+import {G2PieModule} from "@delon/chart/pie";
+import {NumberInfoModule} from "@delon/chart/number-info";
+import {G2BarModule} from "@delon/chart/bar";
+import {G2MiniAreaModule} from "@delon/chart/mini-area";
+import {TrendModule} from "@delon/chart/trend";
+import {DecimalPipe} from "@angular/common";
+import {G2MiniProgressModule} from "@delon/chart/mini-progress";
+import {G2CardModule} from "@delon/chart/card";
+import {G2MiniBarModule} from "@delon/chart/mini-bar";
 
 @Component({
   selector: 'app-dashboard-analysis',
   templateUrl: './analysis.component.html',
   styleUrls: ['./analysis.component.less'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ...SHARED_IMPORTS,
+    G2TimelineModule,
+    G2PieModule,
+    NumberInfoModule,
+    TrendModule,
+    G2MiniAreaModule,
+    DecimalPipe,
+    G2BarModule,
+    G2MiniProgressModule,
+    G2CardModule,
+    G2MiniBarModule
+  ]
 })
 export class DashboardAnalysisComponent implements OnInit {
   constructor(

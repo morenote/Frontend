@@ -1,13 +1,13 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, Optional} from '@angular/core';
-import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, Optional, inject} from '@angular/core';
+import {AbstractControl, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import {Router, RouterLink} from '@angular/router';
 import {StartupService} from '@core';
 import {ReuseTabService} from '@delon/abc/reuse-tab';
-import {DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService} from '@delon/auth';
-import {_HttpClient, SettingsService} from '@delon/theme';
+import {ALLOW_ANONYMOUS, DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService} from '@delon/auth';
+import {_HttpClient, I18nPipe, SettingsService} from '@delon/theme';
 import {environment} from '@env/environment';
 import {NzModalService} from 'ng-zorro-antd/modal';
-import {NzTabChangeEvent} from 'ng-zorro-antd/tabs';
+import {NzTabChangeEvent, NzTabsModule} from 'ng-zorro-antd/tabs';
 import {Subscription} from 'rxjs';
 
 import {ApiRep} from '../../../models/api/api-rep';
@@ -22,27 +22,51 @@ import {NzMessageService} from "ng-zorro-antd/message";
 import {ClientResponse} from "../../../models/DTO/USBKey/client-response";
 import {LoginSecurityPolicyLevel} from "../../../models/enum/LoginSecurityPolicyLevel/login-security-policy-level";
 import {Fido2Service} from "../../../services/auth/fido2.service";
+import {NzCheckboxModule} from "ng-zorro-antd/checkbox";
+import {NzAlertModule} from "ng-zorro-antd/alert";
+import {NzFormModule} from "ng-zorro-antd/form";
+import {NzInputModule} from "ng-zorro-antd/input";
+import {NzButtonModule} from "ng-zorro-antd/button";
+import {NzToolTipModule} from "ng-zorro-antd/tooltip";
+import {NzIconModule} from "ng-zorro-antd/icon";
+import {HttpContext} from "@angular/common/http";
+import {NgIf} from "@angular/common";
+import {LogUtil} from "../../../shared/utils/log-util";
 
 @Component({
   selector: 'passport-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.less'],
   providers: [SocialService],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    RouterLink,
+    ReactiveFormsModule,
+    I18nPipe,
+    NzCheckboxModule,
+    NzTabsModule,
+    NzAlertModule,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzToolTipModule,
+    NzIconModule,
+    NgIf
+  ]
 })
 export class UserLoginComponent implements OnDestroy {
+  private readonly reuseTabService = inject(ReuseTabService, { optional: true });
+  private readonly router = inject(Router);
+  private readonly settingsService = inject(SettingsService);
+  private readonly socialService = inject(SocialService);
+
+  private readonly tokenService = inject(DA_SERVICE_TOKEN);
+  private readonly startupSrv = inject(StartupService);
+  private readonly http = inject(_HttpClient);
+  private readonly cdr = inject(ChangeDetectorRef);
   constructor(
     fb: UntypedFormBuilder,
-    private router: Router,
-    private settingsService: SettingsService,
-    private socialService: SocialService,
-    @Optional()
-    @Inject(ReuseTabService)
-    private reuseTabService: ReuseTabService,
-    @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
-    private startupSrv: StartupService,
-    public http: _HttpClient,
-    private cdr: ChangeDetectorRef,
     private modal: NzModalService,
     public authService: AuthService,
     private settingService: SettingsService,
@@ -125,8 +149,8 @@ export class UserLoginComponent implements OnDestroy {
   securityStrategy: UserLoginSecurityStrategy | undefined;
 
   getUserLoginSecurityStrategy(): Subscription {
-    let url = `${this.webSiteConfig.baseURL}/api/User/GetUserLoginSecurityStrategy?_allow_anonymous=true&userName=${this.userName.value}`;
-    let obs: Subscription = this.http.get<ApiRep>(url).subscribe((apiRe: ApiRep) => {
+    let url = `${this.webSiteConfig.baseURL}/api/User/GetUserLoginSecurityStrategy&userName=${this.userName.value}`;
+    let obs: Subscription = this.http.get<ApiRep>(url,{ context: new HttpContext().set(ALLOW_ANONYMOUS, true)}).subscribe((apiRe: ApiRep) => {
       let securityStrategy: UserLoginSecurityStrategy = apiRe.Data as UserLoginSecurityStrategy;
       // alert(securityStrategy.UserName);
       this.securityStrategy = securityStrategy;
@@ -144,10 +168,12 @@ export class UserLoginComponent implements OnDestroy {
    * 通过提交密码登录
    */
   async submit() {
+    LogUtil.log("submit  start");
     this.error = '';
 
     if (this.password == null) {
       alert('缺少登录密码');
+      LogUtil.log("缺少登录密码！");
       return;
     }
     if (this.type === 0) {
@@ -179,6 +205,7 @@ export class UserLoginComponent implements OnDestroy {
     this.cdr.detectChanges();
     try {
       let requestNumber=await  this.authService.TakeSessionCode();
+      LogUtil.log("requestNumber is ok！");
       //登录
       let  apiRe = await this.authService.PasswordChallenge(String(this.type), this.userName.value, this.password.value,requestNumber);
       if (this.error) {
@@ -193,6 +220,8 @@ export class UserLoginComponent implements OnDestroy {
         console.log('进入111');
         return;
       }
+      LogUtil.log("PasswordChallenge is ok！");
+
       //获得登录方式
       let level=await  this.authService.GetUserLoginSettings(this.userName.value);
       if (level==LoginSecurityPolicyLevel.compliant){
@@ -202,20 +231,24 @@ export class UserLoginComponent implements OnDestroy {
            return;
          }
       }
+      LogUtil.log("GetUserLoginSettings is ok！");
       let userToken=await  this.authService.SubmitLogin(this.userName.value,requestNumber);
-
+      LogUtil.log("SubmitLogin is ok！");
       // 清空路由复用信息
-      this.reuseTabService.clear();
+      this.reuseTabService?.clear();
+      LogUtil.log("reuseTabService  clear is ok！");
       // 设置用户Token信息
       this.tokenService.set({
         token: userToken.Token
       });
+      LogUtil.log("reuseTabService has been successfully set！");
 
       this.settingService.setUser({
         name:userToken.Username,
         avatar:"https://gw.alipayobjects.com/zos/rmsportal/lctvVCLfRpYCkYxAsiVQ.png",
         email:userToken.Email
       });
+      LogUtil.log("this.settingService.setUser:Success！");
 
       this.configService.SetUserToken(userToken);
       this.nzMessage.success("业务系统身份鉴别成功")
@@ -227,7 +260,7 @@ export class UserLoginComponent implements OnDestroy {
   }
   async toLogin(userToken: UserToken) {
     // 清空路由复用信息
-    this.reuseTabService.clear();
+    this.reuseTabService?.clear();
     // 设置用户Token信息
     this.tokenService.set({
       token: userToken.Token
@@ -313,7 +346,7 @@ export class UserLoginComponent implements OnDestroy {
           //登录步骤
           let userToken: UserToken = apiRep.Data;
           // 清空路由复用信息
-          this.reuseTabService.clear();
+          this.reuseTabService?.clear();
           // 设置用户Token信息
           this.tokenService.set({
             token: userToken.Token

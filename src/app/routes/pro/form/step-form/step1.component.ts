@@ -2,10 +2,22 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { TransferService } from './transfer.service';
+import {SEComponent} from "@delon/abc/se";
+import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
+import {NzInputGroupComponent} from "ng-zorro-antd/input";
+import {SharedModule} from "@shared";
 
 @Component({
   selector: 'app-step1',
   templateUrl: './step1.component.html',
+  standalone: true,
+  imports: [
+    SEComponent,
+    NzSelectComponent,
+    NzOptionComponent,
+    NzInputGroupComponent,
+    SharedModule
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Step1Component implements OnInit {

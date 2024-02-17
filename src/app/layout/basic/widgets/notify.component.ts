@@ -1,24 +1,26 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { NoticeIconList, NoticeIconSelect, NoticeItem } from '@delon/abc/notice-icon';
+import {NoticeIconList, NoticeIconModule, NoticeIconSelect, NoticeItem} from '@delon/abc/notice-icon';
 import { add, formatDistanceToNow, parse } from 'date-fns';
 import { NzI18nService } from 'ng-zorro-antd/i18n';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
-  selector: 'header-notify',
-  template: `
-    <notice-icon
-      [data]="data"
-      [count]="count"
-      [loading]="loading"
-      btnClass="alain-default__nav-item"
-      btnIconClass="alain-default__nav-item-icon"
-      (select)="select($event)"
-      (clear)="clear($event)"
-      (popoverVisibleChange)="loadData()"
-    ></notice-icon>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'header-notify',
+    template: `
+        <notice-icon
+                [data]="data"
+                [count]="count"
+                [loading]="loading"
+                btnClass="alain-default__nav-item"
+                btnIconClass="alain-default__nav-item-icon"
+                (select)="select($event)"
+                (clear)="clear($event)"
+                (popoverVisibleChange)="loadData()"
+        ></notice-icon>
+    `,
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NoticeIconModule]
 })
 export class HeaderNotifyComponent {
   data: NoticeItem[] = [

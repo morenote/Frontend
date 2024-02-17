@@ -11,7 +11,6 @@ import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
 
 // #region third libs
 // import { NgxTinymceModule } from 'ngx-tinymce';
-// import { UEditorModule } from 'ngx-ueditor';
 
 const THIRDMODULES: Array<Type<any>> = [];
 // #endregion
@@ -27,7 +26,7 @@ const DIRECTIVES: Array<Type<any>> = [];
     FormsModule,
     RouterModule,
     ReactiveFormsModule,
-    AlainThemeModule.forChild(),
+    AlainThemeModule,
     DelonACLModule,
     DelonFormModule,
     ...SHARED_DELON_MODULES,
@@ -57,7 +56,4 @@ const DIRECTIVES: Array<Type<any>> = [];
     ...DIRECTIVES
   ]
 })
-/**
- * 共享模块(全局依赖)
- */
 export class SharedModule {}

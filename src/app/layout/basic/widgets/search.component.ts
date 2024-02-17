@@ -12,6 +12,13 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
+import {FormsModule} from "@angular/forms";
+import {I18nPipe} from "@delon/theme";
+import {NgTemplateOutlet} from "@angular/common";
+import {NzInputModule} from "ng-zorro-antd/input";
+import {NzIconModule} from "ng-zorro-antd/icon";
+import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
   selector: 'header-search',
@@ -38,7 +45,9 @@ import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
       <nz-auto-option *ngFor="let i of options" [nzValue]="i">{{ i }}</nz-auto-option>
     </nz-autocomplete>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [...SHARED_IMPORTS,FormsModule, I18nPipe, NgTemplateOutlet, NzInputModule, NzIconModule, NzAutocompleteModule]
 })
 export class HeaderSearchComponent implements AfterViewInit, OnDestroy {
   q = '';

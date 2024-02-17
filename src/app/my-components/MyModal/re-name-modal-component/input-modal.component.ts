@@ -1,9 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import {NzModalComponent} from "ng-zorro-antd/modal";
+import {SharedModule} from "@shared";
 
 @Component({
   selector: 'app-re-name-modal-component',
   templateUrl: './input-modal.component.html',
-  styleUrls: ['./input-modal.component.css']
+  styleUrls: ['./input-modal.component.css'],
+  imports: [
+    NzModalComponent,
+    SharedModule
+  ],
+  standalone: true
 })
 export class InputModalComponent implements OnInit {
 

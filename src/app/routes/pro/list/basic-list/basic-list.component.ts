@@ -3,11 +3,27 @@ import { ModalHelper, _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 import { ProBasicListEditComponent } from './edit/edit.component';
+import {NzListComponent, NzListItemComponent} from "ng-zorro-antd/list";
+import {NzInputGroupComponent} from "ng-zorro-antd/input";
+import {NzRadioGroupComponent} from "ng-zorro-antd/radio";
+import {NzCardComponent} from "ng-zorro-antd/card";
+import {SharedModule} from "@shared";
+import {NzPaginationComponent} from "ng-zorro-antd/pagination";
 
 @Component({
   selector: 'app-basic-list',
   templateUrl: './basic-list.component.html',
   styleUrls: ['./basic-list.component.less'],
+  standalone: true,
+  imports: [
+    NzListComponent,
+    NzListItemComponent,
+    NzInputGroupComponent,
+    NzRadioGroupComponent,
+    NzCardComponent,
+    SharedModule,
+    NzPaginationComponent
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProBasicListComponent implements OnInit {

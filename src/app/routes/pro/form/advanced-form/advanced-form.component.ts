@@ -1,9 +1,34 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {NzColDirective, NzRowDirective} from "ng-zorro-antd/grid";
+import {NzFormItemComponent} from "ng-zorro-antd/form";
+import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
+import {NzInputGroupComponent} from "ng-zorro-antd/input";
+import {NzDatePickerComponent} from "ng-zorro-antd/date-picker";
+import {NzCardComponent} from "ng-zorro-antd/card";
+import {NzTimePickerComponent} from "ng-zorro-antd/time-picker";
+import {NzTableComponent} from "ng-zorro-antd/table";
+import {SharedModule} from "@shared";
+import {FooterToolbarComponent} from "@delon/abc/footer-toolbar";
 
 @Component({
   selector: 'app-advanced-form',
   templateUrl: './advanced-form.component.html',
+  standalone: true,
+  imports: [
+    NzColDirective,
+    NzFormItemComponent,
+    NzSelectComponent,
+    NzOptionComponent,
+    NzInputGroupComponent,
+    NzDatePickerComponent,
+    NzCardComponent,
+    NzRowDirective,
+    NzTimePickerComponent,
+    NzTableComponent,
+    SharedModule,
+    FooterToolbarComponent
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdvancedFormComponent implements OnInit {

@@ -2,10 +2,13 @@ import { Component } from '@angular/core';
 import { SFSchema } from '@delon/form';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
+import {SHARED_IMPORTS, SharedModule} from "@shared";
 
 @Component({
   selector: 'app-basic-list-edit',
-  templateUrl: './edit.component.html'
+  standalone: true,
+  templateUrl: './edit.component.html',
+  imports: [...SHARED_IMPORTS, SharedModule]
 })
 export class ProBasicListEditComponent {
   record: any = {};

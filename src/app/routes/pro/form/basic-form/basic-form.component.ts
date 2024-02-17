@@ -1,10 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import {PageHeaderComponent} from "@delon/abc/page-header";
+import {NzCardComponent} from "ng-zorro-antd/card";
+import {SharedModule} from "@shared";
 
 @Component({
   selector: 'app-basic-form',
   templateUrl: './basic-form.component.html',
+  standalone: true,
+  imports: [
+    PageHeaderComponent,
+    NzCardComponent,
+    SharedModule
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BasicFormComponent implements OnInit {

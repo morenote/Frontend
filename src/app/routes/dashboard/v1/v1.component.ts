@@ -1,15 +1,22 @@
 import { Platform } from '@angular/cdk/platform';
-import { DOCUMENT } from '@angular/common';
+import {DOCUMENT, NgForOf, NgIf} from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, Renderer2 } from '@angular/core';
 import type { Chart } from '@antv/g2';
-import { OnboardingService } from '@delon/abc/onboarding';
+import {OnboardingModule, OnboardingService} from '@delon/abc/onboarding';
 import { _HttpClient } from '@delon/theme';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
+import {SHARED_IMPORTS} from "@shared";
+import {G2TimelineModule} from "@delon/chart/timeline";
+import {G2BarModule} from "@delon/chart/bar";
+import {G2MiniBarModule} from "@delon/chart/mini-bar";
+import {QuickMenuModule} from "@delon/abc/quick-menu";
 
 @Component({
   selector: 'app-dashboard-v1',
   templateUrl: './v1.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [...SHARED_IMPORTS, G2TimelineModule, G2BarModule, G2MiniBarModule, QuickMenuModule, OnboardingModule]
 })
 export class DashboardV1Component implements OnInit {
   todoData = [

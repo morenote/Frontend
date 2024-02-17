@@ -1,22 +1,18 @@
 import {Inject, Injectable} from '@angular/core';
-import {DA_SERVICE_TOKEN, ITokenService} from "@delon/auth";
+import {ALLOW_ANONYMOUS, DA_SERVICE_TOKEN, ITokenService} from "@delon/auth";
 import {LocalStorageDBService} from "../data-storage/local-storage-db.service";
 import {Observable} from "rxjs";
 import {ApiRep} from "../../models/api/api-rep";
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpContext, HttpParams} from "@angular/common/http";
 import {WebsiteConfig} from "../../models/config/website-config";
 import {ConfigService} from "../config/config.service";
 import {UserToken} from "../../models/DTO/user-token";
-import {pbkdf2, pbkdf2Sync} from "crypto";
-import * as hkdf from "futoin-hkdf";
-import {AuthOk} from "../../models/api/auth-ok";
+
 import {LoginSecurityPolicyLevel} from "../../models/enum/LoginSecurityPolicyLevel/login-security-policy-level";
 import {UserService} from "../User/user.service";
 
 import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security-config-dto";
-import {UserInfo} from "../../models/entity/userInfo";
-import {LogUtil} from "../../shared/utils/log-util";
-import {Base64Util} from "../../shared/utils/base64-util";
+
 import { SJJ1962Service } from "../Cryptography/PasswordProcessing/sj1962/s-j-j1962.service";
 
 
@@ -70,13 +66,13 @@ export class AuthService {
 
       pwd=await  this.sjj1962.TransferEncryptionIfUser(pwd,userInfo,scDTO);
 
-      let url = this.config.baseURL + '/api/Auth/PasswordChallenge?_allow_anonymous=true';
+      let url = this.config.baseURL + '/api/Auth/PasswordChallenge';
       let formData = new FormData();
       formData.set('type', type!);
       formData.set('email', email!);
       formData.set('pwd', pwd);
       formData.set('sessionCode', sessionCode);
-      let result = this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
+      let result = this.http.post<ApiRep>(url, formData,{ context: new HttpContext().set(ALLOW_ANONYMOUS, true)}).subscribe(apiRe=>{
           resolve(apiRe);
       })
     })
@@ -88,8 +84,8 @@ export class AuthService {
    */
   public TakeSessionCode():Promise<string>{
     return  new Promise<string>(resolve => {
-      let url = this.config.baseURL + '/api/Auth/TakeSessionCode?_allow_anonymous=true';
-      let result = this.http.get<ApiRep>(url).subscribe(apiRe=>{
+      let url = this.config.baseURL + '/api/Auth/TakeSessionCode';
+      let result = this.http.get<ApiRep>(url,{context:new HttpContext().set(ALLOW_ANONYMOUS,true)}).subscribe(apiRe=>{
         if (apiRe!=null && apiRe.Ok){
           resolve(apiRe.Data);
         }else {
@@ -107,10 +103,10 @@ export class AuthService {
    */
   public GetUserLoginSettings(email:string):Promise<LoginSecurityPolicyLevel>{
     return  new Promise<LoginSecurityPolicyLevel>((resolve)=>{
-      let url = this.config.baseURL + '/api/Auth/GetUserLoginSettings?_allow_anonymous=true';
+      let url = this.config.baseURL + '/api/Auth/GetUserLoginSettings';
       let httpParams = new HttpParams()
         .append('email', email);
-      let result = this.http.get<ApiRep>(url, {params: httpParams}).subscribe(apiRe=>{
+      let result = this.http.get<ApiRep>(url, {params: httpParams,context:new HttpContext().set(ALLOW_ANONYMOUS,true)}).subscribe(apiRe=>{
         if (apiRe!=null && apiRe.Ok){
           return resolve(apiRe.Data);
         }else {
@@ -133,7 +129,7 @@ export class AuthService {
       let formData = new FormData();
       formData.set('email', email);
       formData.set('sessionCode', sessionCode);
-      this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
+      this.http.post<ApiRep>(url, formData,{context: new HttpContext().set(ALLOW_ANONYMOUS, true)}).subscribe(apiRe=>{
         if (apiRe!=null){
         return   resolve(apiRe.Data);
         }

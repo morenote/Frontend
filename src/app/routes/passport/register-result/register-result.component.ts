@@ -1,9 +1,16 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import {NzButtonComponent} from "ng-zorro-antd/button";
+import {ResultComponent} from "@delon/abc/result";
 
 @Component({
   selector: 'passport-register-result',
+  standalone: true,
+  imports: [
+    NzButtonComponent,
+    ResultComponent
+  ],
   templateUrl: './register-result.component.html'
 })
 export class UserRegisterResultComponent {

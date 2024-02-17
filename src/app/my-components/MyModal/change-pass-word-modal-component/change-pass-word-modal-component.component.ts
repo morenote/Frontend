@@ -1,10 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import {NzModalComponent} from "ng-zorro-antd/modal";
+import {NzInputGroupComponent} from "ng-zorro-antd/input";
+import {SharedModule} from "@shared";
 
 @Component({
   selector: 'app-change-pass-word-modal-component',
   templateUrl: './change-pass-word-modal-component.component.html',
-  styles: [
-  ]
+  standalone: true,
+  imports: [
+    NzModalComponent,
+    NzInputGroupComponent,
+    SharedModule
+  ],
+  styles: []
 })
 export class ChangePassWordModalComponentComponent implements OnInit {
 

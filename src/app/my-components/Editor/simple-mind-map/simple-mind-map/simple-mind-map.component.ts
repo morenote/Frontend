@@ -5,6 +5,7 @@ import MindMap  from "simple-mind-map";
 @Component({
   selector: 'app-simple-mind-map',
   templateUrl: './simple-mind-map.component.html',
+  standalone:true,
   styleUrls: ['./simple-mind-map.component.css'
   ]
 })

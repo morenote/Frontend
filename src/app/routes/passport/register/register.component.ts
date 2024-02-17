@@ -1,18 +1,51 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { _HttpClient } from '@delon/theme';
+import {
+  AbstractControl,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
+import {Router, RouterLink} from '@angular/router';
+import {_HttpClient, I18nPipe} from '@delon/theme';
 import { MatchControl } from '@delon/util/form';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { finalize } from 'rxjs/operators';
 import {UserService} from "../../../services/User/user.service";
 import {NzMessageService} from "ng-zorro-antd/message";
+import {NzAlertModule} from "ng-zorro-antd/alert";
+import {NzFormModule} from "ng-zorro-antd/form";
+import {NzInputModule} from "ng-zorro-antd/input";
+import {NzPopoverModule} from "ng-zorro-antd/popover";
+import {NzProgressModule} from "ng-zorro-antd/progress";
+import {NzSelectModule} from "ng-zorro-antd/select";
+import {NzGridModule} from "ng-zorro-antd/grid";
+import {NzButtonModule} from "ng-zorro-antd/button";
+import {NgSwitch} from "@angular/common";
+
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+
+    ReactiveFormsModule,
+    I18nPipe,
+    RouterLink,
+    NzAlertModule,
+    NzFormModule,
+    NzInputModule,
+    NzPopoverModule,
+    NzProgressModule,
+    NzSelectModule,
+    NzGridModule,
+    NzButtonModule,
+    NgSwitch
+  ],
   selector: 'passport-register',
-  templateUrl: './register.component.html',
+  standalone: true,
   styleUrls: ['./register.component.less'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './register.component.html'
 })
 export class UserRegisterComponent implements OnDestroy {
   constructor(fb: UntypedFormBuilder,

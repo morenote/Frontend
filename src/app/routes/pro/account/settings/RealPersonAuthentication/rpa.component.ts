@@ -9,6 +9,7 @@ import {UserService} from "../../../../../services/User/user.service";
 import {RealNameInformation} from "../../../../../models/entity/User/real-name-information";
 import {WebsiteConfig} from "../../../../../models/config/website-config";
 import {ConfigService} from "../../../../../services/config/config.service";
+import {SHARED_IMPORTS} from "@shared";
 
 interface ProAccountSettingsUser {
   email: string;
@@ -37,7 +38,9 @@ interface ProAccountSettingsCity {
   selector: 'app-account-settings-rpa',
   templateUrl: './rpa.component.html',
   styleUrls: ['./rpa.component.less'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports:[...SHARED_IMPORTS,]
 })
 export class ProRealPersonAuthenticationComponent implements OnInit {
   config?: WebsiteConfig;

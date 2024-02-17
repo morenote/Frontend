@@ -1,9 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
+import {SharedModule} from "@shared";
 
 @Component({
   selector: 'app-select-moal',
   templateUrl: './select-moal.component.html',
-  styleUrls: ['./select-moal.component.less']
+  styleUrls: ['./select-moal.component.less'],
+  imports: [
+    NzSelectComponent,
+    NzOptionComponent,
+    SharedModule
+  ],
+  standalone: true
 })
 export class SelectMoalComponent implements OnInit {
 

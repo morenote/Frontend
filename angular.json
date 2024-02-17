@@ -59,7 +59,7 @@
             "outputPath": "dist/notion-like-theme",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "less",
 
@@ -78,6 +78,8 @@
             "allowedCommonJsDependencies": [
               "@antv/g2",
               "ajv",
+              "mockjs",
+              "extend",
               "ajv-formats",
               "date-fns",
               "file-saver"

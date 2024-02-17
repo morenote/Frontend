@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
+import {SHARED_IMPORTS} from "@shared";
+import {DecimalPipe} from "@angular/common";
 
 @Component({
   selector: 'app-account-center-applications',
   templateUrl: './applications.component.html',
   styleUrls: ['./applications.component.less'],
+  standalone: true,
+  imports: [...SHARED_IMPORTS, DecimalPipe,],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProAccountCenterApplicationsComponent {

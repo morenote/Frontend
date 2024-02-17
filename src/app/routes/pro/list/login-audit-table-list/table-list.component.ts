@@ -7,10 +7,13 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { map, tap } from 'rxjs/operators';
 import {LoginAuditService} from "../../../../services/LoginAudit/login-audit.service";
 import {ApiRep} from "../../../../models/api/api-rep";
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
   selector: 'app-login-audit-table-list',
   templateUrl: './table-list.component.html',
+  standalone: true,
+  imports:[SHARED_IMPORTS],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginAuditProTableListComponent implements OnInit {

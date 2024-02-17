@@ -1,10 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivationEnd, Router } from '@angular/router';
+import {ActivationEnd, Router, RouterOutlet} from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
   selector: 'app-list-layout',
+  standalone: true,
+  imports: [...SHARED_IMPORTS, RouterOutlet],
   templateUrl: './list.component.html'
 })
 export class ProListLayoutComponent implements OnInit, OnDestroy {

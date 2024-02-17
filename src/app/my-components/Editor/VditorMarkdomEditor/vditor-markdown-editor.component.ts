@@ -9,7 +9,8 @@ import {UserToken} from "../../../models/DTO/user-token";
 @Component({
   selector: 'app-VditorMarkdownEditor',
   templateUrl: './vditor-markdown-editor.component.html',
-  styleUrls: ['./vditor-markdown-editor.component.css']
+  styleUrls: ['./vditor-markdown-editor.component.css'],
+  standalone:true
 })
 export class VditorMarkdownEditorComponent implements OnInit, EditorInterface {
   config!: WebsiteConfig;

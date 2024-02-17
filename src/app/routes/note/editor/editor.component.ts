@@ -3,8 +3,8 @@ import {ActivatedRoute} from '@angular/router';
 import {NzContextMenuService, NzDropdownMenuComponent} from 'ng-zorro-antd/dropdown';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {NzModalRef, NzModalService} from 'ng-zorro-antd/modal';
-import {NzFormatBeforeDropEvent, NzFormatEmitEvent, NzTreeNodeOptions} from 'ng-zorro-antd/tree';
-import {NzTreeComponent} from 'ng-zorro-antd/tree/tree.component';
+import {NzFormatBeforeDropEvent, NzFormatEmitEvent, NzTreeComponent, NzTreeNodeOptions} from 'ng-zorro-antd/tree';
+
 import {delay, Observable, of} from 'rxjs';
 
 import {ApiRep} from '../../../models/api/api-rep';
@@ -30,11 +30,33 @@ import {TimeFormatUtil} from '../../../shared/utils/Time/time-format-util';
 import {Watermark} from '../../../shared/utils/WaterMark/watermark';
 import {LogUtil} from '../../../shared/utils/log-util';
 import {ExtendedNameEnum} from "../../../models/enum/extended-name-enum";
+import {NzTabComponent, NzTabSetComponent} from "ng-zorro-antd/tabs";
+import {NzInputGroupComponent} from "ng-zorro-antd/input";
+import {SHARED_IMPORTS, SharedModule} from "@shared";
+import {
+  SimpleMindMapComponen
+} from "../../../my-components/Editor/simple-mind-map/simple-mind-map/simple-mind-map.component";
+
 
 @Component({
   selector: 'app-myeditor',
   templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.less']
+  styleUrls: ['./editor.component.less'],
+  imports: [
+    ...SHARED_IMPORTS,
+    NzTabSetComponent,
+    NzTabComponent,
+    NzInputGroupComponent,
+    SharedModule,
+
+    InputModalComponent,
+    SerchNoteModalComponent,
+    TextbusEditorComponent,
+    SimpleMindMapComponen,
+    VditorMarkdownEditorComponent,
+    NzTreeComponent
+  ],
+  standalone: true
 })
 export class EditorComponent implements OnInit, ISearchNoteAction {
   repositoryId!: string;

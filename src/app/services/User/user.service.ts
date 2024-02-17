@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {WebsiteConfig} from "../../models/config/website-config";
 import {AuthService} from "../auth/auth.service";
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpContext, HttpParams} from "@angular/common/http";
 import {ConfigService} from "../config/config.service";
 import {Observable} from "rxjs";
 import {ApiRep} from "../../models/api/api-rep";
@@ -18,6 +18,7 @@ import {LogUtil} from "../../shared/utils/log-util";
 import {EPass2001Service} from "../Usbkey/EnterSafe/ePass2001/e-pass2001.service";
 import {PayLoadDTO} from "../../models/DTO/Api/pay-load-d-t-o";
 import { SJJ1962Service } from "../Cryptography/PasswordProcessing/sj1962/s-j-j1962.service";
+import {ALLOW_ANONYMOUS} from "@delon/auth";
 
 @Injectable({
   providedIn: 'root'
@@ -172,7 +173,7 @@ export class UserService {
       let url = this.config.baseURL + '/api/User/GetUserInfoByEmail';
       let httpParams = new HttpParams()
         .append('email', email!);
-      let result = this.http.get<ApiRep>(url, {params: httpParams}).subscribe(apiRe => {
+      let result = this.http.get<ApiRep>(url, {params: httpParams,context: new HttpContext().set(ALLOW_ANONYMOUS, true)}).subscribe(apiRe => {
        if(apiRe!=null&&apiRe.Ok){
          let user= apiRe.Data as UserInfo;
           resolve(user);

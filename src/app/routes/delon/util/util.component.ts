@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { copy } from '@delon/util/browser';
 import { format } from '@delon/util/format';
 import { yuan } from '@shared';
@@ -9,7 +9,9 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   templateUrl: './util.component.html'
 })
 export class UtilComponent {
-  readonly messageSrv = inject(NzMessageService);
+  constructor(public messageSrv: NzMessageService) {}
+
+  // region: string
 
   format_str = 'this is ${name}';
   format_res = '';
@@ -18,6 +20,10 @@ export class UtilComponent {
   // yuan
   yuan_str: any;
   yuan_res!: string;
+
+  // endregion
+
+  // region: other
 
   content = `time ${+new Date()}
 
@@ -38,4 +44,6 @@ export class UtilComponent {
   onCopy(): void {
     copy(`time ${+new Date()}`).then(() => this.messageSrv.success(`success`));
   }
+
+  // endregion
 }

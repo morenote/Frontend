@@ -33,7 +33,7 @@ export class FileBrowserComponent implements OnInit, AfterViewInit, OnDestroy {
 
   listOfData: VirtualFileInfo[] = [];
   selectFile: VirtualFileInfo | undefined;
-  qrValue: string = 'https://dev.morenote.top';
+  qrValue: string = 'https://app.morenote.top';
   repositoryId: string = '';
   constructor(
     public message: NzMessageService,

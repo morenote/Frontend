@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import {NzIconModule} from "ng-zorro-antd/icon";
@@ -15,10 +15,11 @@ import {I18nPipe} from "@delon/theme";
     },
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NzIconModule, I18nPipe]
+    imports: [NzIconModule, I18nPipe]
 })
 export class HeaderClearStorageComponent {
-  constructor(private modalSrv: NzModalService, private messageSrv: NzMessageService) {}
+  private readonly modalSrv = inject(NzModalService);
+  private readonly messageSrv = inject(NzMessageService);
 
   @HostListener('click')
   _click(): void {

@@ -11,6 +11,7 @@ import {SHARED_IMPORTS} from "@shared";
 import {NzAvatarModule} from "ng-zorro-antd/avatar";
 import {G2RadarModule} from "@delon/chart/radar";
 
+
 @Component({
   selector: 'app-dashboard-workplace',
   templateUrl: './workplace.component.html',
@@ -90,6 +91,8 @@ export class DashboardWorkplaceComponent implements OnInit {
   constructor(private http: _HttpClient,
               public msg: NzMessageService,
               private cdr: ChangeDetectorRef,
+
+
               public router: Router,
               private configService: ConfigService,
               private authService: AuthService,

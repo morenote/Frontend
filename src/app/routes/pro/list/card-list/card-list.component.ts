@@ -16,15 +16,19 @@ import {EllipsisComponent} from "@delon/abc/ellipsis";
   ],
   encapsulation: ViewEncapsulation.Emulated,
   standalone: true,
-  imports: [...SHARED_IMPORTS, EllipsisComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [...SHARED_IMPORTS, EllipsisComponent]
 })
 export class ProCardListComponent implements OnInit {
   list: Array<{ id: number; title: string; avatar: string; description: string } | null> = [null];
 
   loading = true;
 
-  constructor(private http: _HttpClient, private msg: NzMessageService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private http: _HttpClient,
+    private msg: NzMessageService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;

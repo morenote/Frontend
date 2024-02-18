@@ -1,30 +1,29 @@
+import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { I18NService } from '@core';
 import { STColumn } from '@delon/abc/st';
+import { G2BarModule } from '@delon/chart/bar';
+import { G2CardModule } from '@delon/chart/card';
+import { G2MiniAreaModule } from '@delon/chart/mini-area';
+import { G2MiniBarModule } from '@delon/chart/mini-bar';
+import { G2MiniProgressModule } from '@delon/chart/mini-progress';
+import { NumberInfoModule } from '@delon/chart/number-info';
+import { G2PieModule } from '@delon/chart/pie';
+import { G2TimelineModule } from '@delon/chart/timeline';
+import { TrendModule } from '@delon/chart/trend';
 import { ALAIN_I18N_TOKEN, _HttpClient } from '@delon/theme';
 import { getTimeDistance } from '@delon/util/date-time';
 import { deepCopy } from '@delon/util/other';
-import {SHARED_IMPORTS, yuan} from '@shared';
+import { SHARED_IMPORTS, yuan } from '@shared';
 import type { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import {ConfigService} from "../../../services/config/config.service";
-import {G2TimelineModule} from "@delon/chart/timeline";
-import {G2PieModule} from "@delon/chart/pie";
-import {NumberInfoModule} from "@delon/chart/number-info";
-import {G2BarModule} from "@delon/chart/bar";
-import {G2MiniAreaModule} from "@delon/chart/mini-area";
-import {TrendModule} from "@delon/chart/trend";
-import {DecimalPipe} from "@angular/common";
-import {G2MiniProgressModule} from "@delon/chart/mini-progress";
-import {G2CardModule} from "@delon/chart/card";
-import {G2MiniBarModule} from "@delon/chart/mini-bar";
 
 @Component({
   selector: 'app-dashboard-analysis',
   templateUrl: './analysis.component.html',
   styleUrls: ['./analysis.component.less'],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     ...SHARED_IMPORTS,
     G2TimelineModule,
@@ -43,7 +42,6 @@ export class DashboardAnalysisComponent implements OnInit {
   constructor(
     private http: _HttpClient,
     public msg: NzMessageService,
-    private configService:ConfigService,
     @Inject(ALAIN_I18N_TOKEN) private i18n: I18NService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -99,7 +97,7 @@ export class DashboardAnalysisComponent implements OnInit {
   offlineIdx = 0;
 
   ngOnInit(): void {
-    this.http.get(this.configService.GetWebSiteConfig().baseURL+'/chart').subscribe(res => {
+    this.http.get('/chart').subscribe(res => {
       res.offlineData.forEach((item: any, idx: number) => {
         item.show = idx === 0;
         item.chart = deepCopy(res.offlineChartData);
@@ -120,8 +118,8 @@ export class DashboardAnalysisComponent implements OnInit {
       this.salesType === 'all'
         ? this.data.salesTypeData
         : this.salesType === 'online'
-        ? this.data.salesTypeDataOnline
-        : this.data.salesTypeDataOffline;
+          ? this.data.salesTypeDataOnline
+          : this.data.salesTypeDataOffline;
     if (this.salesPieData) {
       this.salesTotal = this.salesPieData.reduce((pre: number, now: { y: number }) => now.y + pre, 0);
     }

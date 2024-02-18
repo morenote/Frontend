@@ -36,6 +36,7 @@ import {SHARED_IMPORTS, SharedModule} from "@shared";
 import {
   SimpleMindMapComponen
 } from "../../../my-components/Editor/simple-mind-map/simple-mind-map/simple-mind-map.component";
+import {ExtendedName} from "../../../models/enum/extended-name";
 
 
 @Component({
@@ -367,7 +368,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   onCreateMdDoc() {
     this.reNameModalComponent.showModal('新建markdown文档', '请输入文档名称', async (result: boolean, value: string) => {
       if (result && value != null && value != '') {
-        let apiRe = await this.noteService.CreateNote(value, this.rightClickNode!.key, true);
+        let apiRe = await this.noteService.CreateNote(value, this.rightClickNode!.key, ExtendedName.md);
         if (apiRe.Ok == true) {
           let note: Note = apiRe.Data;
           let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.Id, note.Title));
@@ -390,7 +391,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   onCreateHtmlDoc() {
     this.reNameModalComponent.showModal('新建富文本文档', '请输入文档名称', async (result: boolean, value: string) => {
       if (result && value != null && value != '') {
-        let apiRe = await this.noteService.CreateNote(value, this.rightClickNode!.key, false);
+        let apiRe = await this.noteService.CreateNote(value, this.rightClickNode!.key, ExtendedName.textbus);
         if (apiRe.Ok == true) {
           let note: Note = apiRe.Data;
           let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.Id, note.Title));
@@ -408,7 +409,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   onCreateSimpleMindDoc() {
     this.reNameModalComponent.showModal('新建思维导图文档', '请输入文档名称', async (result: boolean, value: string) => {
       if (result && value != null && value != '') {
-        let apiRe = await this.noteService.CreateNote(value, this.rightClickNode!.key, false);
+        let apiRe = await this.noteService.CreateNote(value, this.rightClickNode!.key, ExtendedName.textbus);
         if (apiRe.Ok == true) {
           let note: Note = apiRe.Data;
           let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(note.Id, note.Title));
@@ -455,7 +456,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   async updateNote() {
     let title = this.noteTitle;
     let content = this.editor?.GetContent();
-    if (content == null || content == undefined) {
+    if (content == null) {
       this.message.remove(this.saveMessageId);
       this.message.error('保存内容存在错误，无法保存当前笔记内容');
       return;

@@ -15,10 +15,11 @@ import {ConfigService} from "../../../../services/config/config.service";
 import {WebsiteConfig} from "../../../../models/config/website-config";
 import {UserService} from "../../../../services/User/user.service";
 import {SHARED_IMPORTS} from "@shared";
+import {NgIf} from "@angular/common";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [...SHARED_IMPORTS, RouterOutlet,],
+  imports: [...SHARED_IMPORTS, RouterOutlet, NgIf,],
   selector: 'app-account-center',
   standalone: true,
   styleUrls: ['./center.component.less'],

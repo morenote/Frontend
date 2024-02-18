@@ -5,7 +5,7 @@ import {ResultComponent} from "@delon/abc/result";
 @Component({
   selector: 'app-result-fail',
   standalone: true,
-  imports: [...SHARED_IMPORTS, ResultComponent],
-  templateUrl: './fail.component.html'
+  templateUrl: './fail.component.html',
+  imports: [...SHARED_IMPORTS, ResultComponent]
 })
 export class ProResultFailComponent {}

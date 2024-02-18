@@ -10,8 +10,8 @@ import {AvatarListComponent, AvatarListItemComponent} from "@delon/abc/avatar-li
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.less'],
   standalone: true,
-  imports: [...SHARED_IMPORTS, TagSelectComponent, AvatarListComponent, AvatarListItemComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [...SHARED_IMPORTS, TagSelectComponent, AvatarListComponent, AvatarListItemComponent]
 })
 export class ProListProjectsComponent implements OnInit {
   q = {
@@ -51,7 +51,11 @@ export class ProListProjectsComponent implements OnInit {
   }
   // endregion
 
-  constructor(private http: _HttpClient, public msg: NzMessageService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private http: _HttpClient,
+    public msg: NzMessageService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.getData();

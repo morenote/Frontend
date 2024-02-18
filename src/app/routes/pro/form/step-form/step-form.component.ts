@@ -1,30 +1,19 @@
 import { AfterViewInit, Component } from '@angular/core';
 
 import { TransferService } from './transfer.service';
+import {SHARED_IMPORTS} from "@shared";
 import {Step1Component} from "./step1.component";
-import {NzStepComponent, NzStepsComponent} from "ng-zorro-antd/steps";
-import {PageHeaderComponent} from "@delon/abc/page-header";
-import {NzCardComponent} from "ng-zorro-antd/card";
 import {Step2Component} from "./step2.component";
 import {Step3Component} from "./step3.component";
-import {SHARED_IMPORTS} from "@shared";
+import {NzStepComponent, NzStepsComponent} from "ng-zorro-antd/steps";
 
 @Component({
   selector: 'app-step-form',
   templateUrl: './step-form.component.html',
   styleUrls: ['./step-form.component.less'],
   standalone: true,
-  imports:[
-  ...SHARED_IMPORTS,
-    Step1Component,
-    NzStepComponent,
-    NzStepsComponent,
-    PageHeaderComponent,
-    NzCardComponent,
-    Step2Component,
-    Step3Component
-  ],
-  providers: [TransferService]
+  providers: [TransferService],
+  imports: [...SHARED_IMPORTS, Step1Component, Step2Component, Step3Component, NzStepComponent, NzStepsComponent]
 })
 export class StepFormComponent implements AfterViewInit {
   get item(): TransferService {

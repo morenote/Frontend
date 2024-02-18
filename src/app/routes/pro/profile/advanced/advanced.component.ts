@@ -12,8 +12,8 @@ import {NzStepComponent, NzStepsComponent} from "ng-zorro-antd/steps";
   templateUrl: './advanced.component.html',
   styleUrls: ['./advanced.component.less'],
   standalone: true,
-  imports: [SHARED_IMPORTS, NzStepsComponent, NzStepComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [...SHARED_IMPORTS, NzStepComponent, NzStepsComponent]
 })
 export class ProProfileAdvancedComponent implements OnInit {
   list: Array<{ [key: string]: NzSafeAny }> = [];
@@ -30,7 +30,11 @@ export class ProProfileAdvancedComponent implements OnInit {
     { title: '备注', index: 'memo', default: '-' }
   ];
 
-  constructor(public msg: NzMessageService, private http: _HttpClient, private cdr: ChangeDetectorRef) {}
+  constructor(
+    public msg: NzMessageService,
+    private http: _HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.http.get('/profile/advanced').subscribe(res => {

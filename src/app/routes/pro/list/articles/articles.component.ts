@@ -1,43 +1,22 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
-import {NzCardComponent} from "ng-zorro-antd/card";
-import {NzListComponent, NzListItemComponent} from "ng-zorro-antd/list";
-import {NzAvatarComponent} from "ng-zorro-antd/avatar";
-import {NzTagComponent} from "ng-zorro-antd/tag";
-import {NzButtonComponent} from "ng-zorro-antd/button";
+import {SHARED_IMPORTS} from "@shared";
 import {TagSelectComponent} from "@delon/abc/tag-select";
-import {SEComponent, SEContainerComponent} from "@delon/abc/se";
-import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
-import {NzFormControlComponent, NzFormItemComponent, NzFormLabelComponent} from "ng-zorro-antd/form";
-import {SharedModule} from "@shared";
 
 @Component({
   selector: 'app-list-articles',
   templateUrl: './articles.component.html',
   standalone: true,
-  imports: [
-    NzCardComponent,
-    NzListComponent,
-    NzListItemComponent,
-    NzAvatarComponent,
-    NzTagComponent,
-    NzButtonComponent,
-    TagSelectComponent,
-    SEComponent,
-    SEContainerComponent,
-    NzSelectComponent,
-    NzOptionComponent,
-    NzFormItemComponent,
-    NzFormLabelComponent,
-    NzFormControlComponent,
-    SharedModule
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [...SHARED_IMPORTS, TagSelectComponent]
 })
 export class ProListArticlesComponent implements OnInit {
   // endregion
 
-  constructor(private http: _HttpClient, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private http: _HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
   q = {
     ps: 5,
     categories: [],

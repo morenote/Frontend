@@ -6,12 +6,15 @@ import { MatchControl } from '@delon/util/form';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { finalize } from 'rxjs/operators';
 import {UserService} from "../../services/User/user.service";
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
   selector: 'passport-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.less'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports:[...SHARED_IMPORTS]
 })
 export class UserRegisterComponent implements OnDestroy {
   constructor(fb: FormBuilder,

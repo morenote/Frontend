@@ -18,22 +18,22 @@ export class LogUtil {
 
   public  static  info(str:string){
     if (this.GetIsOk()){
-      console.log(str)
+      console.info(str)
     }
   }
   public  static  debug(str:string){
     if (this.GetIsOk()){
-      console.log(str)
+      console.debug(str)
     }
   }
   public  static  warning(str:string){
     if (this.GetIsOk()){
-      console.log(str)
+      console.warn(str)
     }
   }
   public  static  error(str:string){
     if (this.GetIsOk()){
-      console.log(str)
+      console.error(str)
     }
   }
 }

@@ -1,19 +1,23 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { CountDownModule } from '@delon/abc/count-down';
+import { G2GaugeModule } from '@delon/chart/gauge';
+import { G2MiniAreaModule } from '@delon/chart/mini-area';
+import { NumberInfoModule } from '@delon/chart/number-info';
+import { G2PieModule } from '@delon/chart/pie';
+import { G2TagCloudModule } from '@delon/chart/tag-cloud';
+import { G2WaterWaveModule } from '@delon/chart/water-wave';
 import { _HttpClient } from '@delon/theme';
+import { SHARED_IMPORTS } from '@shared';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import type { CountdownConfig } from 'ngx-countdown';
 import { zip } from 'rxjs';
-import {SHARED_IMPORTS} from "@shared";
-import {G2WaterWaveModule} from "@delon/chart/water-wave";
-import {G2TagCloudModule} from "@delon/chart/tag-cloud";
-import {G2PieModule} from "@delon/chart/pie";
-import {G2GaugeModule} from "@delon/chart/gauge";
-import {G2MiniAreaModule} from "@delon/chart/mini-area";
-import {NumberInfoModule} from "@delon/chart/number-info";
-import {CountDownModule} from "@delon/abc/count-down";
 
 @Component({
+  selector: 'app-dashboard-monitor',
+  templateUrl: './monitor.component.html',
+  styleUrls: ['./monitor.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     ...SHARED_IMPORTS,
     G2WaterWaveModule,
@@ -23,14 +27,14 @@ import {CountDownModule} from "@delon/abc/count-down";
     G2MiniAreaModule,
     NumberInfoModule,
     CountDownModule
-  ],
-  selector: 'app-dashboard-monitor',
-  standalone: true,
-  styleUrls: ['./monitor.component.less'],
-  templateUrl: './monitor.component.html'
+  ]
 })
 export class DashboardMonitorComponent implements OnInit, OnDestroy {
-  constructor(private http: _HttpClient, public msg: NzMessageService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private http: _HttpClient,
+    public msg: NzMessageService,
+    private cdr: ChangeDetectorRef
+  ) {}
   data: any = {};
   tags = [];
   loading = true;

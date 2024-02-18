@@ -1,20 +1,17 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
-import {I18nPipe, SettingsService, User} from '@delon/theme';
-import {ConfigService} from "../../../services/config/config.service";
-import {NzDropDownModule} from "ng-zorro-antd/dropdown";
-import {NzMenuModule} from "ng-zorro-antd/menu";
-import {NzIconModule} from "ng-zorro-antd/icon";
-import {NzAvatarModule} from "ng-zorro-antd/avatar";
-import {SHARED_IMPORTS} from "@shared";
+import { DA_SERVICE_TOKEN } from '@delon/auth';
+import { I18nPipe, SettingsService, User } from '@delon/theme';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
 
 @Component({
   selector: 'header-user',
   template: `
-    <div class="alain-default__nav-item d-flex align-items-center px-sm" nz-dropdown nzPlacement="bottomRight"
-         [nzDropdownMenu]="userMenu">
-      <nz-avatar [nzSrc]="user.avatar" nzSize="small" class="mr-sm"></nz-avatar>
+    <div class="alain-default__nav-item d-flex align-items-center px-sm" nz-dropdown nzPlacement="bottomRight" [nzDropdownMenu]="userMenu">
+      <nz-avatar [nzSrc]="user.avatar" nzSize="small" class="mr-sm" />
       {{ user.name }}
     </div>
     <nz-dropdown-menu #userMenu="nzDropdownMenu">
@@ -39,26 +36,20 @@ import {SHARED_IMPORTS} from "@shared";
       </div>
     </nz-dropdown-menu>
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ ...SHARED_IMPORTS,NzDropDownModule, NzMenuModule, NzIconModule, I18nPipe, NzAvatarModule]
+  standalone: true,
+  imports: [NzDropDownModule, NzMenuModule, NzIconModule, I18nPipe, NzAvatarModule]
 })
 export class HeaderUserComponent {
-
+  private readonly settings = inject(SettingsService);
+  private readonly router = inject(Router);
+  private readonly tokenService = inject(DA_SERVICE_TOKEN);
   get user(): User {
     return this.settings.user;
   }
 
-  constructor(private settings: SettingsService,
-              private router: Router,
-              private configService:ConfigService,
-              @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService) {}
-
-  async logout() {
+  logout(): void {
     this.tokenService.clear();
-    await this.router.navigateByUrl(this.tokenService.login_url!);
-    this.configService.ClearCache();
-    //重载页面 清缓存
-    location.reload();
+    this.router.navigateByUrl(this.tokenService.login_url!);
   }
 }

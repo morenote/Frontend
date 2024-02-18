@@ -1,40 +1,33 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import {PageHeaderComponent} from "@delon/abc/page-header";
-import {NzCardComponent} from "ng-zorro-antd/card";
-import {SharedModule} from "@shared";
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
   selector: 'app-basic-form',
   templateUrl: './basic-form.component.html',
   standalone: true,
-  imports: [
-    PageHeaderComponent,
-    NzCardComponent,
-    SharedModule
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports:[...SHARED_IMPORTS]
 })
-export class BasicFormComponent implements OnInit {
-  form!: UntypedFormGroup;
+export class BasicFormComponent {
+  form = new FormGroup({
+    title: new FormControl('', Validators.required),
+    date: new FormControl('', Validators.required),
+    goal: new FormControl('', Validators.required),
+    standard: new FormControl('', Validators.required),
+    client: new FormControl(''),
+    invites: new FormControl(''),
+    weight: new FormControl(''),
+    public: new FormControl(1, [Validators.min(1), Validators.max(3)]),
+    publicUsers: new FormControl('')
+  });
   submitting = false;
 
-  constructor(private fb: UntypedFormBuilder, private msg: NzMessageService, private cdr: ChangeDetectorRef) {}
-
-  ngOnInit(): void {
-    this.form = this.fb.group({
-      title: [null, [Validators.required]],
-      date: [null, [Validators.required]],
-      goal: [null, [Validators.required]],
-      standard: [null, [Validators.required]],
-      client: [null, []],
-      invites: [null, []],
-      weight: [null, []],
-      public: [1, [Validators.min(1), Validators.max(3)]],
-      publicUsers: [null, []]
-    });
-  }
+  constructor(
+    private msg: NzMessageService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   submit(): void {
     this.submitting = true;

@@ -7,8 +7,9 @@ import { SHARED_DELON_MODULES } from './shared-delon.module';
 import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
 
 export const SHARED_IMPORTS = [
-  NgIf,
   NgForOf,
+  NgIf,
+
   FormsModule,
   ReactiveFormsModule,
   RouterLink,

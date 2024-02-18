@@ -1,20 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { TransferService } from './transfer.service';
+import {SHARED_IMPORTS} from "@shared";
 import {ResultComponent} from "@delon/abc/result";
-import {SVComponent} from "@delon/abc/sv";
-import {NzButtonComponent} from "ng-zorro-antd/button";
 
 @Component({
   selector: 'app-step3',
   templateUrl: './step3.component.html',
   standalone: true,
-  imports: [
-    ResultComponent,
-    SVComponent,
-    NzButtonComponent
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [...SHARED_IMPORTS, ResultComponent]
 })
 export class Step3Component {
   get item(): TransferService {

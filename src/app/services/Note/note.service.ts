@@ -14,6 +14,7 @@ import {LogUtil} from "../../shared/utils/log-util";
 import {PayLoadDTO} from "../../models/DTO/Api/pay-load-d-t-o";
 import {DataSign} from "../../models/DTO/USBKey/data-sign";
 import {LocalForageService} from "../data-storage/local-forage.service";
+import {ExtendedName} from "../../models/enum/extended-name";
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +55,7 @@ export class NoteService {
     return result;
   }
 
-  public CreateNote(noteTitle: string, notebookId: string, isMarkdown: boolean): Promise<ApiRep> {
+  public CreateNote(noteTitle: string, notebookId: string, extendedName: ExtendedName): Promise<ApiRep> {
     return new Promise<ApiRep>(async resolve => {
       //CreateNote
       let url = this.config.baseURL + '/api/Note/CreateNote';
@@ -62,7 +63,7 @@ export class NoteService {
       formData.set('token', this.token!);
       formData.set('noteTitle', noteTitle);
       formData.set('notebookId', notebookId);
-      formData.set('isMarkdown', isMarkdown + '');
+      formData.set('extendedName', extendedName.toString() );
 
       let result = this.http.post<ApiRep>(url, formData).subscribe(apiRe => {
         resolve(apiRe);

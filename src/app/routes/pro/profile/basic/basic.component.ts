@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { STColumn } from '@delon/abc/st';
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { tap } from 'rxjs/operators';
+import { tap } from 'rxjs';
 import {SHARED_IMPORTS} from "@shared";
 import {CurrencyPricePipe} from "@delon/util";
 
@@ -54,5 +54,8 @@ export class ProProfileBaseComponent {
     { title: '耗时', index: 'cost' }
   ];
 
-  constructor(private http: _HttpClient, private msg: NzMessageService) {}
+  constructor(
+    private http: _HttpClient,
+    private msg: NzMessageService
+  ) {}
 }

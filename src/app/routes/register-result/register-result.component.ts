@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
   selector: 'passport-register-result',
-  templateUrl: './register-result.component.html'
+  standalone: true,
+  templateUrl: './register-result.component.html',
+  imports:[...SHARED_IMPORTS]
 })
 export class UserRegisterResultComponent {
   params = { email: '' };

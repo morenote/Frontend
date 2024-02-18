@@ -3,11 +3,7 @@ import { ModalHelper, _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 import { ProBasicListEditComponent } from './edit/edit.component';
-import {NzListComponent, NzListItemComponent} from "ng-zorro-antd/list";
-import {NzInputGroupComponent} from "ng-zorro-antd/input";
-import {NzRadioGroupComponent} from "ng-zorro-antd/radio";
-import {NzCardComponent} from "ng-zorro-antd/card";
-import {SharedModule} from "@shared";
+import {SHARED_IMPORTS} from "@shared";
 import {NzPaginationComponent} from "ng-zorro-antd/pagination";
 
 @Component({
@@ -15,16 +11,8 @@ import {NzPaginationComponent} from "ng-zorro-antd/pagination";
   templateUrl: './basic-list.component.html',
   styleUrls: ['./basic-list.component.less'],
   standalone: true,
-  imports: [
-    NzListComponent,
-    NzListItemComponent,
-    NzInputGroupComponent,
-    NzRadioGroupComponent,
-    NzCardComponent,
-    SharedModule,
-    NzPaginationComponent
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [...SHARED_IMPORTS, NzPaginationComponent]
 })
 export class ProBasicListComponent implements OnInit {
   q = {
@@ -44,7 +32,12 @@ export class ProBasicListComponent implements OnInit {
     status: string;
   }> = [];
 
-  constructor(private http: _HttpClient, private msg: NzMessageService, private modal: ModalHelper, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private http: _HttpClient,
+    private msg: NzMessageService,
+    private modal: ModalHelper,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.getData();

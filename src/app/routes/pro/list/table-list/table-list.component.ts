@@ -4,15 +4,15 @@ import { _HttpClient } from '@delon/theme';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs';
 import {SHARED_IMPORTS} from "@shared";
 
 @Component({
   selector: 'app-table-list',
   templateUrl: './table-list.component.html',
   standalone: true,
-  imports:[SHARED_IMPORTS],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports:[...SHARED_IMPORTS]
 })
 export class ProTableListComponent implements OnInit {
   q: {
@@ -95,7 +95,12 @@ export class ProTableListComponent implements OnInit {
   totalCallNo = 0;
   expandForm = false;
 
-  constructor(private http: _HttpClient, public msg: NzMessageService, private modalSrv: NzModalService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private http: _HttpClient,
+    public msg: NzMessageService,
+    private modalSrv: NzModalService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.getData();

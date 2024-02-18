@@ -11,6 +11,8 @@ import {promise} from "protractor";
 import {Base64} from "js-base64";
 import {USBKeyBinding} from "../../models/entity/usbkey-binding";
 import {FIDO2Item} from "../../models/DTO/fido2/fido2-item";
+import {LogUtil} from "../../shared/utils/log-util";
+import {LogService} from "../Log/log.service";
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +21,11 @@ export class Fido2Service {
   config: WebsiteConfig;
   userToken:UserToken;
 
+
   constructor( private messageUI: MessageUIService,
                public http: HttpClient,
                public configService: ConfigService,
+               public logService:LogService,
                public helperService: HelperServiceService) {
 
     this.config = this.configService.GetWebSiteConfig();
@@ -220,6 +224,7 @@ export class Fido2Service {
         });
 
         makeAssertionOptions = await res.json();
+
       } catch (e) {
         this.messageUI.ShowErrorMessage('Request to server failed');
       }
@@ -252,7 +257,8 @@ export class Fido2Service {
       let credential;
       try {
         credential = await navigator.credentials.get({publicKey: makeAssertionOptions});
-      } catch (err) {
+      } catch (err:any) {
+        this.logService.error(err.toString())
         this.messageUI.ShowErrorMessage('error');
       }
         resolve(credential);
@@ -260,6 +266,7 @@ export class Fido2Service {
 
   }
   async verifyTheAssertionResponse(email:string,assertedCredential: any):Promise<UserToken|null>{
+    LogUtil.log("verifyTheAssertionResponse is start")
     return  new Promise<UserToken|null>(resolve => {
       let authData = new Uint8Array(assertedCredential.response.authenticatorData);
       let clientDataJSON = new Uint8Array(assertedCredential.response.clientDataJSON);

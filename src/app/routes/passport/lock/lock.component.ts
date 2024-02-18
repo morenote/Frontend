@@ -1,52 +1,39 @@
 import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
-import { SettingsService, User } from '@delon/theme';
-import {NzAvatarComponent} from "ng-zorro-antd/avatar";
-import {NzFormControlComponent, NzFormItemComponent} from "ng-zorro-antd/form";
-import {NzInputGroupComponent} from "ng-zorro-antd/input";
-import {NzColDirective, NzRowDirective} from "ng-zorro-antd/grid";
-import {SharedModule} from "@shared";
+import { I18nPipe, SettingsService, User } from '@delon/theme';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzInputModule } from 'ng-zorro-antd/input';
 
 @Component({
   selector: 'passport-lock',
   templateUrl: './lock.component.html',
+  styleUrls: ['./lock.component.less'],
   standalone: true,
-  imports: [
-    NzAvatarComponent,
-    NzFormItemComponent,
-    NzFormControlComponent,
-    NzInputGroupComponent,
-    NzRowDirective,
-    NzColDirective,
-    SharedModule
-  ],
-  styleUrls: ['./lock.component.less']
+  imports: [ReactiveFormsModule, I18nPipe, NzAvatarModule, NzFormModule, NzGridModule, NzButtonModule, NzInputModule]
 })
 export class UserLockComponent {
-  f: UntypedFormGroup;
+  f = new FormGroup({
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required] })
+  });
 
   get user(): User {
     return this.settings.user;
   }
 
   constructor(
-    fb: UntypedFormBuilder,
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     private settings: SettingsService,
     private router: Router
-  ) {
-    this.f = fb.group({
-      password: [null, Validators.required]
-    });
-  }
+  ) {}
 
   submit(): void {
-    for (const i in this.f.controls) {
-      this.f.controls[i].markAsDirty();
-      this.f.controls[i].updateValueAndValidity();
-    }
+    this.f.controls.password.markAsDirty();
+    this.f.controls.password.updateValueAndValidity();
     if (this.f.valid) {
       console.log('Valid!');
       console.log(this.f.value);

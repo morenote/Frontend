@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import {Router} from "@angular/router";
 import {RepositoryType} from "../../../models/enum/repository-type";
+import {SHARED_IMPORTS} from "@shared";
 
 @Component({
   selector: 'header-create-repository',
@@ -13,20 +14,24 @@ import {RepositoryType} from "../../../models/enum/repository-type";
       nzPlacement="bottomRight"
       (nzVisibleChange)="change()"
     >
-      <nz-badge >
+      <nz-badge>
         <i nz-icon nzType="plus" class="alain-default__nav-item-icon"></i>
       </nz-badge>
     </div>
     <nz-dropdown-menu #taskMenu="nzDropdownMenu">
       <ul nz-menu nzSelectable>
-        <li nz-menu-item  (click)="createDocumentRepository()"><i nz-icon nzType="file-markdown" nzTheme="outline"></i>创建文档型仓库</li>
-        <li nz-menu-item (click)="createFileRepository()"><i nz-icon nzType="hdd" nzTheme="outline"></i>创建文件型仓库</li>
+        <li nz-menu-item (click)="createDocumentRepository()"><i nz-icon nzType="file-markdown" nzTheme="outline"></i>创建文档型仓库
+        </li>
+        <li nz-menu-item (click)="createFileRepository()"><i nz-icon nzType="hdd" nzTheme="outline"></i>创建文件型仓库
+        </li>
         <li nz-menu-item><i nz-icon nzType="usergroup-add" nzTheme="outline"></i>创建自定义组织</li>
         <li nz-menu-item><i nz-icon nzType="import" nzTheme="outline"></i>导入第三方笔记</li>
       </ul>
     </nz-dropdown-menu>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports:[...SHARED_IMPORTS]
 })
 export class HeaderCreateRepositoryComponent {
   loading = true;

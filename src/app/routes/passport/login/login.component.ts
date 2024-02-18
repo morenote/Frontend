@@ -168,7 +168,7 @@ export class UserLoginComponent implements OnDestroy {
    * 通过提交密码登录
    */
   async submit() {
-    LogUtil.log("submit  start");
+    LogUtil.log("submit  start...");
     this.error = '';
 
     if (this.password == null) {
@@ -291,10 +291,15 @@ export class UserLoginComponent implements OnDestroy {
       this.cdr.detectChanges();
       let credential= await this.fido2.getAssertionOptions(userNameText);
       if (credential!=null){
+        LogUtil.log("getAssertionOptions is ok!");
        let userToken= await this.fido2.verifyTheAssertionResponse(userNameText,credential);
        if (userToken!=null){
         await   this.toLogin(userToken);
+       }else {
+         LogUtil.error("userToken is null!!");
        }
+      }else{
+        LogUtil.error("credential is null!!");
       }
       return;
     }

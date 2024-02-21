@@ -5,7 +5,7 @@ import {ConfigService} from "../config/config.service";
 import {WebsiteConfig} from "../../models/config/website-config";
 import {HelperServiceService} from "../helper/helper-service.service";
 import {UserToken} from "../../models/DTO/user-token";
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpContext, HttpParams} from "@angular/common/http";
 import {ApiRep} from "../../models/api/api-rep";
 import {promise} from "protractor";
 import {Base64} from "js-base64";
@@ -13,6 +13,7 @@ import {USBKeyBinding} from "../../models/entity/usbkey-binding";
 import {FIDO2Item} from "../../models/DTO/fido2/fido2-item";
 import {LogUtil} from "../../shared/utils/log-util";
 import {LogService} from "../Log/log.service";
+import {ALLOW_ANONYMOUS} from "@delon/auth";
 
 @Injectable({
   providedIn: 'root'
@@ -289,7 +290,7 @@ export class Fido2Service {
       let formData = new FormData();
       formData.set('email', email);
       formData.set('data', Base64.encode(JSON.stringify(data)));
-      let result=this.http.post<ApiRep>(url,formData).subscribe(apiRe=>
+      let result=this.http.post<ApiRep>(url,formData,{context:new HttpContext().set(ALLOW_ANONYMOUS, true) }).subscribe(apiRe=>
       {
         if (apiRe!=null&& apiRe.Ok){
           let userToken=apiRe.Data as UserToken;

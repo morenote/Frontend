@@ -19,6 +19,8 @@ import { enUS as dfEn, zhCN as dfZhCn, zhTW as dfZhTw } from 'date-fns/locale';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { en_US as zorroEnUS, NzI18nService, zh_CN as zorroZhCN, zh_TW as zorroZhTW } from 'ng-zorro-antd/i18n';
 import { Observable } from 'rxjs';
+import {HttpClient, HttpContext} from "@angular/common/http";
+import {ALLOW_ANONYMOUS} from "@delon/auth";
 
 interface LangConfigData {
   abbr: string;
@@ -66,7 +68,7 @@ export class I18NService extends AlainI18nBaseService {
   });
 
   constructor(
-    private http: _HttpClient,
+    private http: HttpClient,
     private settings: SettingsService,
     private nzI18nService: NzI18nService,
     private delonLocaleService: DelonLocaleService,
@@ -92,7 +94,7 @@ export class I18NService extends AlainI18nBaseService {
   }
 
   loadLangData(lang: string): Observable<NzSafeAny> {
-    return this.http.get(`assets/tmp/i18n/${lang}.json`);
+    return this.http.get(`assets/tmp/i18n/${lang}.json`,{context:new HttpContext().set(ALLOW_ANONYMOUS, true) });
   }
 
   use(lang: string, data: Record<string, unknown>): void {

@@ -29,7 +29,6 @@ jobs:
         id: get_version
         run: echo APP_VERSION=`git describe --tags --always` >> $GITHUB_ENV
       - name: build
-        working-directory: Src/MoreNote
         run: pnpm build
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3

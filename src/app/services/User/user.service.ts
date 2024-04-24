@@ -273,7 +273,7 @@ export class UserService {
       let formData = new FormData();
       formData.set('email', email);
       formData.set('pwd', pwd);
-      this.http.post<ApiRep>(url, formData).subscribe(apiRe => {
+      this.http.post<ApiRep>(url, formData,{ context: new HttpContext().set(ALLOW_ANONYMOUS, true)}).subscribe(apiRe => {
         resolve(apiRe);
       })
     })

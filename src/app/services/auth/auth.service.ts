@@ -84,7 +84,7 @@ export class AuthService {
    */
   public TakeSessionCode():Promise<string>{
     return  new Promise<string>(resolve => {
-      let url = this.config.baseURL + '/api/Auth/TakeSessionCode';
+      let url = this.config.baseURL + '/api/Auth/Session';
       let result = this.http.get<ApiRep>(url,{context:new HttpContext().set(ALLOW_ANONYMOUS,true)}).subscribe(apiRe=>{
         if (apiRe!=null && apiRe.Ok){
           resolve(apiRe.Data);
@@ -103,7 +103,7 @@ export class AuthService {
    */
   public GetUserLoginSettings(email:string):Promise<LoginSecurityPolicyLevel>{
     return  new Promise<LoginSecurityPolicyLevel>((resolve)=>{
-      let url = this.config.baseURL + '/api/Auth/GetUserLoginSettings';
+      let url = this.config.baseURL + '/api/Auth/UserLoginSettings';
       let httpParams = new HttpParams()
         .append('email', email);
       let result = this.http.get<ApiRep>(url, {params: httpParams,context:new HttpContext().set(ALLOW_ANONYMOUS,true)}).subscribe(apiRe=>{

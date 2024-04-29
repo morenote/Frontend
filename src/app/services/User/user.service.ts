@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@angular/core";
+import { inject, Inject, Injectable } from "@angular/core";
 import {WebsiteConfig} from "../../models/config/website-config";
 import {AuthService} from "../auth/auth.service";
 import {HttpClient, HttpContext, HttpParams} from "@angular/common/http";
@@ -30,7 +30,7 @@ export class UserService {
   token?: string;
   config: WebsiteConfig;
   sc: SecurityConfigDTO;
-  private httpServices:HttpService=Inject(HttpService)
+  private httpServices:HttpService=inject(HttpService)
   constructor(
 
     public configService: ConfigService,

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@angular/core";
+import { inject, Inject, Injectable } from "@angular/core";
 import { HttpClient, HttpContext, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ALLOW_ANONYMOUS } from "@delon/auth";
@@ -8,7 +8,7 @@ import { ALLOW_ANONYMOUS } from "@delon/auth";
 
 })
 export class HttpService {
-  private httpClient: HttpClient=Inject(HttpClient);
+  private httpClient: HttpClient=inject(HttpClient);
   constructor() { }
 
   /**

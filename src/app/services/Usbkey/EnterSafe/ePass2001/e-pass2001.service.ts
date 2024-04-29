@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { inject, Inject, Injectable } from "@angular/core";
 import {WebsiteConfig} from "../../../../models/config/website-config";
 import {AuthService} from "../../../auth/auth.service";
 import {HttpClient, HttpParams} from "@angular/common/http";
@@ -23,11 +23,12 @@ export class EPass2001Service {
   token?: string | null;
   config: WebsiteConfig;
   localhostUrl: string = "http://localhost:8070";
+  configService: ConfigService=inject(ConfigService);
 
   constructor(
               public http: HttpClient,
-              public nzMessage: NzMessageService,
-              public configService: ConfigService) {
+              public nzMessage: NzMessageService
+             ) {
 
 
     let userToken = this.configService.GetUserToken();

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@angular/core";
+import { inject, Inject, Injectable } from "@angular/core";
 
 import { WebsiteConfig } from '../../models/config/website-config';
 import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security-config-dto";
@@ -16,8 +16,8 @@ import { HttpService } from "../Http/http.service";
 export class ConfigService {
 
   localhostUrl: string = "/localhost";
-  private http: HttpService=Inject(HttpService);
-  private localStorageDBService:LocalStorageDBService=Inject(LocalStorageDBService);
+  private http: HttpService=inject(HttpService);
+  private localStorageDBService:LocalStorageDBService=inject(LocalStorageDBService);
   constructor( ) {
 
   }

@@ -73,23 +73,8 @@ export class ProRealPersonAuthenticationComponent implements OnInit {
         this.cdr.detectChanges();
       }
     );
-    let apiRe = await this.userService.GetRealNameInformation();
-    if (apiRe!=null&& apiRe.Ok){
-      let realName=apiRe.Data as RealNameInformation;
-      if (realName==null){
-        this.sfz="未实名";
-        return;
-      }
-      this.sfz=realName.IdCardNo;
-      this.cdr.detectChanges();
-      if (!realName.Verify){
-         setTimeout(()=>{
-           this.nzMessage.error("检测到数据库中的用户身份证信息遭到非法篡改",{nzDuration:5000});
-         },1000)
-      }else {
 
-      }
-    }
+
   }
 
   choProvince(pid: string, cleanCity: boolean = true): void {
@@ -108,13 +93,6 @@ export class ProRealPersonAuthenticationComponent implements OnInit {
   async save() {
     //数据签名
 
-    let apiRe= await this.userService.SetRealNameInformation(this.sfz);
-    if (apiRe!=null && apiRe.Ok){
-      this.nzMessage.success("更新实名信息成功");
-    }else {
-      this.nzMessage.error("更新实名信息失败");
-    }
 
-    return apiRe!=null && apiRe.Ok;
   }
 }

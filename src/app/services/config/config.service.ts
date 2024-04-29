@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from "@angular/core";
 
 import { WebsiteConfig } from '../../models/config/website-config';
 import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security-config-dto";
@@ -8,6 +8,7 @@ import {ApiRep} from "../../models/api/api-rep";
 import {UserToken} from "../../models/DTO/user-token";
 import {LocalStorageDBService} from "../data-storage/local-storage-db.service";
 import {ALLOW_ANONYMOUS} from "@delon/auth";
+import { HttpService } from "../Http/http.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,9 @@ import {ALLOW_ANONYMOUS} from "@delon/auth";
 export class ConfigService {
 
   localhostUrl: string = "/localhost";
-
-  constructor( public http: HttpClient,private localStorageDBService: LocalStorageDBService) {
+  private http: HttpService=Inject(HttpService);
+  private localStorageDBService:LocalStorageDBService=Inject(LocalStorageDBService);
+  constructor( ) {
 
   }
   public GetUserToken(): UserToken {
@@ -71,7 +73,7 @@ export class ConfigService {
         return  new Promise<ApiRep>(resolve => {
           let config=this.GetWebSiteConfig();
           let url=config.baseURL+"/api/Config/GetSecurityConfig";
-          this.http.get<ApiRep>(url,{ context: new HttpContext().set(ALLOW_ANONYMOUS, true)}).subscribe(apiRe=>{
+          this.http.get<ApiRep>(url,null,true).subscribe(apiRe=>{
             resolve(apiRe);
           })
         })

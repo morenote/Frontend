@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Inject, Injectable } from "@angular/core";
 import {WebsiteConfig} from "../../models/config/website-config";
 import {AuthService} from "../auth/auth.service";
 import {HttpClient, HttpContext, HttpParams} from "@angular/common/http";
@@ -19,6 +19,7 @@ import {EPass2001Service} from "../Usbkey/EnterSafe/ePass2001/e-pass2001.service
 import {PayLoadDTO} from "../../models/DTO/Api/pay-load-d-t-o";
 import { SJJ1962Service } from "../Cryptography/PasswordProcessing/sj1962/s-j-j1962.service";
 import {ALLOW_ANONYMOUS} from "@delon/auth";
+import { HttpService } from "../Http/http.service";
 
 @Injectable({
   providedIn: 'root'
@@ -29,9 +30,9 @@ export class UserService {
   token?: string;
   config: WebsiteConfig;
   sc: SecurityConfigDTO;
-
+  private httpServices:HttpService=Inject(HttpService)
   constructor(
-    public http: HttpClient,
+
     public configService: ConfigService,
     public sjj1962: SJJ1962Service,
     private epass: EPass2001Service
@@ -54,115 +55,13 @@ export class UserService {
       let url = this.config.baseURL + '/api/User/GetUserInfoByToken';
       let httpParams = new HttpParams()
         .append('token', this.token!);
-      let result = this.http.get<ApiRep>(url, {params: httpParams}).subscribe(apiRe => {
+
+      let result = this.httpServices.get<ApiRep>(url, httpParams,false).subscribe(apiRe => {
         resolve(apiRe);
       })
     })
   }
 
-  /**
-   * 获得用户实名身份信息
-   * @constructor
-   */
-  public GetRealNameInformation(): Promise<ApiRep> {
-    return new Promise<ApiRep>(async resolve => {
-
-      //签名
-      let signData = new SignData();
-      let dataSign = new DataSign();
-      if (this.sc.ForceDigitalSignature) {
-        signData.Id = "";
-        signData.Data = "/api/User/GetRealNameInformation";
-        signData.UserId = this.userId;
-        signData.UinxTime = Math.round(new Date().getTime() / 1000);
-        signData.Operate = "/api/User/GetRealNameInformation";
-        signData.SM3Data("/api/User/GetRealNameInformation");
-        dataSign = await this.epass.SendSignToePass2001(signData);
-      }
-      //数字信封
-      let deJson = "";
-      let gm = new GMService();
-      let sm4Key = gm.GetSM4Key();
-      let iv = gm.GetIV();
-      if (this.sc.ForceDigitalEnvelope) {
-        let digitalEnvelope = new DigitalEnvelope();
-        digitalEnvelope.SetPayLodValue("/api/User/GetRealNameInformation", sm4Key, this.sc.PublicKey!, iv);
-        deJson = JSON.stringify(digitalEnvelope);
-        LogUtil.log(deJson);
-      }
-
-
-      let url = this.config.baseURL + '/api/User/GetRealNameInformation';
-      let formData = new FormData();
-      formData.set('token', this.token!);
-      formData.set('digitalEnvelopeJson', deJson);
-      formData.set('dataSignJson', JSON.stringify(dataSign));
-      let result = this.http.post<ApiRep>(url, formData).subscribe(apiRe => {
-        LogUtil.log("数字信封：" + JSON.stringify(apiRe));
-        if (apiRe.Encryption) {
-          LogUtil.log("payLod.加密数据=" + apiRe.Data)
-          LogUtil.log("payLod.解密.sm4Key=" + sm4Key)
-          LogUtil.log("payLod.解密.iv=" + iv)
-          let payLodJson = gm.SM4Dec(apiRe.Data, sm4Key, iv);
-          LogUtil.log("payLodJson：" + JSON.stringify(payLodJson));
-          let temp = JSON.parse(payLodJson) as PayLoadDTO;
-          let payLod = new PayLoadDTO();
-          payLod.Data = temp.Data;
-          payLod.Hash = temp.Hash;
-          apiRe.Data = payLod.Data;
-          apiRe.Ok = payLod.VerifyPayLodHash();
-          LogUtil.log("payLod.Data=" + temp.Data)
-          LogUtil.log("Hash.Hash=" + temp.Hash)
-        }
-        LogUtil.log("解密结果：" + JSON.stringify(apiRe));
-
-        resolve(apiRe);
-      })
-    })
-  }
-
-  public SetRealNameInformation(sfz: string): Promise<ApiRep> {
-    return new Promise<ApiRep>(async resolve => {
-      //签名
-
-      let signData = new SignData();
-      let dataSign = new DataSign();
-      if (this.sc.ForceDigitalSignature) {
-        signData.Id = "";
-        signData.Data = "";
-        signData.UserId = this.userId;
-        signData.UinxTime = Math.round(new Date().getTime() / 1000);
-        signData.Operate = "/api/User/SetRealNameInformation";
-        signData.SM3Data(sfz);
-        dataSign = await this.epass.SendSignToePass2001(signData);
-      }
-
-
-      //数字信封
-
-      let deJson = "";
-      if (this.sc.ForceDigitalEnvelope) {
-        let gm = new GMService();
-        let sm4Key = gm.GetSM4Key();
-        let iv = gm.GetIV();
-        let digitalEnvelope = new DigitalEnvelope();
-        digitalEnvelope.SetPayLodValue(sfz, sm4Key, this.sc.PublicKey!, iv);
-        deJson = JSON.stringify(digitalEnvelope);
-        LogUtil.log(deJson);
-      }
-      let url = this.config.baseURL + '/api/User/SetRealNameInformation';
-      let formData = new FormData();
-      formData.set('token', this.token!);
-      formData.set('digitalEnvelopeJson', deJson);
-      formData.set('dataSignJson', JSON.stringify(dataSign));
-
-      let result = this.http.post<ApiRep>(url, formData).subscribe(apiRe => {
-        resolve(apiRe);
-      })
-
-    })
-
-  }
 
   /**
    * 通过邮箱获得用户详情
@@ -173,7 +72,7 @@ export class UserService {
       let url = this.config.baseURL + '/api/User/GetUserInfoByEmail';
       let httpParams = new HttpParams()
         .append('email', email!);
-      let result = this.http.get<ApiRep>(url, {params: httpParams,context: new HttpContext().set(ALLOW_ANONYMOUS, true)}).subscribe(apiRe => {
+      let result = this.httpServices.get<ApiRep>(url, httpParams,true).subscribe(apiRe => {
        if(apiRe!=null&&apiRe.Ok){
          let user= apiRe.Data as UserInfo;
           resolve(user);
@@ -189,7 +88,7 @@ export class UserService {
       let url = this.config.baseURL + '/api/User/GetUserInfoByUserId';
       let httpParams = new HttpParams()
         .append('userId', this.userId!);
-      let result = this.http.get<ApiRep>(url, {params: httpParams}).subscribe(apiRe => {
+      let result = this.httpServices.get<ApiRep>(url, httpParams,true).subscribe(apiRe => {
         if (apiRe.Ok) {
           resolve(apiRe.Data)
         } else {
@@ -241,7 +140,7 @@ export class UserService {
       formData.set('token', this.token!);
       formData.set('oldPwd', oldPwd);
       formData.set('pwd', pwd);
-      this.http.post<ApiRep>(url, formData).subscribe(apiRe => {
+      this.httpServices.post<ApiRep>(url, formData,true).subscribe(apiRe => {
         resolve(apiRe);
       })
     })
@@ -273,7 +172,8 @@ export class UserService {
       let formData = new FormData();
       formData.set('email', email);
       formData.set('pwd', pwd);
-      this.http.post<ApiRep>(url, formData,{ context: new HttpContext().set(ALLOW_ANONYMOUS, true)}).subscribe(apiRe => {
+      console.log(this.httpServices);
+      this.httpServices.post<ApiRep>(url, formData,true).subscribe(apiRe => {
         resolve(apiRe);
       })
     })
@@ -285,7 +185,7 @@ export class UserService {
       let formData = new FormData();
         formData.set('token', this.token!);
         formData.set('username', username);
-        this.http.post<ApiRep>(url,formData).subscribe(apiRe=>{
+        this.httpServices.post<ApiRep>(url,formData).subscribe(apiRe=>{
           resolve(apiRe);
         })
     })

@@ -19,6 +19,7 @@ import {HeaderClearStorageComponent} from "./widgets/clear-storage.component";
 import {HeaderFullScreenComponent} from "./widgets/fullscreen.component";
 import {HeaderUserComponent} from "./widgets/user.component";
 import {SHARED_IMPORTS} from "@shared";
+import { HeaderCreateRepositoryComponent } from "./widgets/create-repository.component";
 
 @Component({
   selector: 'layout-basic',
@@ -47,6 +48,9 @@ import {SHARED_IMPORTS} from "@shared";
       </layout-default-header-item>
       <layout-default-header-item direction="right" hidden="mobile">
         <header-task />
+      </layout-default-header-item>
+      <layout-default-header-item direction="right" hidden="mobile">
+        <header-create-repository></header-create-repository>
       </layout-default-header-item>
       <layout-default-header-item direction="right" hidden="mobile">
         <header-icon />
@@ -120,7 +124,8 @@ import {SHARED_IMPORTS} from "@shared";
     HeaderI18nComponent,
     HeaderClearStorageComponent,
     HeaderFullScreenComponent,
-    HeaderUserComponent
+    HeaderUserComponent,
+    HeaderCreateRepositoryComponent
   ]
 })
 export class LayoutBasicComponent {

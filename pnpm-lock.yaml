@@ -8078,7 +8078,7 @@ packages:
     dependencies:
       flatted: 2.0.2
       rimraf: 2.6.3
-      write: registry.nlark.com/write@1.0.3
+      write: registry.npmmirror.com/write@1.0.3
     dev: true
 
   /flat-cache@3.1.0:
@@ -15334,7 +15334,7 @@ packages:
     resolution: {integrity: sha512-y7Y3gH9BsUSdD4KzHsuMaCzRjglXN0W2EcMf0gpvu6+SbsGhMje7xDc8AEoeXy6mIwCKMI6BkjMsRjzQbhMEjQ==}
     dependencies:
       is-buffer: 2.0.5
-      replace-ext: registry.nlark.com/replace-ext@1.0.0
+      replace-ext: registry.npmmirror.com/replace-ext@1.0.0
       unist-util-stringify-position: 1.1.2
       vfile-message: 1.1.1
     dev: true
@@ -15915,15 +15915,15 @@ packages:
       tslib: 2.3.0
     dev: false
 
-  registry.nlark.com/replace-ext@1.0.0:
-    resolution: {integrity: sha1-3mMSg3P8v3w8z6TeWkgMRaZ5WOs=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/replace-ext/download/replace-ext-1.0.0.tgz}
+  registry.npmmirror.com/replace-ext@1.0.0:
+    resolution: {integrity: sha1-3mMSg3P8v3w8z6TeWkgMRaZ5WOs=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/replace-ext/download/replace-ext-1.0.0.tgz}
     name: replace-ext
     version: 1.0.0
     engines: {node: '>= 0.10'}
     dev: true
 
-  registry.nlark.com/write@1.0.3:
-    resolution: {integrity: sha1-CADhRSO5I6OH5BUSPIZWFqrg9cM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/write/download/write-1.0.3.tgz}
+  registry.npmmirror.com/write@1.0.3:
+    resolution: {integrity: sha1-CADhRSO5I6OH5BUSPIZWFqrg9cM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/write/download/write-1.0.3.tgz}
     name: write
     version: 1.0.3
     engines: {node: '>=4'}

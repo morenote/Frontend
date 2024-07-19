@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { DownFileModule } from '@delon/abc/down-file';
 import { FullContentModule } from '@delon/abc/full-content';
-import { QRModule } from '@delon/abc/qr';
+
 import { G2MiniBarModule } from '@delon/chart/mini-bar';
 import { SharedModule } from '@shared';
 
@@ -20,6 +20,7 @@ import { STDemoComponent } from './st/st.component';
 import { UtilComponent } from './util/util.component';
 import { XlsxComponent } from './xlsx/xlsx.component';
 import { ZipComponent } from './zip/zip.component';
+import { NzQRCodeModule } from "ng-zorro-antd/qr-code";
 
 const COMPONENTS = [
   STDemoComponent,
@@ -39,7 +40,7 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-  imports: [SharedModule, DelonRoutingModule, DownFileModule, FullContentModule, QRModule, G2MiniBarModule],
+  imports: [SharedModule, DelonRoutingModule, DownFileModule, FullContentModule, NzQRCodeModule, G2MiniBarModule],
   declarations: COMPONENTS
 })
 export class DelonModule {}

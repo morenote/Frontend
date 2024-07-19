@@ -19,24 +19,24 @@
     <button nz-button (click)="download()" class="ml-sm">download</button>
     <nz-table [nzData]="data" [nzFrontPagination]="false" [nzShowPagination]="false" class="mt-sm">
       <thead>
-        <tr>
-          <th>
-            <span>path</span>
-          </th>
-          <th>
-            <span>url</span>
-          </th>
-        </tr>
+      <tr>
+        <th>
+          <span>path</span>
+        </th>
+        <th>
+          <span>url</span>
+        </th>
+      </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let i of data; let index = index">
-          <td>
-            <input nz-input [(ngModel)]="i.path" name="path{{ index }}" />
-          </td>
-          <td>
-            <input nz-input [(ngModel)]="i.url" name="url{{ index }}" />
-          </td>
-        </tr>
+      <tr *ngFor="let i of data; let index = index">
+        <td>
+          <input nz-input [(ngModel)]="i.path" name="path{{ index }}" />
+        </td>
+        <td>
+          <input nz-input [(ngModel)]="i.url" name="url{{ index }}" />
+        </td>
+      </tr>
       </tbody>
     </nz-table>
   </nz-card>

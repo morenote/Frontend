@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ApiRep} from "../../models/api/api-rep";
 import {Hash} from "crypto";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {SignData} from "../../models/DTO/USBKey/sign-data";
 import {SnowFlake} from "../../shared/utils/snow-flake";
 import {DigitalEnvelope} from "../../models/DTO/Api/digital-envelope";

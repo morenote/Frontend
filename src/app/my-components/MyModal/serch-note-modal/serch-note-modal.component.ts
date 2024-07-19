@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Subject, takeUntil} from "rxjs";
 import {MyDataSource} from "../../../services/Search/NoteSearch/my-data-source";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {Note} from "../../../models/entity/note";
 import {NzModalComponent} from "ng-zorro-antd/modal";

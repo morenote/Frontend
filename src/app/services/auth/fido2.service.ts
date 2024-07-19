@@ -5,7 +5,7 @@ import {ConfigService} from "../config/config.service";
 import {WebsiteConfig} from "../../models/config/website-config";
 import {HelperServiceService} from "../helper/helper-service.service";
 import {UserToken} from "../../models/DTO/user-token";
-import {HttpClient, HttpContext, HttpParams} from "@angular/common/http";
+import { HttpClient, HttpContext, HttpParams } from "@angular/common/http";
 import {ApiRep} from "../../models/api/api-rep";
 import {promise} from "protractor";
 import {Base64} from "js-base64";

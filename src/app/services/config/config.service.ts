@@ -63,7 +63,7 @@ export class ConfigService {
     if (localStorage.getItem("url")!=null){
       config.baseURL = localStorage.getItem("url") as string;
     }
-    //调试模式
+    //localhost
     if (localStorage.getItem("localhost")!=null){
       config.baseURL="http://localhost:5000";
     }

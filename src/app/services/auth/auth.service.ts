@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@angular/core';
+import { inject, Inject, Injectable } from "@angular/core";
 import {ALLOW_ANONYMOUS, DA_SERVICE_TOKEN, ITokenService} from "@delon/auth";
 import {LocalStorageDBService} from "../data-storage/local-storage-db.service";
 import {Observable} from "rxjs";
@@ -14,6 +14,7 @@ import {UserService} from "../User/user.service";
 import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security-config-dto";
 
 import { SJJ1962Service } from "../Cryptography/PasswordProcessing/sj1962/s-j-j1962.service";
+import { TelegramFacService } from "../Communication/telegram-fac.service";
 
 
 
@@ -62,8 +63,6 @@ export class AuthService {
 
       //获得用户密码算法
       let userInfo = await this.userService.GetUserInfoByEmail(email);
-
-
       pwd=await  this.sjj1962.TransferEncryptionIfUser(pwd,userInfo,scDTO);
 
       let url = this.config.baseURL + '/api/Auth/PasswordChallenge';
@@ -129,6 +128,7 @@ export class AuthService {
       let formData = new FormData();
       formData.set('email', email);
       formData.set('sessionCode', sessionCode);
+
       this.http.post<ApiRep>(url, formData,{context: new HttpContext().set(ALLOW_ANONYMOUS, true)}).subscribe(apiRe=>{
         if (apiRe!=null){
         return   resolve(apiRe.Data);

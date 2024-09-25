@@ -1,7 +1,9 @@
 import { inject, Inject, Injectable } from "@angular/core";
-import { HttpClient, HttpContext, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpContext, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ALLOW_ANONYMOUS } from "@delon/auth";
+import { ConfigService } from "../config/config.service";
+import List from "@antv/g2/lib/facet/list";
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +11,7 @@ import { ALLOW_ANONYMOUS } from "@delon/auth";
 })
 export class HttpService {
   private httpClient: HttpClient=inject(HttpClient);
+  //public configService: ConfigService=inject(ConfigService);
   constructor() { }
 
   /**
@@ -16,18 +19,28 @@ export class HttpService {
    * @param url 请求地址
    * @param body fromdata
    * @param anonymous 是否允许匿名发送
+   * @param signatureRequired 是否需要签名
+   * @param encryptionRequired 是否需要加密
    */
-  public post<T>(url: string, body: any | null,anonymous:boolean=true):Observable<T>{
+  public post<T>(url: string, body: FormData | null,anonymous:boolean=true,signatureRequired=false,encryptionRequired:boolean=false):Observable<T>{
     let  httpContext=new HttpContext();
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
     if (ALLOW_ANONYMOUS){
       httpContext.set(ALLOW_ANONYMOUS,true)
     }
     if (body==null){
-      return  this.httpClient.post<T>(url,{context:httpContext});
-    }else {
-      return  this.httpClient.post<T>(url,body,{context:httpContext});
+      body=new FormData();
     }
+
+    body.forEach((value,key)=>{
+
+    })
+
+    return  this.httpClient.post<T>(url,body,{context:httpContext});
   }
+
 
   /**
    *

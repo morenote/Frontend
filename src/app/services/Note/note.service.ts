@@ -13,7 +13,7 @@ import {SecurityConfigDTO} from "../../models/DTO/Config/SecurityConfig/security
 import {LogUtil} from "../../shared/utils/log-util";
 import {PayLoadDTO} from "../../models/DTO/Api/pay-load-d-t-o";
 import {DataSign} from "../../models/DTO/USBKey/data-sign";
-import {LocalForageService} from "../data-storage/local-forage.service";
+
 import {ExtendedName} from "../../models/enum/extended-name";
 
 @Injectable({
@@ -28,7 +28,7 @@ export class NoteService {
   constructor(public authService: AuthService,
               public http: HttpClient,
               public epass: EPass2001Service,
-              public  localForageService:LocalForageService,
+
               public configService: ConfigService) {
     let userToken = this.configService.GetUserToken();
     this.userId = userToken.UserId;
@@ -122,7 +122,6 @@ export class NoteService {
       formData.set('digitalEnvelopeJson', deJson);
       this.http.post<ApiRep>(url, formData).subscribe(apiRe => {
         LogUtil.log("数字信封：" + JSON.stringify(apiRe));
-
         if (apiRe.Encryption) {
           LogUtil.log("payLod.加密数据=" + apiRe.Data)
           LogUtil.log("payLod.解密.sm4Key=" + sm4Key)
@@ -139,7 +138,6 @@ export class NoteService {
           LogUtil.log("Hash.Hash=" + temp.Hash)
         }
         LogUtil.log("解密结果：" + JSON.stringify(apiRe));
-
         resolve(apiRe);
       });
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import {Router} from "@angular/router";
-import {RepositoryType} from "../../../models/enum/repository-type";
+import {NotebookType} from "../../../models/enum/notebook-type";
 import {SHARED_IMPORTS} from "@shared";
 
 @Component({
@@ -48,12 +48,12 @@ export class HeaderCreateRepositoryComponent {
 
   createDocumentRepository() {
     // this.router.navigateByUrl("/pro/form/create-repository-form")
-    let repositoryType=RepositoryType.NoteRepository;
+    let repositoryType=NotebookType.NoteRepository;
     this.router.navigate(['/pro/form/create-repository-form'],{queryParams:{repositoryType:repositoryType}});
 
   }
   createFileRepository() {
-    let repositoryType=RepositoryType.FileRepository;
+    let repositoryType=NotebookType.FileRepository;
     this.router.navigate(['/pro/form/create-repository-form'],{queryParams:{repositoryType:repositoryType}});
 
   }

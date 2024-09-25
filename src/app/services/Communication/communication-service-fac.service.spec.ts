@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NotebookService } from './notebook.service';
+import { TelegramFacService } from './telegram-fac.service';
 
-describe('NotebookService', () => {
-  let service: NotebookService;
+describe('CommunicationServiceFacService', () => {
+  let service: TelegramFacService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(NotebookService);
+    service = TestBed.inject(TelegramFacService);
   });
 
   it('should be created', () => {

@@ -1,7 +1,7 @@
-import { Notebook } from './notebook';
+import { NoteCollection } from './noteCollection';
 
 describe('Notebook', () => {
   it('should create an instance', () => {
-    expect(new Notebook()).toBeTruthy();
+    expect(new NoteCollection()).toBeTruthy();
   });
 });

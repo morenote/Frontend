@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { _HttpClient } from '@delon/theme';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import {ConfigService} from "../../../../../services/config/config.service";
-import {RepositoryService} from "../../../../../services/repository/repository.service";
-import {Repository} from "../../../../../models/entity/repository";
-import {RepositoryType} from "../../../../../models/enum/repository-type";
+import {NotebookService} from "../../../../../services/Note/notebook.service";
+import {Notebook} from "../../../../../models/entity/notebook";
+import {NotebookType} from "../../../../../models/enum/notebook-type";
 import {ApiRep} from "../../../../../models/api/api-rep";
 import {Router} from "@angular/router";
 import {NzMessageService} from "ng-zorro-antd/message";
@@ -35,19 +35,19 @@ import {DecimalPipe} from "@angular/common";
 export class ProAccountCenterFilesComponent {
   listLoading = true;
 
-  public list: Array<Repository> = [];
+  public list: Array<Notebook> = [];
   constructor(private http: _HttpClient,
               private configService:ConfigService,
               public router:Router,
-              public repositoryService: RepositoryService,
+              public repositoryService: NotebookService,
               private cdr: ChangeDetectorRef,
               private message:NzMessageService) {
     var config=configService.GetWebSiteConfig();
-    repositoryService.GetMyRepository(RepositoryType.FileRepository).subscribe(
+    repositoryService.GetMyNotebook(NotebookType.FileRepository).subscribe(
       (apiRe: ApiRep) => {
         console.log(apiRe.Ok)
         if (apiRe.Ok) {
-          let notesRepositoryList: Array<Repository> = apiRe.Data as Array<Repository>;
+          let notesRepositoryList: Array<Notebook> = apiRe.Data as Array<Notebook>;
           console.log(notesRepositoryList.length)
           for (const notesRepository of notesRepositoryList) {
             console.log(notesRepository.Name)
@@ -72,12 +72,12 @@ export class ProAccountCenterFilesComponent {
     }
     return result.toString();
   }
-  OnCardClick(repository: Repository) {
+  OnCardClick(repository: Notebook) {
     //alert(repository.Name);
     this.router.navigate(['/file/browser'],{queryParams:{repository:repository.Id}})
   }
   async OnDelete(id: string) {
-    let apiRe = await this.repositoryService.DeleteRepository(id);
+    let apiRe = await this.repositoryService.DeleteNotebook(id);
     if (apiRe.Ok == true) {
       //alert(apiRe.Ok)
       this.list=this.list.filter(item => item.Id != id);

@@ -7,13 +7,13 @@ import { NzFormatBeforeDropEvent, NzFormatEmitEvent, NzTreeNode, NzTreeNodeOptio
 import { NzTreeComponent } from 'ng-zorro-antd/tree/tree.component';
 import { delay, Observable, of, Subject, takeUntil } from 'rxjs';
 import { NoteService } from 'src/app/services/Note/note.service';
-import { NotebookService } from 'src/app/services/NoteBook/notebook.service';
+import { NoteCollectionService } from '../../../services/Note/note-collection.service';
 
 import { ApiRep } from '../../../models/api/api-rep';
 import { VirtualFolderInfo } from '../../../models/entity/File/VirtualFolderInfo';
 import { VirtualFileInfo } from '../../../models/entity/File/virtual-file-info';
 import { Note } from '../../../models/entity/note';
-import { Notebook } from '../../../models/entity/notebook';
+import { NoteCollection } from '../../../models/entity/noteCollection';
 import { TreeNodeModel } from '../../../models/model/tree-node-model';
 import { TreeNodeOptionsModel } from '../../../models/model/tree-node-options-model';
 import { VirtualFolderAccessService } from '../../../services/VirtualIO/virtual-folder-access.service';
@@ -39,7 +39,7 @@ export class FileBrowserComponent implements OnInit, AfterViewInit, OnDestroy {
     public message: NzMessageService,
     public noteService: NoteService,
     public route: ActivatedRoute,
-    public notebookService: NotebookService,
+    public notebookService: NoteCollectionService,
     private folderService: VirtualFolderAccessService,
     private nzContextMenuService: NzContextMenuService
   ) {}

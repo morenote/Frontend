@@ -1,4 +1,4 @@
-export enum RepositoryType {
+export enum NotebookType {
   //笔记仓库
   NoteRepository = 0x01,
   //文件仓库

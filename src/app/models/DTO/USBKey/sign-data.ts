@@ -12,6 +12,5 @@ export class SignData {
   public  SM3Data(data:string){
     let gmService=new GMService();
      this.Hash=gmService.SM3(data).toUpperCase();
-
   }
 }

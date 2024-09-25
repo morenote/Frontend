@@ -6,13 +6,13 @@ import {OrganizationAuthorityEnum} from "../../../../models/enum/organization-au
 import {ApiRep} from "../../../../models/api/api-rep";
 import {Organization} from "../../../../models/entity/organization";
 import {AuthService} from "../../../../services/auth/auth.service";
-import {Repository} from "../../../../models/entity/repository";
-import {RepositoryType} from "../../../../models/enum/repository-type";
-import {RepositoryService} from "../../../../services/repository/repository.service";
+import {Notebook} from "../../../../models/entity/notebook";
+import {NotebookType} from "../../../../models/enum/notebook-type";
+import {NotebookService} from "../../../../services/Note/notebook.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserToken} from "../../../../models/DTO/user-token";
 import {ConfigService} from "../../../../services/config/config.service";
-import {RepositoryOwnerType} from "../../../../models/enum/repository-owner-type";
+import {NotebookOwnerType} from "../../../../models/enum/notebook-owner-type";
 import {NzMentionComponent} from "ng-zorro-antd/mention";
 import {NzRadioGroupComponent} from "ng-zorro-antd/radio";
 import {SharedModule} from "@shared";
@@ -31,7 +31,7 @@ import {SharedModule} from "@shared";
 export class CreateRepositoryFormComponent implements OnInit {
   form!: UntypedFormGroup;
   submitting = false;
-  repositoryType:RepositoryType=RepositoryType.NoteRepository;
+  repositoryType:NotebookType=NotebookType.NoteRepository;
   orgs: Array<Organization> = new Array<Organization>();
 
   userToken?: UserToken;
@@ -52,7 +52,7 @@ export class CreateRepositoryFormComponent implements OnInit {
               private authService: AuthService,
               private configService: ConfigService,
               public route: ActivatedRoute,
-              private repositoryService: RepositoryService
+              private repositoryService: NotebookService
   ) {
     this.userToken = this.configService.GetUserToken();
   }
@@ -63,24 +63,24 @@ export class CreateRepositoryFormComponent implements OnInit {
 
     switch (repositoryTypeString){
       case 1:
-        this.repositoryType=RepositoryType.NoteRepository;
+        this.repositoryType=NotebookType.NoteRepository;
         this.msg.info("选择1");
         break;
       case 2:
-        this.repositoryType=RepositoryType.FileRepository;
+        this.repositoryType=NotebookType.FileRepository;
         this.msg.info("选择2");
         break;
       default:
-        this.repositoryType=RepositoryType.NoteRepository;
+        this.repositoryType=NotebookType.NoteRepository;
         this.msg.info("选择default"+repositoryTypeString);
         break;
     }
 
     switch (this.repositoryType){
-      case RepositoryType.FileRepository:
+      case NotebookType.FileRepository:
         this.des="文件库用于托管文件和音视频，允许更多创作者参与到文件管理，可以站在更高的角度和更低的细粒度去融合创造力和想象力。";
         break;
-      case RepositoryType.NoteRepository:
+      case NotebookType.NoteRepository:
         this.des="文档库用于托管文档和笔记，允许更多创作者参与到文档创作，可以站在更高的角度和更低的细粒度去融合创造力和想象力。";
         break;
     }
@@ -123,16 +123,16 @@ export class CreateRepositoryFormComponent implements OnInit {
 
   }
 
-  getNotesRepository(): Repository {
-    let repository = new Repository();
+  getNotesRepository(): Notebook {
+    let repository = new Notebook();
     repository.Name = this.form.value.repositoryName;
-    repository.RepositoryType=this.repositoryType;
+    repository.NotebookType=this.repositoryType;
 
     if (this.form.value.owner == this.userToken?.Username) {
       repository.OwnerId = this.userToken?.UserId!;
-      repository.RepositoryOwnerType = RepositoryOwnerType.Personal;
+      repository.NotebookOwnerType = NotebookOwnerType.Personal;
     } else {
-      repository.RepositoryOwnerType = RepositoryOwnerType.Organization;
+      repository.NotebookOwnerType = NotebookOwnerType.Organization;
       repository.OwnerId = this.ownerMap.get(this.form.value.owner!);
     }
     repository.Description = this.form.value.description;
@@ -149,11 +149,11 @@ export class CreateRepositoryFormComponent implements OnInit {
   async submit() {
     this.submitting = true;
     let repository = this.getNotesRepository();
-    let apiRe = await this.repositoryService.CreateRepository(repository);
+    let apiRe = await this.repositoryService.CreateNotebook(repository);
     this.submitting = false;
     this.cdr.detectChanges();
     if (apiRe.Ok == true) {
-      let result: Repository = apiRe.Data;
+      let result: Notebook = apiRe.Data;
       this.msg.success(`创建成功:` + result.Id);
       setTimeout(() => {
         this.router.navigateByUrl("/pro/account/center/documents");

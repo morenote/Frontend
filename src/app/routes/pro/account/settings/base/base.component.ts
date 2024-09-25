@@ -79,7 +79,8 @@ export class ProAccountSettingsBaseComponent implements OnInit {
       geographic: {city: {key: "330000"}, province: {key: "330100"}},
       phone: "这里显示你的手机号",
       profile: "这里显示你的简介",
-      email: userInfo.Email, name: userInfo.Username
+      email: userInfo.Email,
+      name: userInfo.Username
     };
     //this.choProvince(this.user.geographic.province.key, false);
     this.cdr.detectChanges();

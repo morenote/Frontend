@@ -13,7 +13,7 @@ import {DataSign} from "../../models/DTO/USBKey/data-sign";
 @Injectable({
   providedIn: 'root'
 })
-export class NotebookService {
+export class NoteCollectionService {
   userId: string ;
   token: string ;
   config: WebsiteConfig;
@@ -31,68 +31,68 @@ export class NotebookService {
     this.config = this.configService.GetWebSiteConfig();
     this.sc = configService.GetSecurityConfigDTOFromDB();
   }
-  public GetRootNotebooks(noteRepositoryId: string) : Observable<ApiRep> {
-    let url = this.config.baseURL + '/api/Notebook/GetRootNotebooks';
-    let httpParams = new HttpParams()
-      .append('token', this.token!)
-      .append('repositoryId', noteRepositoryId);
-    let result = this.http.get<ApiRep>(url, {params:httpParams});
-    return result;
-  }
-  public GetNotebookChildren(notebookId: string) : Observable<ApiRep> {
-    let url = this.config.baseURL + '/api/Notebook/GetNotebookChildren';
+  public GetRootNoteCollection(notebookId: string) : Observable<ApiRep> {
+    let url = this.config.baseURL + '/api/NoteCollection/GetRootNoteCollection';
     let httpParams = new HttpParams()
       .append('token', this.token!)
       .append('notebookId', notebookId);
     let result = this.http.get<ApiRep>(url, {params:httpParams});
     return result;
   }
-  public CreateNoteBook(noteRepositoryId:string,notebookTitle: string,parentNotebookId:string) : Promise<ApiRep> {
+  public GetNoteCollectionChildren(notebookId: string) : Observable<ApiRep> {
+    let url = this.config.baseURL + '/api/NoteCollection/GetNoteCollectionChildren';
+    let httpParams = new HttpParams()
+      .append('token', this.token!)
+      .append('notebookId', notebookId);
+    let result = this.http.get<ApiRep>(url, {params:httpParams});
+    return result;
+  }
+  public CreateNoteCollection(notebookId:string,noteCollectionTitle: string,parentNoteCollectionId:string) : Promise<ApiRep> {
     return new Promise<ApiRep>(async resolve => {
       //签名
       let signData = new SignData();
       let dataSign = new DataSign();
       if (this.sc.ForceDigitalSignature){
         signData.Id = "";
-        signData.Data = notebookTitle;
+        signData.Data = noteCollectionTitle;
         signData.UserId = this.userId;
         signData.UinxTime = Math.round(new Date().getTime() / 1000);
-        signData.Operate = "/api/Notebook/CreateNoteBook";
+        signData.Operate = "/api/NoteCollection/CreateNoteCollection";
         dataSign = await this.epass.SendSignToePass2001(signData);
       }
       //发送数据
-      let url = this.config.baseURL + '/api/Notebook/CreateNoteBook';
+      let url = this.config.baseURL + '/api/NoteCollection/CreateNoteBook';
       let formData = new FormData();
       formData.set('token', this.token!);
-      formData.set('notebookTitle', notebookTitle);
-      formData.set('noteRepositoryId', noteRepositoryId);
-      formData.set('parentNotebookId', parentNotebookId);
+      formData.set('noteCollectionTitle', noteCollectionTitle);
+      formData.set('notebookId', notebookId);
+      formData.set('parentNoteCollectionId', parentNoteCollectionId);
       formData.set('dataSignJson', JSON.stringify(dataSign));
       this.http.post<ApiRep>(url, formData).subscribe(apiRe => {
         resolve(apiRe);
       });
     })
   }
-  public UpdateNoteBookTitle(notebookId:string,notebookTitle: string) : Promise<ApiRep> {
+  public UpdateNoteCollectionTitle(noteCollectionId:string, noteCollectionTitle: string) : Promise<ApiRep> {
     return  new  Promise<ApiRep>(async resolve => {
       //签名
       let signData = new SignData();
       let dataSign = new DataSign();
       if (this.sc.ForceDigitalSignature){
         signData.Id = "";
-        signData.Data = notebookTitle;
+        signData.Data = noteCollectionTitle;
         signData.UserId = this.userId;
         signData.UinxTime = Math.round(new Date().getTime() / 1000);
-        signData.Operate = "/api/Notebook/UpdateNoteBookTitle";
-        signData.SM3Data(notebookId+notebookTitle)
+        signData.Operate = "/api/NoteCollection/UpdateNoteCollectionTitle";
+        signData.SM3Data(noteCollectionId+noteCollectionTitle)
         dataSign = await this.epass.SendSignToePass2001(signData);
       }
       //发送数据
-      let url = this.config.baseURL + '/api/Notebook/UpdateNoteBookTitle';
+      let url = this.config.baseURL + '/api/NoteCollection/UpdateNoteBookTitle';
       let formData = new FormData();
       formData.set('token', this.token!);
-      formData.set('notebookId', notebookId);
-      formData.set('notebookTitle', notebookTitle);
+      formData.set('noteCollectionId', noteCollectionId);
+      formData.set('noteCollectionTitle', noteCollectionTitle);
       formData.set('dataSignJson', JSON.stringify(dataSign));
        this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
         resolve(apiRe);
@@ -101,7 +101,7 @@ export class NotebookService {
 
   }
 
-  public deleteNotebook(noteRepositoryId: string,notebookId: string,recursively:boolean,force:boolean): Promise<ApiRep> {
+  public deleteNoteCollection(notebookId: string, noteCollectionId: string, recursively:boolean, force:boolean): Promise<ApiRep> {
     return new Promise<ApiRep>(async resolve => {
 
       //签名
@@ -109,18 +109,18 @@ export class NotebookService {
       let dataSign=new DataSign();
       if (this.sc.ForceDigitalSignature){
         signData.Id = "";
-        signData.Data = notebookId;
+        signData.Data = noteCollectionId;
         signData.UserId = this.userId;
         signData.UinxTime = Math.round(new Date().getTime() / 1000);
-        signData.Operate = "/api/Notebook/DeleteNotebook";
-        signData.SM3Data(noteRepositoryId + notebookId)
+        signData.Operate = "/api/NoteCollection/DeleteNotebook";
+        signData.SM3Data(notebookId + noteCollectionId)
         dataSign = await this.epass.SendSignToePass2001(signData);
       }
-      let url = this.config.baseURL + '/api/Notebook/DeleteNotebook';
+      let url = this.config.baseURL + '/api/NoteCollection/DeleteNoteCollection';
       let formData = new FormData();
       formData.set('token', this.token!);
-      formData.set('noteRepositoryId', noteRepositoryId);
       formData.set('notebookId', notebookId);
+      formData.set('noteCollectionId', noteCollectionId);
       formData.set('recursively', recursively + "");
       formData.set('force', force + "");
       formData.set('dataSignJson', JSON.stringify(dataSign));

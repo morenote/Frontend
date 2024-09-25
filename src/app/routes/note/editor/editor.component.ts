@@ -10,7 +10,7 @@ import {delay, Observable, of} from 'rxjs';
 import {ApiRep} from '../../../models/api/api-rep';
 import {Note} from '../../../models/entity/note';
 import {NoteContent} from '../../../models/entity/note-content';
-import {Notebook} from '../../../models/entity/notebook';
+import {NoteCollection} from '../../../models/entity/noteCollection';
 import {TreeNodeModel} from '../../../models/model/tree-node-model';
 import {TreeNodeOptionsModel} from '../../../models/model/tree-node-options-model';
 import {TextbusEditorComponent} from '../../../my-components/Editor/TextbusEditor/textbus-editor.component';
@@ -24,7 +24,7 @@ import {
   SerchNoteModalComponent
 } from '../../../my-components/MyModal/serch-note-modal/serch-note-modal.component';
 import {NoteService} from '../../../services/Note/note.service';
-import {NotebookService} from '../../../services/NoteBook/notebook.service';
+import {NoteCollectionService} from '../../../services/Note/note-collection.service';
 import {ConfigService} from '../../../services/config/config.service';
 import {TimeFormatUtil} from '../../../shared/utils/Time/time-format-util';
 import {Watermark} from '../../../shared/utils/WaterMark/watermark';
@@ -73,7 +73,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
     public route: ActivatedRoute,
     private configService: ConfigService,
     public message: NzMessageService,
-    private notebookService: NotebookService,
+    private notebookService: NoteCollectionService,
     private modal: NzModalService,
     private noteService: NoteService
   ) {}
@@ -192,9 +192,9 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
     return new Promise(resolve => {
       setTimeout(() => {
         let array: TreeNodeModel[] = new Array<TreeNodeModel>();
-        let a = this.notebookService.GetNotebookChildren(key).subscribe((apiRe: ApiRep) => {
+        let a = this.notebookService.GetNoteCollectionChildren(key).subscribe((apiRe: ApiRep) => {
           if (apiRe.Ok == true) {
-            let data: Notebook[] = apiRe.Data;
+            let data: NoteCollection[] = apiRe.Data;
 
             for (const notebook of data) {
               if (notebook.IsDeleted || notebook.IsTrash) {
@@ -246,9 +246,9 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   ngOnInit(): void {
     this.repositoryId = this.route.snapshot.queryParams['repository'];
 
-    this.notebookService.GetRootNotebooks(this.repositoryId).subscribe((apiRe: ApiRep) => {
+    this.notebookService.GetRootNoteCollection(this.repositoryId).subscribe((apiRe: ApiRep) => {
       if (apiRe.Ok == true) {
-        let data: Notebook[] = apiRe.Data;
+        let data: NoteCollection[] = apiRe.Data;
         for (const notebook of data) {
           let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.Id, notebook.Title));
           node.title = notebook.Title;
@@ -300,7 +300,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
    *
    * @param $event
    */
-  onCreateNotebook($event: MouseEvent, isRoot: boolean) {
+  onCreateNoteCollection($event: MouseEvent, isRoot: boolean) {
     let noteRepositoryId = this.repositoryId;
     this.reNameModalComponent.clearValue();
     this.reNameModalComponent.showModal('创建文件夹', '请输入文件夹名称', async (result: boolean, value: string) => {
@@ -310,12 +310,12 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
           parentFolder = '';
         }
 
-        let apiRe = await this.notebookService.CreateNoteBook(noteRepositoryId, value, parentFolder);
+        let apiRe = await this.notebookService.CreateNoteCollection(noteRepositoryId, value, parentFolder);
         if (apiRe.Ok == true) {
-          let notebook: Notebook = apiRe.Data;
-          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(notebook.Id, notebook.Title));
-          node.title = notebook.Title;
-          node.key = notebook.Id;
+          let noteCollection: NoteCollection = apiRe.Data;
+          let node: TreeNodeModel = new TreeNodeModel(new TreeNodeOptionsModel(noteCollection.Id, noteCollection.Title));
+          node.title = noteCollection.Title;
+          node.key = noteCollection.Id;
           node.icon = 'folder';
 
           if (isRoot) {
@@ -346,7 +346,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
       }
     } else {
       //是笔记本
-      let apiRe = await this.notebookService.deleteNotebook(this.repositoryId, this.rightClickNode.key, true, true);
+      let apiRe = await this.notebookService.deleteNoteCollection(this.repositoryId, this.rightClickNode.key, true, true);
       if (apiRe.Ok) {
         this.message.success(`删除文件夹成功,文件夹title=${this.clickTreeNode.title}`);
         let a = this.rightClickNode.parentNode?.getChildren().filter(x => x.key != this.rightClickNode.key);
@@ -508,7 +508,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   }
 
   private async ReNameNoteBook(noteBookId: string, title: string) {
-    let apiRe = await this.notebookService.UpdateNoteBookTitle(noteBookId, title);
+    let apiRe = await this.notebookService.UpdateNoteCollectionTitle(noteBookId, title);
     if (apiRe.Ok) {
       this.rightClickNode.title = title;
     }

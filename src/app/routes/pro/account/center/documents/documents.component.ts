@@ -1,12 +1,12 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {_HttpClient} from '@delon/theme';
 import {NzSafeAny} from 'ng-zorro-antd/core/types';
-import {RepositoryService} from "../../../../../services/repository/repository.service";
+import {NotebookService} from "../../../../../services/Note/notebook.service";
 import {ApiRep} from "../../../../../models/api/api-rep";
-import {Repository} from "../../../../../models/entity/repository";
+import {Notebook} from "../../../../../models/entity/notebook";
 import {Router} from "@angular/router";
 import {NzMessageService} from "ng-zorro-antd/message";
-import {RepositoryType} from "../../../../../models/enum/repository-type";
+import {NotebookType} from "../../../../../models/enum/notebook-type";
 import {NzCardComponent, NzCardMetaComponent} from "ng-zorro-antd/card";
 import {NzAvatarComponent} from "ng-zorro-antd/avatar";
 import {NzDropDownDirective, NzDropdownMenuComponent} from "ng-zorro-antd/dropdown";
@@ -32,22 +32,22 @@ import {DecimalPipe} from "@angular/common";
 })
 export class ProAccountCenterDocumentsComponent {
   listLoading = true;
-  public list: Array<Repository> = [];
+  public list: Array<Notebook> = [];
 
   constructor(private http: _HttpClient,
               private cdr: ChangeDetectorRef,
               public router:Router,
-              public repositoryService: RepositoryService,
+              public notebookService: NotebookService,
               private message:NzMessageService) {
-    repositoryService.GetMyRepository(RepositoryType.NoteRepository).subscribe(
+    notebookService.GetMyNotebook(NotebookType.NoteRepository).subscribe(
       (apiRe: ApiRep) => {
         console.log(apiRe.Ok)
         if (apiRe.Ok) {
-          let notesRepositoryList: Array<Repository> = apiRe.Data as Array<Repository>;
-          console.log(notesRepositoryList.length)
-          for (const notesRepository of notesRepositoryList) {
-            console.log(notesRepository.Name)
-            this.list.push(notesRepository);
+          let notebooks: Array<Notebook> = apiRe.Data as Array<Notebook>;
+          console.log(notebooks.length)
+          for (const notebook of notebooks) {
+            console.log(notebook.Name)
+            this.list.push(notebook);
           }
           this.listLoading = false;
           this.cdr.detectChanges();
@@ -79,17 +79,17 @@ export class ProAccountCenterDocumentsComponent {
     return result.toString();
   }
 
-  OnCardClick(repository: Repository) {
+  OnCardClick(notebook: Notebook) {
     //alert(repository.Name);
-    this.router.navigate(['/note/editor'],{queryParams:{repository:repository.Id}})
+    this.router.navigate(['/note/editor'],{queryParams:{repository:notebook.Id}})
   }
 
-  async OnDelete(noteRepositoryId: string) {
-    let apiRe = await this.repositoryService.DeleteRepository(noteRepositoryId);
+  async OnDelete(notebookId: string) {
+    let apiRe = await this.notebookService.DeleteNotebook(notebookId);
     if (apiRe.Ok == true) {
       //alert(apiRe.Ok)
-      this.list=this.list.filter(item => item.Id != noteRepositoryId);
-      this.message.success('删除仓库成功，您可以在回收站恢复被删除的仓库');
+      this.list=this.list.filter(item => item.Id != notebookId);
+      this.message.success('删除笔记本成功，您可以在回收站恢复被删除的仓库');
     }
   }
 }

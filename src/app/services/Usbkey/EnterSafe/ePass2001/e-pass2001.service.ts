@@ -22,7 +22,7 @@ export class EPass2001Service {
   userId?: string | null;
   token?: string | null;
   config: WebsiteConfig;
-  localhostUrl: string = "http://localhost:8070";
+  localhostUrl: string = "http://localhost:3100";
   configService: ConfigService=inject(ConfigService);
 
   constructor(

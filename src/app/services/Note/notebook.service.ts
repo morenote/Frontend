@@ -75,11 +75,13 @@ export class NotebookService {
       map.set('data', JSON.stringify(notebook));
 
        tel= tel.setURL("/api/Notebook/CreateNotebook")
-        .addData(map)
-         .addDigitalEnvelope("data")
-
-      return await tel.post();
-
+        .addData(map);
+      if (this.sc.ForceDigitalSignature){
+        tel=await tel.addSign("data")
+        tel=tel.addDigitalEnvelope("data")
+      }
+      var apiRe= await tel.post();
+      resolve(apiRe);
       // let result = this.http.post<ApiRep>(url, fromData).subscribe(apiRe => {
       //   resolve(apiRe);
       // })

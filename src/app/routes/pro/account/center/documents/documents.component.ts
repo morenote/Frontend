@@ -12,6 +12,9 @@ import {NzAvatarComponent} from "ng-zorro-antd/avatar";
 import {NzDropDownDirective, NzDropdownMenuComponent} from "ng-zorro-antd/dropdown";
 import {NzListComponent, NzListItemComponent} from "ng-zorro-antd/list";
 import {DecimalPipe} from "@angular/common";
+import {NzTooltipDirective} from "ng-zorro-antd/tooltip";
+import {NzIconDirective} from "ng-zorro-antd/icon";
+import {NzMenuDirective, NzMenuItemComponent} from "ng-zorro-antd/menu";
 
 @Component({
   selector: 'app-account-center-documents',
@@ -26,7 +29,11 @@ import {DecimalPipe} from "@angular/common";
     NzListComponent,
     NzDropDownDirective,
     DecimalPipe,
-    NzCardComponent
+    NzCardComponent,
+    NzTooltipDirective,
+    NzIconDirective,
+    NzMenuDirective,
+    NzMenuItemComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -90,6 +97,9 @@ export class ProAccountCenterDocumentsComponent {
       //alert(apiRe.Ok)
       this.list=this.list.filter(item => item.Id != notebookId);
       this.message.success('删除笔记本成功，您可以在回收站恢复被删除的仓库');
+      setTimeout(()=>{
+        window.location.reload() ;
+      },1500);
     }
   }
 }

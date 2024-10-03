@@ -1,7 +1,7 @@
-import { USBKeyBinding } from './usbkey-binding';
+import { UserSM2Binding } from './user-s-m2-binding';
 
 describe('USBKeyBinding', () => {
   it('should create an instance', () => {
-    expect(new USBKeyBinding()).toBeTruthy();
+    expect(new UserSM2Binding()).toBeTruthy();
   });
 });

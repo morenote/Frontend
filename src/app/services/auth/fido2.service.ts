@@ -9,7 +9,7 @@ import { HttpClient, HttpContext, HttpParams } from "@angular/common/http";
 import {ApiRep} from "../../models/api/api-rep";
 import {promise} from "protractor";
 import {Base64} from "js-base64";
-import {USBKeyBinding} from "../../models/entity/usbkey-binding";
+import {UserSM2Binding} from "../../models/entity/user-s-m2-binding";
 import {FIDO2Item} from "../../models/DTO/fido2/fido2-item";
 import {LogUtil} from "../../shared/utils/log-util";
 import {LogService} from "../Log/log.service";
@@ -381,7 +381,7 @@ export class Fido2Service {
       });
     })
   }
-  public async  Find(keyId:string):Promise<USBKeyBinding>{
+  public async  Find(keyId:string):Promise<UserSM2Binding>{
     return  new Promise<FIDO2Item>((resolve)=>{
       let url = this.config.baseURL + '/api/fido2/Find';
       let httpParams = new HttpParams()

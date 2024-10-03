@@ -19,7 +19,7 @@ import {
 } from "../../../../../my-components/MyModal/change-pass-word-modal-component/change-pass-word-modal-component.component";
 import {UserService} from "../../../../../services/User/user.service";
 import {EPass2001Service} from "../../../../../services/Usbkey/EnterSafe/ePass2001/e-pass2001.service";
-import {USBKeyBinding} from "../../../../../models/entity/usbkey-binding";
+import {UserSM2Binding} from "../../../../../models/entity/user-s-m2-binding";
 import {Router} from "@angular/router";
 import {Fido2Service} from "../../../../../services/auth/fido2.service";
 import {FIDO2Item} from "../../../../../models/DTO/fido2/fido2-item";
@@ -73,9 +73,9 @@ export class ProAccountSettingsSecurityComponent {
   async OnBindUsbKey() {
     let apiRe = await this.epass2001.Register(this.configService.GetUserToken().Email, "1111");
     if (apiRe.Ok) {
-      let key= apiRe.Data as USBKeyBinding;
+      let key= apiRe.Data as UserSM2Binding;
       alert("您已经成功注册key："+key.Id);
-      this.usbKeylist.set(key.Id!, key.Modulus!);
+      this.usbKeylist.set(key.Id!, key.PublicKey!);
       this.cdr.detectChanges();
     } else {
       alert("注册key失败："+apiRe.Msg);
@@ -103,7 +103,7 @@ export class ProAccountSettingsSecurityComponent {
     //更新列表
     let list=await this.epass2001.List(this.configService.GetUserToken().UserId);
     for (const item of list) {
-      this.usbKeylist.set(item.Id!, item.Modulus!);
+      this.usbKeylist.set(item.Id!, item.PublicKey!);
     }
     let serverFido2List=await  this.fido2.List(this.configService.GetUserToken().UserId);
     for (let item of serverFido2List){

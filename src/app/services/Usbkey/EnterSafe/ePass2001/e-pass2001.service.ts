@@ -1,7 +1,7 @@
 import { inject, Inject, Injectable } from "@angular/core";
 import {WebsiteConfig} from "../../../../models/config/website-config";
 import {AuthService} from "../../../auth/auth.service";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import {HttpClient, HttpContext, HttpParams} from "@angular/common/http";
 import {ConfigService} from "../../../config/config.service";
 import {Observable} from "rxjs";
 import {ApiRep} from "../../../../models/api/api-rep";
@@ -13,7 +13,8 @@ import {NzMessageService} from "ng-zorro-antd/message";
 import {SignData} from "../../../../models/DTO/USBKey/sign-data";
 import {DataSign} from "../../../../models/DTO/USBKey/data-sign";
 import {LogUtil} from "../../../../shared/utils/log-util";
-import {USBKeyBinding} from "../../../../models/entity/usbkey-binding";
+import {UserSM2Binding} from "../../../../models/entity/user-s-m2-binding";
+import {ALLOW_ANONYMOUS} from "@delon/auth";
 
 @Injectable({
   providedIn: 'root'
@@ -51,7 +52,9 @@ export class EPass2001Service {
 
       let url = this.localhostUrl;
       let postCfg = {
-        headers: {'Content-Type': 'application/json;charset=UTF-8'}
+        headers: {'Content-Type': 'application/json;charset=UTF-8'},
+        context:new HttpContext().set(ALLOW_ANONYMOUS, true)
+
       };
       let result = this.http.post<ApiRep>(url, json, postCfg).subscribe(apiRe=>{
         resolve(apiRe);
@@ -89,7 +92,7 @@ export class EPass2001Service {
       let url = this.config.baseURL + '/api/USBKey/LoginChallengeResponse';
       let formData = new FormData();
       formData.set('data', data);
-      this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
+      this.http.post<ApiRep>(url, formData,{context:new HttpContext().set(ALLOW_ANONYMOUS,true)}).subscribe(apiRe=>{
         resolve(apiRe);
       });
     })
@@ -102,7 +105,7 @@ export class EPass2001Service {
       formData.set('data', data);
       formData.set('token', this.token!);
       formData.set('sms', sms);
-      this.http.post<ApiRep>(url, formData).subscribe(apiRe=>{
+      this.http.post<ApiRep>(url, formData,{context:new HttpContext().set(ALLOW_ANONYMOUS,true)}).subscribe(apiRe=>{
         resolve(apiRe);
       });
     })
@@ -113,7 +116,7 @@ export class EPass2001Service {
       let httpParams = new HttpParams()
         .append('email', email)
         .append('sessionCode', requestNumber);
-      let result = this.http.get<ApiRep>(url, {params: httpParams});
+      let result = this.http.get<ApiRep>(url, {params: httpParams,context:new HttpContext().set(ALLOW_ANONYMOUS, true)});
       result.subscribe(apiRe => {
         resolve(apiRe);
       });
@@ -124,7 +127,7 @@ export class EPass2001Service {
       let url = this.config.baseURL + '/api/USBKey/RegistrationChallengeRequest';
       let httpParams = new HttpParams()
         .append('email', email);
-      let result = this.http.get<ApiRep>(url, {params: httpParams});
+      let result = this.http.get<ApiRep>(url, {params: httpParams,context:new HttpContext().set(ALLOW_ANONYMOUS, true)});
       result.subscribe(apiRe => {
         resolve(apiRe);
       });
@@ -233,8 +236,8 @@ export class EPass2001Service {
 
     });
   }
-  public async  List(userId:string):Promise<Array<USBKeyBinding>>{
-    return  new Promise<Array<USBKeyBinding>>((resolve)=>{
+  public async  List(userId:string):Promise<Array<UserSM2Binding>>{
+    return  new Promise<Array<UserSM2Binding>>((resolve)=>{
 
       let url = this.config.baseURL + '/api/USBKey/List';
       let httpParams = new HttpParams()
@@ -242,10 +245,10 @@ export class EPass2001Service {
       let result = this.http.get<ApiRep>(url, {params: httpParams});
       result.subscribe(apiRe => {
         if (apiRe.Ok){
-         let arr=apiRe.Data as Array<USBKeyBinding>;
+         let arr=apiRe.Data as Array<UserSM2Binding>;
          resolve(arr);
         }
-        let arr=new Array<USBKeyBinding>();
+        let arr=new Array<UserSM2Binding>();
         resolve(arr);
       });
 
@@ -265,8 +268,8 @@ export class EPass2001Service {
       });
     })
   }
-  public async  Find(keyId:string):Promise<USBKeyBinding>{
-    return  new Promise<USBKeyBinding>((resolve)=>{
+  public async  Find(keyId:string):Promise<UserSM2Binding>{
+    return  new Promise<UserSM2Binding>((resolve)=>{
       let url = this.config.baseURL + '/api/USBKey/Find';
       let httpParams = new HttpParams()
         .append('keyId', keyId)

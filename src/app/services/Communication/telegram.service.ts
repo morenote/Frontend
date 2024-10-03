@@ -92,7 +92,7 @@ export class TelegramService {
    */
   public async addSign( key: string): Promise<TelegramService> {
     let signData = new SignData();
-    signData.Id = SnowFlake.NexHexId();
+    signData.Id ="";
     signData.UserId = this.userId;
     signData.Data = "";
     signData.UinxTime = Math.round(new Date().getTime() / 1000);
@@ -101,7 +101,7 @@ export class TelegramService {
 
     this.dataSign = await this.ePass2001Service.SendSignToePass2001(signData);
     this.headers=this.headers.set("sign_field",key);
-    this.data.set("sign",JSON.stringify(JSON.stringify(this.dataSign)));
+    this.headers=this.headers.set("sign",JSON.stringify(this.dataSign));
     return this;
   }
 

@@ -53,34 +53,17 @@ export class NotebookService {
 
   public CreateNotebook(notebook: Notebook): Promise<ApiRep> {
     return new Promise<ApiRep>(async resolve => {
-      let signData = new SignData();
-      let dataSign=new DataSign();
-      if (this.sc.ForceDigitalSignature){
-        signData.Id = "";
-        signData.Data = JSON.stringify(notebook);
-        signData.UserId = this.userId;
-        signData.UinxTime = Math.round(new Date().getTime() / 1000);
-        signData.Operate = "/api/Notebook/CreateNotebook";
-        dataSign = await this.epass.SendSignToePass2001(signData);
-      }
-
-      let url = this.config.baseURL + '/api/Notebook/CreateNotebook';
-      let fromData = new FormData()
-      fromData.set('token', this.token!)
-      fromData.set('data', JSON.stringify(notebook));
-      fromData.set('dataSignJson', JSON.stringify(dataSign));
       let tel=this.telegramFacService.Instace();
       let map=new Map<string,string>();
       map.set('token', this.token!)
       map.set('data', JSON.stringify(notebook));
 
-       tel= tel.setURL("/api/Notebook/CreateNotebook")
-        .addData(map);
+       tel= tel.setURL("/api/Notebook/CreateNotebook").setData(map);
       if (this.sc.ForceDigitalSignature){
         tel=await tel.addSign("data")
         tel=tel.addDigitalEnvelope("data")
       }
-      var apiRe= await tel.post();
+      let apiRe= await tel.post();
       resolve(apiRe);
       // let result = this.http.post<ApiRep>(url, fromData).subscribe(apiRe => {
       //   resolve(apiRe);
@@ -91,28 +74,20 @@ export class NotebookService {
 
   public DeleteNotebook(id: string): Promise<ApiRep> {
     return new Promise<ApiRep>(async resolve => {
-      let signData = new SignData();
-      let dataSign = new DataSign();
+      let tel=this.telegramFacService.Instace();
+      let map=new Map<string,string>();
+      map.set('token', this.token!)
+      map.set('id', id);
 
-      if (this.sc.ForceDigitalSignature) {
-        signData.Id = "";
-        signData.Data = id;
-        signData.UserId = this.userId;
-        signData.UinxTime = Math.round(new Date().getTime() / 1000);
-        signData.Operate = "/api/Notebook/DeleteNotebook";
-
-        dataSign = await this.epass.SendSignToePass2001(signData);
+      let url = '/api/Notebook/DeleteNotebook';
+      tel= tel.setURL(url).setData(map);
+      if (this.sc.ForceDigitalSignature){
+        tel=await tel.addSign("id")
+        //tel=tel.addDigitalEnvelope("id")
       }
+      let apiRe= await tel.post();
+      resolve(apiRe);
 
-
-      let url = this.config.baseURL + '/api/Notebook/DeleteNotebook';
-      let fromData = new FormData();
-      fromData.set('token', this.token!)
-      fromData.set('id', id);
-      fromData.set('dataSignJson', JSON.stringify(dataSign));
-      let result = this.http.post<ApiRep>(url, fromData).subscribe(apiRe => {
-        resolve(apiRe);
-      });
     })
 
   }

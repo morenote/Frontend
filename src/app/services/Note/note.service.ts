@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {WebsiteConfig} from "../../models/config/website-config";
 import {AuthService} from "../auth/auth.service";
 import { HttpClient, HttpParams } from "@angular/common/http";
@@ -15,6 +15,7 @@ import {PayLoadDTO} from "../../models/DTO/Api/pay-load-d-t-o";
 import {DataSign} from "../../models/DTO/USBKey/data-sign";
 
 import {ExtendedName} from "../../models/enum/extended-name";
+import {TelegramFacService} from "../Communication/telegram-fac.service";
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class NoteService {
   token: string;
   config: WebsiteConfig;
   sc: SecurityConfigDTO;
+  telegramFacService:TelegramFacService=inject(TelegramFacService);
 
   constructor(public authService: AuthService,
               public http: HttpClient,
@@ -86,60 +88,26 @@ export class NoteService {
 
   public UpdateNoteTitleAndContent(noteId: string, noteTitle: string, content: string): Promise<ApiRep> {
     return new Promise<ApiRep>(async resolve => {
-      let sc = this.configService.GetSecurityConfigDTOFromDB();
-      //签名
-      let signData = new SignData();
-      let dataSign: DataSign = new DataSign();
-      if (sc.ForceDigitalSignature) {
-        signData.Id = "";
-        signData.Data = noteId;
-        signData.UserId = this.userId;
-        signData.UinxTime = Math.round(new Date().getTime() / 1000);
-        signData.Operate = "/api/Note/UpdateNoteTitleAndContent";
-        signData.SM3Data(noteId + noteTitle + content);
-        dataSign = await this.epass.SendSignToePass2001(signData);
-      }
-      //数字信封
-      let gm = new GMService();
-      let sm4Key = gm.GetSM4Key();
-      let iv = gm.GetIV();
-      let digitalEnvelope = new DigitalEnvelope();
-      let deJson = "";
-      if (sc.ForceDigitalEnvelope) {
-        digitalEnvelope.SetPayLodValue(content, sm4Key, this.sc.PublicKey!, iv);
-        deJson = JSON.stringify(digitalEnvelope);
-        LogUtil.log(deJson);
-        content = "";
-      }
       //更新笔记
-      let url = this.config.baseURL + '/api/Note/UpdateNoteTitleAndContent';
-      let formData = new FormData();
-      formData.set('token', this.token!);
-      formData.set('noteId', noteId);
-      formData.set('noteTitle', noteTitle);
-      formData.set('content', content);
-      formData.set('dataSignJson', JSON.stringify(dataSign));
-      formData.set('digitalEnvelopeJson', deJson);
-      this.http.post<ApiRep>(url, formData).subscribe(apiRe => {
-        LogUtil.log("数字信封：" + JSON.stringify(apiRe));
-        if (apiRe.Encryption) {
-          LogUtil.log("payLod.加密数据=" + apiRe.Data)
-          LogUtil.log("payLod.解密.sm4Key=" + sm4Key)
-          LogUtil.log("payLod.解密.iv=" + iv)
-          let payLodJson = gm.SM4Dec(apiRe.Data, sm4Key, iv);
-          LogUtil.log("payLodJson：" + JSON.stringify(payLodJson));
-          let temp = JSON.parse(payLodJson) as PayLoadDTO;
-          let payLod = new PayLoadDTO();
-          payLod.Data = temp.Data;
-          payLod.Hash = temp.Hash;
-          apiRe.Data = payLod.Data;
-          apiRe.Ok = payLod.VerifyPayLodHash();
-          LogUtil.log("payLod.Data=" + temp.Data)
-          LogUtil.log("Hash.Hash=" + temp.Hash)
-        }
-        LogUtil.log("解密结果：" + JSON.stringify(apiRe));
-        resolve(apiRe);
-      });
+      let url = '/api/Note/UpdateNoteTitleAndContent';
+
+      let tel=this.telegramFacService.Instace();
+      tel=tel.setURL(url);
+      let map=new Map<string,string>();
+
+
+      map.set('token', this.token!);
+      map.set('noteId', noteId);
+      map.set('noteTitle', noteTitle);
+      map.set('content', content)
+      tel=tel.setData(map);
+
+      if (this.sc.ForceDigitalSignature){
+        tel=await tel.addSign("content")
+        tel=tel.addDigitalEnvelope("content")
+      }
+      let apiRe= await tel.post();
+      resolve(apiRe);
 
     })
   }
@@ -147,29 +115,23 @@ export class NoteService {
   public deleteNote(noteRepositoryId: string, noteId: string): Promise<ApiRep> {
     return new Promise<ApiRep>(async resolve => {
 
-      //签名
-      let signData = new SignData();
-      let dataSign = new DataSign();
-      if (this.sc.ForceDigitalSignature) {
-        signData.Id = "";
-        signData.Data = noteId;
-        signData.UserId = this.userId;
-        signData.UinxTime = Math.round(new Date().getTime() / 1000);
-        signData.Operate = "/api/Note/DeleteNote";
 
-        dataSign = await this.epass.SendSignToePass2001(signData);
+      let url =  '/api/Note/DeleteNote';
+      let tel=this.telegramFacService.Instace();
+      tel=tel.setURL(url);
+      let map=new Map<string,string>();
 
+
+      map.set('token', this.token!);
+      map.set('noteRepositoryId', noteRepositoryId);
+      map.set('noteId', noteId);
+      tel.setData(map);
+      if (this.sc.ForceDigitalSignature){
+        tel=await tel.addSign("noteId")
+        //tel=tel.addDigitalEnvelope("noteId")
       }
-
-      let url = this.config.baseURL + '/api/Note/DeleteNote';
-      let formData = new FormData();
-      formData.set('token', this.token!);
-      formData.set('noteRepositoryId', noteRepositoryId);
-      formData.set('noteId', noteId);
-      formData.set('dataSignJson', JSON.stringify(dataSign));
-      this.http.post<ApiRep>(url, formData).subscribe(apiRe => {
-        resolve(apiRe);
-      });
+      let apiRe= await tel.post();
+      resolve(apiRe);
 
 
     });

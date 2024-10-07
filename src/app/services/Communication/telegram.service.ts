@@ -79,7 +79,7 @@ export class TelegramService {
   }
 
   //添加业务数据
-  public addData(mapData: Map<string, any>): TelegramService {
+  public setData(mapData: Map<string, any>): TelegramService {
     this.data = mapData;
     return this;
   }

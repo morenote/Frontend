@@ -116,7 +116,7 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
   editor: EditorInterface | undefined;
 
 
-  nzEvent(event: NzFormatEmitEvent): void {
+  async nzEvent(event: NzFormatEmitEvent):Promise<void> {
     console.log(event);
     // load child async
     if (event.eventName === 'expand') {
@@ -137,52 +137,55 @@ export class EditorComponent implements OnInit, ISearchNoteAction {
       let type = node?.isLeaf;
       this.message.success(`${key}=${title}${type}`);
       if (type != null && type) {
-        this.onClieckNote(key, node.extendedName);
+        await this.onClieckNote(key, node.extendedName);
         this.noteTitle = title;
       }
     }
   }
 
-  protected onClieckNote(noteId: string,extendedName:ExtendedNameEnum|undefined) {
+  protected async onClieckNote(noteId: string, extendedName: ExtendedNameEnum | undefined) {
 
-    this.noteService.GetNoteContent(noteId).subscribe((apiRe: ApiRep) => {
-      if (apiRe.Ok == true) {
-        let noteContent: NoteContent = apiRe.Data;
-
-        this.message.info(`${this.ExtendedNameEnum}?`);
-
-        switch (extendedName) {
-          case ExtendedNameEnum.md:
-            setTimeout(() => {
-              this.vditor!.SetContent(noteContent.Content!, true);
-              this.editor = this.vditor;
-            }, 500);
-            break;
-          case ExtendedNameEnum.textbus:
-            console.log('note is textbus');
-            console.log(`Content is ${noteContent.Content?.length}`);
-            setTimeout(() => {
-              //todo:textbus在ready之后才可以使用
-              this.textbusEditor!.SetContent(noteContent.Content!, true);
-              this.editor = this.textbusEditor;
-            }, 500);
-            break;
-          case ExtendedNameEnum.simpleMind:
-            break;
-        }
-        setTimeout(() => {
-          this.message.info(`切换编辑器到${this.editor?.GetYourName()}`);
-        }, 500);
-      } else {
-        if (apiRe.Msg != null) {
-          this.message.error(apiRe.Msg!);
-        } else {
-          this.message.error('GetNoteContent is error');
-        }
-
-        return;
+    let apiRe = await this.noteService.GetNoteContent(noteId);
+    if (apiRe.Ok == true) {
+      let noteContent: NoteContent =JSON.parse(apiRe.Data);
+      if (noteContent.Content != null) {
+        LogUtil.log(noteContent.Content)
       }
-    });
+      console.log(noteContent);
+      this.message.info(`${this.ExtendedNameEnum}?`);
+
+      switch (extendedName) {
+        case ExtendedNameEnum.md:
+          setTimeout(() => {
+            this.vditor!.SetContent(noteContent.Content!, true);
+            this.editor = this.vditor;
+          }, 500);
+          break;
+        case ExtendedNameEnum.textbus:
+          console.log('note is textbus');
+          console.log(`Content is ${noteContent.Content?.length}`);
+          setTimeout(() => {
+            //todo:textbus在ready之后才可以使用
+            this.textbusEditor!.SetContent(noteContent.Content!, true);
+            this.editor = this.textbusEditor;
+          }, 500);
+          break;
+        case ExtendedNameEnum.simpleMind:
+          break;
+      }
+      setTimeout(() => {
+        this.message.info(`切换编辑器到${this.editor?.GetYourName()}`);
+      }, 500);
+    } else {
+      if (apiRe.Msg != null) {
+        this.message.error(apiRe.Msg!);
+      } else {
+        this.message.error('GetNoteContent is error');
+      }
+
+      return;
+    }
+
   }
 
   public nzOverlayClassName: string = '';

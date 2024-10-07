@@ -145,10 +145,11 @@ export class TelegramService {
           let payLod = new PayLoadDTO();
           payLod.Data = temp.Data;
           payLod.Hash = temp.Hash;
-          apiRe.Data = payLod.Data;
+          apiRe.Data = temp.Data;
           apiRe.Ok = payLod.VerifyPayLodHash();
           LogUtil.log("payLod.Data=" + temp.Data)
           LogUtil.log("Hash.Hash=" + temp.Hash)
+          LogUtil.log("Hash.Ok=" + apiRe.Ok)
         }
         LogUtil.log("解密结果：" + JSON.stringify(apiRe));
         resolve(apiRe);

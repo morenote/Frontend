@@ -16,6 +16,7 @@ import {DataSign} from "../../models/DTO/USBKey/data-sign";
 
 import {ExtendedName} from "../../models/enum/extended-name";
 import {TelegramFacService} from "../Communication/telegram-fac.service";
+import {resolve} from "@angular/compiler-cli";
 
 @Injectable({
   providedIn: 'root'
@@ -48,13 +49,27 @@ export class NoteService {
     return result;
   }
 
-  public GetNoteContent(noteId: string): Observable<ApiRep> {
-    let url = this.config.baseURL + '/api/Note/GetNoteContent';
-    let httpParams = new HttpParams()
-      .append('token', this.token!)
-      .append('noteId', noteId);
-    let result = this.http.get<ApiRep>(url, {params: httpParams});
-    return result;
+  public  GetNoteContent(noteId: string): Promise<ApiRep> {
+
+    //更新笔记
+    return new Promise<ApiRep>(async  (resolve) => {
+      let tel = this.telegramFacService.Instace();
+      tel = tel.setURL("/api/Note/GetNoteContent");
+      let map = new Map<string, string>();
+
+
+      map.set('token', this.token!);
+      map.set('noteId', noteId);
+
+      tel = tel.setData(map);
+
+      if (this.sc.ForceDigitalSignature) {
+        tel = await tel.addSign("noteId")
+        tel = tel.addDigitalEnvelope("noteId")
+      }
+      let apiRe = await tel.post();
+      resolve(apiRe);
+    })
   }
 
   public CreateNote(noteTitle: string, notebookId: string, extendedName: ExtendedName): Promise<ApiRep> {

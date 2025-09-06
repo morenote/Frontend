@@ -100,7 +100,7 @@ export class TelegramService {
     signData.SM3Data(this.data?.get(key));
 
     this.dataSign = await this.ePass2001Service.SendSignToePass2001(signData);
-    this.headers=this.headers.set("sign_field",key);
+    this.headers=this.headers.set("sign-field",key);
     this.headers=this.headers.set("sign",JSON.stringify(this.dataSign));
     return this;
   }
@@ -119,7 +119,7 @@ export class TelegramService {
     let deJson= JSON.stringify(digitalEnvelope);
     this.data.set(key,"");
     this.data?.set("digitalEnvelopeJson",deJson);
-    this.headers=this.headers.set("enc_field",key);
+    this.headers=this.headers.set("enc-field",key);
     return this;
   }
 
